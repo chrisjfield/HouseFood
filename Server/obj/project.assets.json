@@ -10135,10 +10135,10 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Documents HDD\\Repositories\\HouseFoodGitCopy\\Server\\HouseMoneyAPI.csproj",
-      "projectName": "HouseMoneyAPI",
-      "projectPath": "D:\\Documents HDD\\Repositories\\HouseFoodGitCopy\\Server\\HouseMoneyAPI.csproj",
-      "outputPath": "D:\\Documents HDD\\Repositories\\HouseFoodGitCopy\\Server\\obj\\",
+      "projectUniqueName": "D:\\Documents HDD\\Repositories\\HouseFood\\Server\\HouseFoodAPI.csproj",
+      "projectName": "HouseFoodAPI",
+      "projectPath": "D:\\Documents HDD\\Repositories\\HouseFood\\Server\\HouseFoodAPI.csproj",
+      "outputPath": "D:\\Documents HDD\\Repositories\\HouseFood\\Server\\obj\\",
       "projectStyle": "PackageReference",
       "originalTargetFrameworks": [
         "netcoreapp1.1"

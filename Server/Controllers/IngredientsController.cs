@@ -4,45 +4,119 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using HouseMoneyAPI.Model;
+using HouseFoodAPI.Helpers;
 
 namespace HouseMoneyAPI.Controllers
 {
     [Route("api/[controller]")]
     public class IngredientsController : Controller
     {
-        // GET api/values
+        // GET ALL
         [HttpGet]
-        public IEnumerable<Ingredients> Get()
+        public IActionResult Get()
         {
-            using (HouseFoodContext db = new HouseFoodContext())
+            var Handler = new ApiHelper();
+
+            try
             {
-                return db.Ingredients.ToList();
+                using (HouseFoodContext db = new HouseFoodContext())
+                {
+                    var Response = db.Ingredients.ToList();
+                    return Handler.HandleGetResponse(Response);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Handler.HandleException(ex);
             }
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        // GET
+        [HttpGet("{Ingredientid}")]
+        public IActionResult Get(int Ingredientid)
         {
-            return "value";
+            var Handler = new ApiHelper();
+
+            try
+            {
+                using (HouseFoodContext db = new HouseFoodContext())
+                {
+                    var Response = db.Ingredients.Find(Ingredientid);
+                    return Handler.HandleGetResponse(Response);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Handler.HandleException(ex, Ingredientid);
+            }
         }
 
-        // POST api/values
+        // POST
         [HttpPost]
-        public void Post([FromBody]string value)
+        public IActionResult Post([FromBody]Ingredients Ingredient)
         {
+            var Handler = new ApiHelper();
+
+            try
+            {
+                using (HouseFoodContext db = new HouseFoodContext())
+                {
+                    var Response = db.Ingredients.Add(Ingredient).Entity;
+                    db.SaveChanges();
+                    return Handler.HandlePostResponse(Response);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Handler.HandleException(ex, Ingredient);
+            }
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        // PUT
+        [HttpPut("{Ingredientid}")]
+        public IActionResult Put(int Ingredientid, [FromBody]Ingredients Ingredient)
         {
+            var Handler = new ApiHelper();
+
+            try
+            {
+                using (HouseFoodContext db = new HouseFoodContext())
+                {
+                    Ingredient.Ingredientid = Ingredientid;
+                    var Response = db.Ingredients.Update(Ingredient).Entity;
+                    db.SaveChanges();
+                    return Handler.HandlePutResponse(Response);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Handler.HandleException(ex, Ingredientid, Ingredient);
+            }
         }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // DELETE
+        [HttpDelete("{Ingredientid}")]
+        public IActionResult Delete(int Ingredientid)
         {
+            var Handler = new ApiHelper();
+
+            try
+            {
+                using (HouseFoodContext db = new HouseFoodContext())
+                {
+                    if (db.Ingredients.Where(i => i.Ingredientid == Ingredientid).Count() > 0)
+                    {
+                        var Response = db.Ingredients.Remove(db.Ingredients.Find(Ingredientid)).Entity;
+                        db.SaveChanges();
+                        return Handler.HandleDeleteResponse(Response);
+                    } 
+                    return NotFound("No item found to delete");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Handler.HandleException(ex, Ingredientid);
+            }
         }
     }
 }
