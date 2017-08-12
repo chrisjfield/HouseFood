@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using HouseMoneyAPI.Model;
 using HouseFoodAPI.Helpers;
+using HouseFoodAPI.Validation;
 
 namespace HouseMoneyAPI.Controllers
 {
@@ -77,9 +78,12 @@ namespace HouseMoneyAPI.Controllers
         public IActionResult Put(int Ingredientid, [FromBody]Ingredients Ingredient)
         {
             var Handler = new ApiHelper();
+            var Validation = new IngredientsValidation();
 
             try
             {
+                Validation.IngredientShouldExist(Ingredientid);
+
                 using (HouseFoodContext db = new HouseFoodContext())
                 {
                     Ingredient.Ingredientid = Ingredientid;
@@ -99,18 +103,17 @@ namespace HouseMoneyAPI.Controllers
         public IActionResult Delete(int Ingredientid)
         {
             var Handler = new ApiHelper();
+            var Validation = new IngredientsValidation();
 
             try
             {
-                using (HouseFoodContext db = new HouseFoodContext())
+                Validation.IngredientShouldExist(Ingredientid);
+
+                using (HouseFoodContext db = new HouseFoodContext()) 
                 {
-                    if (db.Ingredients.Where(i => i.Ingredientid == Ingredientid).Count() > 0)
-                    {
-                        var Response = db.Ingredients.Remove(db.Ingredients.Find(Ingredientid)).Entity;
-                        db.SaveChanges();
-                        return Handler.HandleDeleteResponse(Response);
-                    } 
-                    return NotFound("No item found to delete");
+                    var Response = db.Ingredients.Remove(db.Ingredients.Find(Ingredientid)).Entity;
+                    db.SaveChanges();
+                    return Handler.HandleDeleteResponse(Response);
                 }
             }
             catch (Exception ex)
