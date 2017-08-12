@@ -1,15 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using System.Runtime.InteropServices;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using HouseMoneyAPI.Model;
-using HouseFoodAPI.Helpers;
 
 namespace HouseFoodAPI.Helpers
 {
