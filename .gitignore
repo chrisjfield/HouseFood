@@ -2,8 +2,12 @@
 
 # production
 /Server/bin
+/Server/bin/Debug/
+/Server/bin/Release/
 
 # misc
 /Server/HouseFoodAPI.csproj.user
 /Server/*.user
-/Server/obj/Debug
+/Server/obj/
+obj
+bin
