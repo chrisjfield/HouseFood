@@ -1,9 +1,0 @@
-D:\Documents HDD\Repositories\HouseFood\Server\bin\Debug\netcoreapp1.1\HouseFoodAPI.deps.json
-D:\Documents HDD\Repositories\HouseFood\Server\bin\Debug\netcoreapp1.1\HouseFoodAPI.runtimeconfig.json
-D:\Documents HDD\Repositories\HouseFood\Server\bin\Debug\netcoreapp1.1\HouseFoodAPI.runtimeconfig.dev.json
-D:\Documents HDD\Repositories\HouseFood\Server\bin\Debug\netcoreapp1.1\HouseFoodAPI.dll
-D:\Documents HDD\Repositories\HouseFood\Server\bin\Debug\netcoreapp1.1\HouseFoodAPI.pdb
-D:\Documents HDD\Repositories\HouseFood\Server\obj\Debug\netcoreapp1.1\HouseFoodAPI.csprojResolveAssemblyReference.cache
-D:\Documents HDD\Repositories\HouseFood\Server\obj\Debug\netcoreapp1.1\HouseFoodAPI.AssemblyInfo.cs
-D:\Documents HDD\Repositories\HouseFood\Server\obj\Debug\netcoreapp1.1\HouseFoodAPI.dll
-D:\Documents HDD\Repositories\HouseFood\Server\obj\Debug\netcoreapp1.1\HouseFoodAPI.pdb
