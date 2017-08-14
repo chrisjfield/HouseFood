@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 
-namespace HouseMoneyAPI
+namespace HouseFoodAPI
 {
     public class Startup
     {

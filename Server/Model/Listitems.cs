@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HouseMoneyAPI.Model
+namespace HouseFoodAPI.Model
 {
     public partial class Listitems
     {
+        public int Listitemid { get; set; }
         public int Listid { get; set; }
         public int Ingredientid { get; set; }
         public int Amount { get; set; }

@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
-using HouseMoneyAPI.Model;
+using HouseFoodAPI.Model;
 
-namespace HouseMoneyAPI
+namespace HouseFoodAPI
 {
     public partial class HouseFoodContext : DbContext
     {
@@ -47,16 +47,18 @@ namespace HouseMoneyAPI
 
             modelBuilder.Entity<Groupingredients>(entity =>
             {
-                entity.HasKey(e => new { e.Groupid, e.Ingredientid })
-                    .HasName("PK__GROUPING__02DFB36B3E4188C1");
+                entity.HasKey(e => e.Groupingredientid)
+                    .HasName("PK__GROUPING__691449B485C5D8EE");
 
                 entity.ToTable("GROUPINGREDIENTS");
+
+                entity.Property(e => e.Groupingredientid).HasColumnName("GROUPINGREDIENTID");
+
+                entity.Property(e => e.Amount).HasColumnName("AMOUNT");
 
                 entity.Property(e => e.Groupid).HasColumnName("GROUPID");
 
                 entity.Property(e => e.Ingredientid).HasColumnName("INGREDIENTID");
-
-                entity.Property(e => e.Amount).HasColumnName("AMOUNT");
 
                 entity.HasOne(d => d.Group)
                     .WithMany(p => p.Groupingredients)
@@ -108,20 +110,22 @@ namespace HouseMoneyAPI
 
             modelBuilder.Entity<Listitems>(entity =>
             {
-                entity.HasKey(e => new { e.Listid, e.Ingredientid })
-                    .HasName("PK__LISTITEM__98DBF5A6F018DF0A");
+                entity.HasKey(e => e.Listitemid)
+                    .HasName("PK__LISTITEM__66B6E84C0ADA3594");
 
                 entity.ToTable("LISTITEMS");
 
-                entity.Property(e => e.Listid).HasColumnName("LISTID");
-
-                entity.Property(e => e.Ingredientid).HasColumnName("INGREDIENTID");
+                entity.Property(e => e.Listitemid).HasColumnName("LISTITEMID");
 
                 entity.Property(e => e.Amount).HasColumnName("AMOUNT");
 
                 entity.Property(e => e.Complete)
                     .HasColumnName("COMPLETE")
                     .HasDefaultValueSql("0");
+
+                entity.Property(e => e.Ingredientid).HasColumnName("INGREDIENTID");
+
+                entity.Property(e => e.Listid).HasColumnName("LISTID");
 
                 entity.HasOne(d => d.Ingredient)
                     .WithMany(p => p.Listitems)
@@ -165,16 +169,18 @@ namespace HouseMoneyAPI
 
             modelBuilder.Entity<Mealingredients>(entity =>
             {
-                entity.HasKey(e => new { e.Mealid, e.Ingredientid })
-                    .HasName("PK__MEALINGR__69CF20A984636528");
+                entity.HasKey(e => e.Mealingredientid)
+                    .HasName("PK__MEALINGR__D74DD616FFC45DE6");
 
                 entity.ToTable("MEALINGREDIENTS");
 
-                entity.Property(e => e.Mealid).HasColumnName("MEALID");
+                entity.Property(e => e.Mealingredientid).HasColumnName("MEALINGREDIENTID");
+
+                entity.Property(e => e.Amount).HasColumnName("AMOUNT");
 
                 entity.Property(e => e.Ingredientid).HasColumnName("INGREDIENTID");
 
-                entity.Property(e => e.Amount).HasColumnName("AMOUNT");
+                entity.Property(e => e.Mealid).HasColumnName("MEALID");
 
                 entity.HasOne(d => d.Ingredient)
                     .WithMany(p => p.Mealingredients)
@@ -211,16 +217,19 @@ namespace HouseMoneyAPI
 
             modelBuilder.Entity<People>(entity =>
             {
-                entity.HasKey(e => new { e.Date, e.Person })
-                    .HasName("PK__PEOPLE__F795C913B4A8DBA3");
+                entity.HasKey(e => e.Personid)
+                    .HasName("PK__PEOPLE__0986239E96BD4D31");
 
                 entity.ToTable("PEOPLE");
+
+                entity.Property(e => e.Personid).HasColumnName("PERSONID");
 
                 entity.Property(e => e.Date)
                     .HasColumnName("DATE")
                     .HasColumnType("date");
 
                 entity.Property(e => e.Person)
+                    .IsRequired()
                     .HasColumnName("PERSON")
                     .HasMaxLength(100);
 

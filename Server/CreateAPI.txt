@@ -5,7 +5,7 @@ dotnet add package Microsoft.EntityFrameworkCore.SqlServer.Design
 dotnet restore
 dotnet ef -h
 dotnet ef dbcontext scaffold "server={server}; Database={Database}; User Id={ID}; Pass
-word={Password}; timeout=30" Microsoft.EntityFrameworkCore.SqlServer -o Model
+word={Password}; timeout=30" Microsoft.EntityFrameworkCore.SqlServer -o Model -f
 
 dotnet run
 

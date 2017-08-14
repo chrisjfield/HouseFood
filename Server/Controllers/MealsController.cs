@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using HouseMoneyAPI.Model;
+using HouseFoodAPI.Model;
 using HouseFoodAPI.Helpers;
 using HouseFoodAPI.Validation;
 
-namespace HouseMoneyAPI.Controllers
+namespace HouseFoodAPI.Controllers
 {
     [Route("api/[controller]")]
     public class MealsController : Controller

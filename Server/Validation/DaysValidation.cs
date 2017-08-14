@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using HouseMoneyAPI;
+using HouseFoodAPI;
 
 namespace HouseFoodAPI.Validation
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HouseMoneyAPI.Model
+namespace HouseFoodAPI.Model
 {
     public partial class Meals
     {
