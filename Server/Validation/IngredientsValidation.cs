@@ -16,7 +16,7 @@ namespace HouseFoodAPI.Validation
         {
             if (_context.Ingredients.Where(i => i.Ingredientid == Ingredientid).Count() == 0)
             {
-                throw new Exception("Ingredient " + Ingredientid.ToString() + " does not exists");
+                throw new Exception(message: $"Ingredient {Ingredientid.ToString()} does not exists");
             }
         }
     }

@@ -16,7 +16,7 @@ namespace HouseFoodAPI.Validation
         {
             if (_context.Days.Where(i => i.Date == Date).Count() == 0)
             {
-                throw new Exception("Ingredient " + Date.ToString() + " does not exists");
+                throw new Exception(message: $"Date {Date.ToString()} does not exists");
             }
         }
     }

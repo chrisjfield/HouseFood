@@ -15,7 +15,7 @@ namespace HouseFoodAPI.Controllers
         public GroupsController(HouseFoodContext context)
         {
             _context = context;
-            Validation = new GroupsValidation(_context);
+            Validation = new GroupsValidation(context: _context);
             Handler = new ApiHelper();
         }
         private HouseFoodContext _context;

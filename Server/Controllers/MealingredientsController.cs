@@ -10,24 +10,24 @@ using HouseFoodAPI.Validation;
 namespace HouseFoodAPI.Controllers
 {
     [Route("api/[controller]")]
-    public class MealsController : Controller
+    public class MealingredientsController : Controller
     {
-        public MealsController(HouseFoodContext context)
+        public MealingredientsController(HouseFoodContext context)
         {
             _context = context;
-            Validation = new MealsValidation(context: _context);
+            Validation = new MealingredientsValidation(context: _context);
             Handler = new ApiHelper();
         }
         private HouseFoodContext _context;
         private ApiHelper Handler;
-        private MealsValidation Validation;
+        private MealingredientsValidation Validation;
         // GET ALL
         [HttpGet]
         public IActionResult Get()
         {
             try
             {
-                var Response = _context.Meals.ToList();
+                var Response = _context.Mealingredients.ToList();
                 return Handler.HandleGetResponse(Response);
             }
             catch (Exception ex)
@@ -37,70 +37,70 @@ namespace HouseFoodAPI.Controllers
         }
 
         // GET
-        [HttpGet("{Mealid}")]
-        public IActionResult Get(int Mealid)
+        [HttpGet("{Mealingredientid}")]
+        public IActionResult Get(int Mealingredientid)
         {
             try
             {
-                var Response = _context.Meals.Find(Mealid);
+                var Response = _context.Mealingredients.Find(Mealingredientid);
                 return Handler.HandleGetResponse(Response);
             }
             catch (Exception ex)
             {
-                return Handler.HandleException(ex, Mealid);
+                return Handler.HandleException(ex, Mealingredientid);
             }
         }
 
         // POST
         [HttpPost]
-        public IActionResult Post([FromBody]Meals Meal)
+        public IActionResult Post([FromBody]Mealingredients Mealingredient)
         {
             try
             {
-                var Response = _context.Meals.Add(Meal).Entity;
+                var Response = _context.Mealingredients.Add(Mealingredient).Entity;
                 _context.SaveChanges();
                 return Handler.HandlePostResponse(Response);
             }
             catch (Exception ex)
             {
-                return Handler.HandleException(ex, Meal);
+                return Handler.HandleException(ex, Mealingredient);
             }
         }
 
         // PUT
-        [HttpPut("{Mealid}")]
-        public IActionResult Put(int Mealid, [FromBody]Meals Meal)
+        [HttpPut("{Mealingredientid}")]
+        public IActionResult Put(int Mealingredientid, [FromBody]Mealingredients Mealingredient)
         {
             try
             {
-                Validation.MealShouldExist(Mealid);
+                Validation.MealIngredientShouldExist(Mealingredientid);
 
-                Meal.Mealid = Mealid;
-                var Response = _context.Meals.Update(Meal).Entity;
+                Mealingredient.Mealingredientid = Mealingredientid;
+                var Response = _context.Mealingredients.Update(Mealingredient).Entity;
                 _context.SaveChanges();
                 return Handler.HandlePutResponse(Response);
             }
             catch (Exception ex)
             {
-                return Handler.HandleException(ex, Mealid, Meal);
+                return Handler.HandleException(ex, Mealingredientid, Mealingredient);
             }
         }
 
         // DELETE
-        [HttpDelete("{Mealid}")]
-        public IActionResult Delete(int Mealid)
+        [HttpDelete("{Mealingredientid}")]
+        public IActionResult Delete(int Mealingredientid)
         {
             try
             {
-                Validation.MealShouldExist(Mealid);
+                Validation.MealIngredientShouldExist(Mealingredientid);
 
-                var Response = _context.Meals.Remove(_context.Meals.Find(Mealid)).Entity;
+                var Response = _context.Mealingredients.Remove(_context.Mealingredients.Find(Mealingredientid)).Entity;
                 _context.SaveChanges();
                 return Handler.HandleDeleteResponse(Response);
             }
             catch (Exception ex)
             {
-                return Handler.HandleException(ex, Mealid);
+                return Handler.HandleException(ex, Mealingredientid);
             }
         }
     }

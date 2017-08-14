@@ -10,24 +10,24 @@ using HouseFoodAPI.Validation;
 namespace HouseFoodAPI.Controllers
 {
     [Route("api/[controller]")]
-    public class MealsController : Controller
+    public class ListitemsController : Controller
     {
-        public MealsController(HouseFoodContext context)
+        public ListitemsController(HouseFoodContext context)
         {
             _context = context;
-            Validation = new MealsValidation(context: _context);
+            Validation = new ListitemsValidation(context: _context);
             Handler = new ApiHelper();
         }
         private HouseFoodContext _context;
         private ApiHelper Handler;
-        private MealsValidation Validation;
+        private ListitemsValidation Validation;
         // GET ALL
         [HttpGet]
         public IActionResult Get()
         {
             try
             {
-                var Response = _context.Meals.ToList();
+                var Response = _context.Listitems.ToList();
                 return Handler.HandleGetResponse(Response);
             }
             catch (Exception ex)
@@ -37,70 +37,70 @@ namespace HouseFoodAPI.Controllers
         }
 
         // GET
-        [HttpGet("{Mealid}")]
-        public IActionResult Get(int Mealid)
+        [HttpGet("{Listitemid}")]
+        public IActionResult Get(int Listitemid)
         {
             try
             {
-                var Response = _context.Meals.Find(Mealid);
+                var Response = _context.Listitems.Find(Listitemid);
                 return Handler.HandleGetResponse(Response);
             }
             catch (Exception ex)
             {
-                return Handler.HandleException(ex, Mealid);
+                return Handler.HandleException(ex, Listitemid);
             }
         }
 
         // POST
         [HttpPost]
-        public IActionResult Post([FromBody]Meals Meal)
+        public IActionResult Post([FromBody]Listitems Listitem)
         {
             try
             {
-                var Response = _context.Meals.Add(Meal).Entity;
+                var Response = _context.Listitems.Add(Listitem).Entity;
                 _context.SaveChanges();
                 return Handler.HandlePostResponse(Response);
             }
             catch (Exception ex)
             {
-                return Handler.HandleException(ex, Meal);
+                return Handler.HandleException(ex, Listitem);
             }
         }
 
         // PUT
-        [HttpPut("{Mealid}")]
-        public IActionResult Put(int Mealid, [FromBody]Meals Meal)
+        [HttpPut("{Listitemid}")]
+        public IActionResult Put(int Listitemid, [FromBody]Listitems Listitem)
         {
             try
             {
-                Validation.MealShouldExist(Mealid);
+                Validation.ListItemShouldExist(Listitemid);
 
-                Meal.Mealid = Mealid;
-                var Response = _context.Meals.Update(Meal).Entity;
+                Listitem.Listitemid = Listitemid;
+                var Response = _context.Listitems.Update(Listitem).Entity;
                 _context.SaveChanges();
                 return Handler.HandlePutResponse(Response);
             }
             catch (Exception ex)
             {
-                return Handler.HandleException(ex, Mealid, Meal);
+                return Handler.HandleException(ex, Listitemid, Listitem);
             }
         }
 
         // DELETE
-        [HttpDelete("{Mealid}")]
-        public IActionResult Delete(int Mealid)
+        [HttpDelete("{Listitemid}")]
+        public IActionResult Delete(int Listitemid)
         {
             try
             {
-                Validation.MealShouldExist(Mealid);
+                Validation.ListItemShouldExist(Listitemid);
 
-                var Response = _context.Meals.Remove(_context.Meals.Find(Mealid)).Entity;
+                var Response = _context.Listitems.Remove(_context.Listitems.Find(Listitemid)).Entity;
                 _context.SaveChanges();
                 return Handler.HandleDeleteResponse(Response);
             }
             catch (Exception ex)
             {
-                return Handler.HandleException(ex, Mealid);
+                return Handler.HandleException(ex, Listitemid);
             }
         }
     }

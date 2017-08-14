@@ -21,7 +21,7 @@ namespace HouseFoodAPI.Helpers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error has occured. Please contact a system admin");
             }
-            return Created("Ingredients" ,Values);
+            return Created("Ingredients", Values);
         }
 
         public IActionResult HandlePutResponse<T>(T Values)
@@ -42,21 +42,15 @@ namespace HouseFoodAPI.Helpers
             return NoContent();
         }
 
-        public IActionResult HandleException(Exception Ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, Ex.Message);
-        }
+        public IActionResult HandleException(Exception Ex) =>
+            StatusCode(StatusCodes.Status500InternalServerError, Ex.Message);
 
-        public IActionResult HandleException<T>(Exception Ex, T RequestParameter)
-        {
-            // use this to log the request parameter as well as the error
-            return StatusCode(StatusCodes.Status500InternalServerError, Ex.Message);
-        }
-
-        public IActionResult HandleException<T, R>(Exception Ex, T RequestParameter, R RequestBody)
-        {
+        public IActionResult HandleException<T>(Exception Ex, T RequestParameter) =>
             // use this to log the request parameter and body as well as the error
-            return StatusCode(StatusCodes.Status500InternalServerError, Ex.Message);
-        }
+            StatusCode(StatusCodes.Status500InternalServerError, Ex.Message);
+
+        public IActionResult HandleException<T, R>(Exception Ex, T RequestParameter, R RequestBody) =>
+            // use this to log the request parameter and body as well as the error
+            StatusCode(StatusCodes.Status500InternalServerError, Ex.Message);
     }
 }

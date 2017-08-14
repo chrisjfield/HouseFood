@@ -15,7 +15,7 @@ namespace HouseFoodAPI.Controllers
         public DaysController(HouseFoodContext context)
         {
             _context = context;
-            Validation = new DaysValidation(_context);
+            Validation = new DaysValidation(context: _context);
             Handler = new ApiHelper();
         }
         private HouseFoodContext _context;
