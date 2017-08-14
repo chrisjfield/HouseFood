@@ -12,19 +12,23 @@ namespace HouseMoneyAPI.Controllers
     [Route("api/[controller]")]
     public class IngredientsController : Controller
     {
+        public IngredientsController(HouseFoodContext context)
+        {
+            _context = context;
+            Validation = new IngredientsValidation(_context);
+            Handler = new ApiHelper();
+        }
+        private HouseFoodContext _context;
+        private ApiHelper Handler;
+        private IngredientsValidation Validation;
         // GET ALL
         [HttpGet]
         public IActionResult Get()
         {
-            var Handler = new ApiHelper();
-
             try
             {
-                using (HouseFoodContext db = new HouseFoodContext())
-                {
-                    var Response = db.Ingredients.ToList();
-                    return Handler.HandleGetResponse(Response);
-                }
+                var Response = _context.Ingredients.ToList();
+                return Handler.HandleGetResponse(Response);
             }
             catch (Exception ex)
             {
@@ -36,15 +40,10 @@ namespace HouseMoneyAPI.Controllers
         [HttpGet("{Ingredientid}")]
         public IActionResult Get(int Ingredientid)
         {
-            var Handler = new ApiHelper();
-
             try
             {
-                using (HouseFoodContext db = new HouseFoodContext())
-                {
-                    var Response = db.Ingredients.Find(Ingredientid);
-                    return Handler.HandleGetResponse(Response);
-                }
+                var Response = _context.Ingredients.Find(Ingredientid);
+                return Handler.HandleGetResponse(Response);
             }
             catch (Exception ex)
             {
@@ -56,16 +55,11 @@ namespace HouseMoneyAPI.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]Ingredients Ingredient)
         {
-            var Handler = new ApiHelper();
-
             try
             {
-                using (HouseFoodContext db = new HouseFoodContext())
-                {
-                    var Response = db.Ingredients.Add(Ingredient).Entity;
-                    db.SaveChanges();
-                    return Handler.HandlePostResponse(Response);
-                }
+                var Response = _context.Ingredients.Add(Ingredient).Entity;
+                _context.SaveChanges();
+                return Handler.HandlePostResponse(Response);
             }
             catch (Exception ex)
             {
@@ -77,20 +71,14 @@ namespace HouseMoneyAPI.Controllers
         [HttpPut("{Ingredientid}")]
         public IActionResult Put(int Ingredientid, [FromBody]Ingredients Ingredient)
         {
-            var Handler = new ApiHelper();
-            var Validation = new IngredientsValidation();
-
             try
             {
                 Validation.IngredientShouldExist(Ingredientid);
 
-                using (HouseFoodContext db = new HouseFoodContext())
-                {
-                    Ingredient.Ingredientid = Ingredientid;
-                    var Response = db.Ingredients.Update(Ingredient).Entity;
-                    db.SaveChanges();
-                    return Handler.HandlePutResponse(Response);
-                }
+                Ingredient.Ingredientid = Ingredientid;
+                var Response = _context.Ingredients.Update(Ingredient).Entity;
+                _context.SaveChanges();
+                return Handler.HandlePutResponse(Response);
             }
             catch (Exception ex)
             {
@@ -102,19 +90,13 @@ namespace HouseMoneyAPI.Controllers
         [HttpDelete("{Ingredientid}")]
         public IActionResult Delete(int Ingredientid)
         {
-            var Handler = new ApiHelper();
-            var Validation = new IngredientsValidation();
-
             try
             {
                 Validation.IngredientShouldExist(Ingredientid);
 
-                using (HouseFoodContext db = new HouseFoodContext()) 
-                {
-                    var Response = db.Ingredients.Remove(db.Ingredients.Find(Ingredientid)).Entity;
-                    db.SaveChanges();
-                    return Handler.HandleDeleteResponse(Response);
-                }
+                var Response = _context.Ingredients.Remove(_context.Ingredients.Find(Ingredientid)).Entity;
+                _context.SaveChanges();
+                return Handler.HandleDeleteResponse(Response);
             }
             catch (Exception ex)
             {

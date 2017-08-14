@@ -8,6 +8,9 @@ namespace HouseMoneyAPI
 {
     public partial class HouseFoodContext : DbContext
     {
+        public HouseFoodContext(DbContextOptions<HouseFoodContext> options) : base(options)
+        {
+        }
         public virtual DbSet<Days> Days { get; set; }
         public virtual DbSet<Groupingredients> Groupingredients { get; set; }
         public virtual DbSet<Groups> Groups { get; set; }
@@ -17,14 +20,6 @@ namespace HouseMoneyAPI
         public virtual DbSet<Mealingredients> Mealingredients { get; set; }
         public virtual DbSet<Meals> Meals { get; set; }
         public virtual DbSet<People> People { get; set; }
-
-        public IConfigurationRoot Configuration { get; }
-
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(@"server=EDLAPTOP\EDLAPTOPSQL; Database=HouseFood_Dev; User Id=chris; Password=Kilburn1; timeout=30");
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
