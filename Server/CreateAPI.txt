@@ -1,4 +1,4 @@
-dotnet new webapi -n HouseMoneyAPI
+dotnet new webapi -n {name of app}
 dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 dotnet add package --version 1.1.0-msbuild3-final Microsoft.EntityFrameworkCore.Tools
 dotnet add package Microsoft.EntityFrameworkCore.SqlServer.Design
@@ -9,4 +9,4 @@ word={Password}; timeout=30" Microsoft.EntityFrameworkCore.SqlServer -o Model
 
 dotnet run
 
-dotnet publish -c Release
+dotnet publish -c Release -o {location}
