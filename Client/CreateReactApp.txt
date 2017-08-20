@@ -4,3 +4,5 @@ create-react-app {folderName} --scripts-version=react-scripts-ts
 cd {folderName}/
 npm start
 
+/*For Production*/
+npm run build
