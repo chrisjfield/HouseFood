@@ -4,5 +4,44 @@ create-react-app {folderName} --scripts-version=react-scripts-ts
 cd {folderName}/
 npm start
 
+/*Packages*/
+npm install tslint --save-dev
+npm install tslint-react --save-dev
+npm install tslint-config-airbnb --save-dev
+npm install react-redux --save
+npm install @types/react-redux --save
+npm install react-router --save
+npm install @types/react-router-dom --save
+npm install react-router-dom --save
+npm install react-router-redux@next --save
+npm install redux-thunk --save
+npm install redux-promise-middleware --save
+npm install @types/redux-promise-middleware --save
+npm install redux-persist --save
+npm install redux-logger --save
+npm install history --save
+npm install material-ui --save
+npm install @types/material-ui --save
+npm install @types/redux-logger --save
+npm install @types/react-router-redux --save
+npm install typescript --save
+
+/*tsconfig*/
+set the following:
+"strictNullChecks": false, - this is because i can't make create store play nicely with this setting on!
+
+/*tslint*/
+{
+  "extends": "tslint-config-airbnb",
+  "rules": {
+    "max-line-length": [true, 140], // Because we dont work in consoles, splitting somtimes makes its harder to read the code, should be down to the dev to decide when to split over multiple lines (within reason, hence 140 limit)
+    "ter-indent": "4", // Because 2 spaces is not enough to quickly visualise nested code
+    "import-name": false, // Because we are using a module/index.js that exports module/Component pattern, this rule shouldnt apply as its looking at folder names and not file names and throwing a lint error
+    "function-name": false, // Because react components should start with a capital
+    "variable-name": false // Because react components should start with a capital
+    //"align": [true, "parameters", "statements"]
+  }
+}
+
 /*For Production*/
 npm run build
