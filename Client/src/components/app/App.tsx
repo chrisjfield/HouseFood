@@ -1,18 +1,15 @@
 import * as React from 'react';
 
-class App extends React.Component {
-    render() {
-        return (
-      <div className="App">
-        <div className="App-header">
-          <h2>Welcome to React hoes</h2>
+import Routes from '../routes';
+import Header from '../header';
+
+function App() {
+    return (
+        <div>
+            <Header/>
+            <Routes/>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
-      </div>
-        );
-    }
+    );
 }
 
 export default App;

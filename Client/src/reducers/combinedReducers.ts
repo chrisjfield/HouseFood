@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
 
 // import the reducers from in individual components
-import shoppingListReducer from './shoppingList';
+import listsReducer from './lists';
 
 // combine all the reducers for export
 const combinedReducers = combineReducers({
-    shoppingListReducer,
+    listsReducer,
 });
 
 export default combinedReducers;
