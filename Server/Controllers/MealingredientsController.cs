@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using HouseFoodAPI.Model;
 using HouseFoodAPI.Helpers;
 using HouseFoodAPI.Validation;
+using Microsoft.AspNetCore.Cors;
 
 namespace HouseFoodAPI.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors("AllowAllHeaders")]
     public class MealingredientsController : Controller
     {
         public MealingredientsController(HouseFoodContext context)

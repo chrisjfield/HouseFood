@@ -33,6 +33,13 @@ namespace HouseFoodAPI
             services.AddDbContext<HouseFoodContext>(
                options => options.UseSqlServer(
                    Configuration.GetConnectionString("DefaultConnection")));
+            services.AddCors(options => {
+                options.AddPolicy("AllowAllHeaders", builder => {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,7 +50,7 @@ namespace HouseFoodAPI
 
             app.UseMvc();
 
-            app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+            app.UseCors("AllowAllHeaders");
         }
     }
 }

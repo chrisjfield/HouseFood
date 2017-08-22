@@ -1,7 +1,7 @@
 import baseURL from '../appConfig';
 
 class APIHelper {
-    static apiCall(method : string, endpoint : string, body : object, urlParams : string) {
+    static apiCall(method : string, endpoint : string, body? : object, urlParams? : string) {
         const customheaders = {
             'Content-Type': 'application/json;charset=UTF-8',
         };
@@ -34,4 +34,4 @@ class APIHelper {
     }
 }
   
-export default APIHelper.apiCall;
+export default APIHelper;

@@ -10,3 +10,29 @@ word={Password}; timeout=30" Microsoft.EntityFrameworkCore.SqlServer -o Model -f
 dotnet run
 
 dotnet publish -c Release -o {location}
+
+/*For cors*/
+in startup:
+public void ConfigureServices(IServiceCollection services)
+        {
+            ...
+            services.AddCors(options => {
+                options.AddPolicy("AllowAllHeaders", builder => {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();
+                });
+            });
+            ...
+        }
+
+public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        {
+            ...
+            app.UseCors("AllowAllHeaders");
+            ...
+        }
+
+in controllers:
+using Microsoft.AspNetCore.Cors;
+[EnableCors("AllowAllHeaders")]
