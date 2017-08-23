@@ -20,16 +20,16 @@ class APIHelper {
         })
         .then((response : any) => APIHelper.checkStatus(response))
         .catch((error : any) => {
-            console.log(error);
             throw(error);
         });
     }
   
     static checkStatus(response : any) {
         if (response.ok) {
-            return Promise.resolve(response);
+            return response.json();
         } else {
-            return Promise.reject(new Error(response.statusText)); 
+            const error = new Error(response.statusText);
+            throw error;
         }
     }
 }

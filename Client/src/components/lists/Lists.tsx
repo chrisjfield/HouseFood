@@ -2,34 +2,136 @@ import * as React from 'react';
 
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
+import Moment from 'react-moment';
 
 import { List } from '../../interfaces/listsInterfaces';
-import { getShoppingLists } from '../../actions/lists/listActions';
+import { 
+    getLists,
+    completeList, 
+} from '../../actions/lists/listActions';
+
+import {
+    Card, 
+    CardActions,  
+    CardText,
+    CardTitle,
+} from 'material-ui/Card';
+import IconButton from 'material-ui/IconButton';
+import ActionDone from 'material-ui/svg-icons/action/done';
+import ActionView from 'material-ui/svg-icons/action/visibility';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 
 interface ListsProps {
-    shoppingList: List[];
+    lists: List[];
+    loading: boolean;
+    error: boolean;
+    updating: boolean;
     dispatch: Dispatch<{}>;
     history: any;
 }
 
-class Lists extends React.Component<ListsProps, any> {
+interface ListsState {
+    activeList: List;
+    completeDialogOpen: boolean;
+}
+
+class Lists extends React.Component<ListsProps, ListsState> {
     constructor(props: any) {
         super();
 
         this.state = {
-            bookmarked: false,
+            completeDialogOpen: false,
+            activeList : undefined, 
         };
     }
 
     componentWillMount() {
-        this.props.dispatch(getShoppingLists());
+        this.props.dispatch(getLists());
+    }
+ 
+    handleCompleteDialogOpen = (list : List) => {
+        this.setState({ 
+            completeDialogOpen: true, 
+            activeList : list,
+        });
+    }
+
+    handleCompleteDialogClose = () => {
+        this.setState({ 
+            completeDialogOpen: false,
+            activeList : undefined, 
+        });
+    }
+
+    handleCompleteDialogComplete = () => {
+        this.props.dispatch(completeList(this.state.activeList));
+        this.setState({ 
+            completeDialogOpen: false,
+            activeList : undefined, 
+        });
+    }
+
+    createlist = (list: List) => {
+        const completed = list.complete ? 'Complete' : 'Active';
+        const actions = [
+            <FlatButton
+              label="Cancel"
+              primary={true}
+              onClick={this.handleCompleteDialogClose}
+            />,
+            <FlatButton
+              label="Complete"
+              primary={true}
+              keyboardFocused={true}
+              onClick={this.handleCompleteDialogComplete}
+            />,
+        ];
+        
+        return (
+            <Card key={list.listid}>
+                <CardTitle title={list.name + ' - ' + completed}/>} 
+                <CardText>
+                    <label>Created Date: </label><Moment format="DD/MM/YYYY" date={list.datecreated}/><br/>
+                    <label>Completed Date: </label>
+                    {list.datecompleted ? <Moment format="DD/MM/YYYY" date={list.datecompleted}/> : undefined}
+                </CardText>
+                <CardActions>
+                    <IconButton 
+                        tooltip="View Details" 
+                    >
+                        <ActionView/>
+                    </IconButton>
+                    <IconButton 
+                        tooltip="Complete" 
+                        disabled={list.complete}
+                        onClick={() => this.handleCompleteDialogOpen(list)}
+                    >
+                        <ActionDone/>
+                    </IconButton>
+                    <Dialog
+                        title="Complete List"
+                        actions={actions}
+                        modal={true}
+                        open={this.state.completeDialogOpen}
+                        onRequestClose={this.handleCompleteDialogClose}
+                    >
+                        Continuing will mark {this.state.activeList ? this.state.activeList.name : ''} as completed.<br/>
+                        After this the list may only be viewed and not edited. 
+                    </Dialog>
+                </CardActions>
+            </Card>
+        );
+    }
+
+    createLists = () => {
+        return this.props.lists ? this.props.lists.map(this.createlist) : undefined;
     }
 
     render() {
-        console.log(this.props);
         return (
             <div>
-                <h1>These are not the Lists you're looking for</h1>
+                {this.createLists()}
             </div>
         );
     }
@@ -38,6 +140,9 @@ class Lists extends React.Component<ListsProps, any> {
 const mapStateToProps = (store : any, props : any) => {
     return {
         lists: store.listsReducer.lists,
+        loading: store.listsReducer.loading,
+        error: store.listsReducer.error,
+        updating: store.listsReducer.updating,
     };
 };
   

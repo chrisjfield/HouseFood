@@ -1,7 +1,7 @@
 export interface List {
-    listId: number;
+    listid: number;
     name: string; 
-    dateCreated: Date;
+    datecreated: Date;
     complete: boolean;
-    dateComplete?: Date;
+    datecompleted?: Date;
 }
