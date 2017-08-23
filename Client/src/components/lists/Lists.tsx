@@ -72,6 +72,11 @@ class Lists extends React.Component<ListsProps, ListsState> {
         });
     }
 
+    handleViewDetails = (listId: number) => {
+        const url: string = '/Lists/' + String(listId);
+        this.props.history.push(url);
+    }
+
     createlist = (list: List) => {
         const completed = list.complete ? 'Complete' : 'Active';
         const actions = [
@@ -99,6 +104,7 @@ class Lists extends React.Component<ListsProps, ListsState> {
                 <CardActions>
                     <IconButton 
                         tooltip="View Details" 
+                        onClick={() => this.handleViewDetails(list.listid)}
                     >
                         <ActionView/>
                     </IconButton>

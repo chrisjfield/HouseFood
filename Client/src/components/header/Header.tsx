@@ -20,7 +20,7 @@ function Header() {
                         <ActionHome />
                     </IconButton>
                 </Link>
-                <ToolbarTitle text="Volunteer Portal" />
+                <ToolbarTitle text="House Food" />
             </ToolbarGroup>
             <ToolbarGroup>
                 <Link to="/Lists">

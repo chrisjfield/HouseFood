@@ -48,10 +48,9 @@ function listsReducer(state: listsReducerState = {
             error: false,
         };
     case COMPLETE_LISTS_SUCCESSFUL:
-        const listid: number = action.payload.listid;
         return {
             ...state,
-            lists: state.lists.map((list: List) => list.listid === listid ? action.payload : list),
+            lists: state.lists.map((list: List) => list.listid === action.payload.listid ? action.payload : list),
             updating: false,
             error: false,
         };
