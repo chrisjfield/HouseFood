@@ -1,7 +1,7 @@
 List Details:
 edit
-tick all
-on all ticked - option to mark as completed
+tick all - DONE
+on all ticked - option to mark as completed - DONE
 
 List page:
 New
