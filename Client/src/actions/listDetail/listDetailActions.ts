@@ -7,6 +7,9 @@ export const GET_LISTDETAILS_FAILURE = 'GET_LISTDETAILS_FAILURE';
 export const CHECK_LISTDETAILS_STARTED = 'CHECK_LISTDETAILS_STARTED';
 export const CHECK_LISTDETAILS_SUCCESSFUL = 'CHECK_LISTDETAILS_SUCCESSFUL';
 export const CHECK_LISTDETAILS_FAILURE = 'CHECK_LISTDETAILS_FAILURE';
+export const CHECK_ALL_LISTDETAILS_STARTED = 'CHECK_ALL_LISTDETAILS_STARTED';
+export const CHECK_ALL_LISTDETAILS_SUCCESSFUL = 'CHECK_ALL_LISTDETAILS_SUCCESSFUL';
+export const CHECK_ALL_LISTDETAILS_FAILURE = 'CHECK_ALL_LISTDETAILS_FAILURE';
 
 export function getListDetails() {
     const request = apiHelper.apiCall(
@@ -87,6 +90,50 @@ function checkListDetailSuccessful(response: ListDetail) {
 function checkListDetailFailure(error: any) {
     return {
         type: CHECK_LISTDETAILS_FAILURE,
+        payload: error,
+    };
+}
+
+export function checkAllListDetail(checked: boolean, listid: number) {
+    const endpoint = 'listitems/bulk/' + String(listid);
+    const checkedToJSON: any = JSON.parse(String(checked));
+
+    const request = apiHelper.apiCall(
+        'PUT',
+        endpoint,
+        checkedToJSON,
+      );
+
+    return (dispatch: Function) => {
+        dispatch(checkAllListDetailStarted());
+        request
+        .then((response: number) =>
+          dispatch(checkAllListDetailSuccessful(checked, listid)),
+        )
+        .catch((error: any) => {
+            console.log(error);
+            dispatch(checkAllListDetailFailure(error));
+        });
+    };
+}
+
+function checkAllListDetailStarted() {
+    return {
+        type: CHECK_ALL_LISTDETAILS_STARTED,
+    };
+}
+
+function checkAllListDetailSuccessful(checked: boolean, listid: number) {
+    return {
+        checked,
+        type: CHECK_ALL_LISTDETAILS_SUCCESSFUL,
+        payload: listid,
+    };
+}
+
+function checkAllListDetailFailure(error: any) {
+    return {
+        type: CHECK_ALL_LISTDETAILS_FAILURE,
         payload: error,
     };
 }

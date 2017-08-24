@@ -7,6 +7,7 @@ using HouseFoodAPI.Model;
 using HouseFoodAPI.Helpers;
 using HouseFoodAPI.Validation;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.EntityFrameworkCore;
 
 namespace HouseFoodAPI.Controllers
 {
@@ -85,6 +86,22 @@ namespace HouseFoodAPI.Controllers
             catch (Exception ex)
             {
                 return Handler.HandleException(ex, Listitemid, Listitem);
+            }
+        }
+
+        [HttpPut("bulk/{Listid}")]
+        public IActionResult BulkCheck(int Listid, [FromBody]bool isChecked)
+        {
+            try
+            {
+
+                var rowsAffected = _context.Database.ExecuteSqlCommand("UPDATE LISTITEMS SET COMPLETE = {0} WHERE LISTID = {1}", isChecked, Listid);
+                _context.SaveChanges();
+                return Handler.HandleBulkCheckResponse(rowsAffected);
+            }
+            catch (Exception ex)
+            {
+                return Handler.HandleException(ex, Listid, isChecked);
             }
         }
 

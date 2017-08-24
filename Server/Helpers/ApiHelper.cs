@@ -33,6 +33,15 @@ namespace HouseFoodAPI.Helpers
             return Ok(Values);
         }
 
+        public IActionResult HandleBulkCheckResponse(int rowsAffected)
+        {
+            if (rowsAffected <= 0)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error has occured. Please contact a system admin");
+            }
+            return Ok(rowsAffected);
+        }
+
         public IActionResult HandleDeleteResponse<T>(T Values)
         {
             if (Values == null)
