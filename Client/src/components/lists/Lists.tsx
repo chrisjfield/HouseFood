@@ -21,6 +21,7 @@ import ActionDone from 'material-ui/svg-icons/action/done';
 import ActionView from 'material-ui/svg-icons/action/visibility';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import Toggle from 'material-ui/Toggle';
 
 interface ListsProps {
     lists: List[];
@@ -34,7 +35,15 @@ interface ListsProps {
 interface ListsState {
     activeList: List;
     completeDialogOpen: boolean;
+    showComplete: boolean;
 }
+
+const styles = {
+    toggle: {
+        maxWidth: 250,
+        padding: '4px',
+    },
+};
 
 class Lists extends React.Component<ListsProps, ListsState> {
     constructor(props: any) {
@@ -43,6 +52,7 @@ class Lists extends React.Component<ListsProps, ListsState> {
         this.state = {
             completeDialogOpen: false,
             activeList : undefined, 
+            showComplete: false,
         };
     }
 
@@ -131,12 +141,29 @@ class Lists extends React.Component<ListsProps, ListsState> {
     }
 
     createLists = () => {
-        return this.props.lists ? this.props.lists.map(this.createlist) : undefined;
+        return this.props.lists ? this.props.lists
+            .filter((list: List) => this.state.showComplete || list.complete === false)
+            .sort((a,b) => {return (a.datecreated > b.datecreated) ? 1 : ((b.datecreated > a.datecreated) ? -1 : 0);})
+            .map(this.createlist) : undefined;
+    }
+
+    setToggle(isInputChecked: boolean) {
+        this.setState({ 
+            showComplete: isInputChecked, 
+        });
     }
 
     render() {
         return (
             <div>
+                <div style={styles.toggle}>
+                <Toggle 
+                    label="Show Completed"
+                    labelPosition="right"
+                    toggled={this.state.showComplete} 
+                    onToggle={(event, isInputChecked) => this.setToggle(isInputChecked)}
+                />
+                </div>
                 {this.createLists()}
             </div>
         );

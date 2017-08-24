@@ -3,6 +3,9 @@ import {
     GET_LISTDETAILS_STARTED,
     GET_LISTDETAILS_SUCCESSFUL,
     GET_LISTDETAILS_FAILURE,
+    CHECK_LISTDETAILS_STARTED,
+    CHECK_LISTDETAILS_SUCCESSFUL,
+    CHECK_LISTDETAILS_FAILURE,
 } from '../../actions/listDetail/listDetailActions';
 
 interface listDetailsReducerState {
@@ -33,6 +36,26 @@ function listDetailsReducer(state: listDetailsReducerState = {
             error: false,
         };
     case GET_LISTDETAILS_FAILURE:
+        return {
+            ...state,
+            loading: false,
+            error: true,
+        };
+    case CHECK_LISTDETAILS_STARTED:
+        return {
+            ...state,
+            loading: true,
+            error: false,
+        };
+    case CHECK_LISTDETAILS_SUCCESSFUL:
+        return {
+            ...state,
+            listDetails:  state.listDetails.map((listDetails: ListDetail) => 
+                listDetails.listitemid === action.payload.listitemid ? action.payload : listDetails),
+            loading: false,
+            error: false,
+        };
+    case CHECK_LISTDETAILS_FAILURE:
         return {
             ...state,
             loading: false,

@@ -1,0 +1,32 @@
+List Details:
+edit
+tick all
+on all ticked - option to mark as completed
+
+List page:
+New
+Show completed - DONE
+order by date - DONE
+
+meals page:
+view
+add - autoselect or add new
+edit
+search (name or category) - autocomplete
+
+Main page:
+View this week/ rolling 7 days
+Click through on day to planner through edit button
+
+Planner page:
+calendar
+add people
+add meals
+auto generate meals - with criteria?
+
+Bootstrap/UI
+Login
+clever pull back of data (not just all - see what it does pull {profiler})
+
+error handling
+loading handling

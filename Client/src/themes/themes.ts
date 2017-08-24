@@ -1,6 +1,6 @@
 import {
-    darkBlack,
     fullBlack,
+    grey300,
     grey500,
     blue900,
   } from 'material-ui/styles/colors';
@@ -11,9 +11,9 @@ const theme = getMuiTheme({
         primary1Color: blue900,
         textColor: fullBlack,
         alternateTextColor: grey500,
-        borderColor: darkBlack,
+        borderColor: grey300,
         pickerHeaderColor: blue900,
-        shadowColor: fullBlack,
+        shadowColor: blue900,
     },
 });
 
