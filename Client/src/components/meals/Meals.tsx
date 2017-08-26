@@ -49,7 +49,7 @@ class Meals extends React.Component<MealsProps, MealsState> {
             : []; 
            
         this.setState({
-            searchTerms: [...categories,...mealNames],
+            searchTerms: [...categories, ...mealNames],
             categories: categories.sort(),
         });
     }
@@ -74,8 +74,9 @@ class Meals extends React.Component<MealsProps, MealsState> {
         const filteredMeals: Meal[] = this.props.meals
             .filter((meal: Meal) => {
                 return meal.category === category 
-                    && ((meal.name.toLowerCase().includes(this.state.searchString) || !this.state.searchString)
-                        || (meal.category.toLowerCase().includes(this.state.searchString) || !this.state.searchString));
+                    && ((meal.name.toLowerCase().includes(this.state.searchString) 
+                            || meal.category.toLowerCase().includes(this.state.searchString)) 
+                        || !this.state.searchString);
             })
             .sort((a,b) => {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);});
         return (
