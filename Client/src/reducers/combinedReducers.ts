@@ -6,6 +6,8 @@ import listDetailsReducer from './listDetails';
 import ingredientsReducer from './ingredients';
 import mealReducer from './meals';
 import mealDetailsReducer from './mealDetails';
+import dayReducer from './days';
+import peopleReducer from './people';
 
 // combine all the reducers for export
 const combinedReducers = combineReducers({
@@ -14,6 +16,8 @@ const combinedReducers = combineReducers({
     ingredientsReducer,
     mealReducer,
     mealDetailsReducer,
+    dayReducer,
+    peopleReducer,
 });
 
 export default combinedReducers;
