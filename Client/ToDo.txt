@@ -1,16 +1,10 @@
 List Details:
 edit (include add/delete)
-tick all - DONE
-on all ticked - option to mark as completed - DONE
 
 List page:
 New (include calculate for date range)
-Show completed - DONE
-order by date - DONE
 
 meals page:
-view
-search (name or category) - autocomplete
 add - autoselect ingredients or add new
 edit
 

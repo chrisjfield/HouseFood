@@ -12,6 +12,7 @@ import {
 } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import Subheader from 'material-ui/Subheader';
+import AutoComplete from 'material-ui/AutoComplete';
 import ActionView from 'material-ui/svg-icons/action/visibility';
 
 interface MealsProps {
@@ -25,6 +26,8 @@ interface MealsProps {
 
 interface MealsState {
     categories: string[];
+    searchTerms: string[];
+    searchString: string;
 }
 
 class Meals extends React.Component<MealsProps, MealsState> {
@@ -40,8 +43,13 @@ class Meals extends React.Component<MealsProps, MealsState> {
         const categories = nextProps.meals 
             ? [...new Set<string>(nextProps.meals.map((meal: Meal) => meal.category))]
             : []; 
+
+        const mealNames = nextProps.meals 
+            ? [...new Set<string>(nextProps.meals.map((meal: Meal) => meal.name))]
+            : []; 
            
         this.setState({
+            searchTerms: [...categories,...mealNames],
             categories: categories.sort(),
         });
     }
@@ -64,23 +72,50 @@ class Meals extends React.Component<MealsProps, MealsState> {
 
     createLists = (category: string) => {
         const filteredMeals: Meal[] = this.props.meals
-            .filter((meal: Meal) => meal.category === category)
+            .filter((meal: Meal) => {
+                return meal.category === category 
+                    && ((meal.name.toLowerCase().includes(this.state.searchString) || !this.state.searchString)
+                        || (meal.category.toLowerCase().includes(this.state.searchString) || !this.state.searchString));
+            })
             .sort((a,b) => {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);});
         return (
-            <div>
+            filteredMeals.length === 0 ? null :
+            <div key={category}>
                 <Subheader>{category}</Subheader>
-                <List key={category}> 
+                <List> 
                     {filteredMeals.map((meal: Meal) => this.createListItem(meal))}
                 </List>
                 <Divider />
             </div>
         );
     }
+    
+    applySearch = (search: string) => {
+        const searchString: string = search === '' ? null : search.toLowerCase();
+        this.setState({
+            searchString,
+        });
+    }
+
+    createSearch = () => {
+        return (
+            <AutoComplete
+                hintText="Search"
+                filter={AutoComplete.caseInsensitiveFilter}
+                maxSearchResults={5}
+                dataSource={this.state.searchTerms}
+                onUpdateInput={(searchText, dataSource) => this.applySearch(searchText)}
+            />
+        );
+    }
 
     render() {
         return (
             <div>
-                {(this.state && this.state.categories && this.props.meals)
+                {(this.state && this.state.searchTerms && this.props.meals)
+                 ? this.createSearch()
+                 : null}
+                {(this.state && this.state.searchTerms && this.props.meals)
                  ? this.state.categories.map((category: string) => this.createLists(category)) 
                  : null}
             </div>
