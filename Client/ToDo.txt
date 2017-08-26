@@ -10,7 +10,6 @@ edit
 
 Main page:
 View this week/ rolling 7 days
-Click through on day to planner through edit button
 
 Planner page:
 calendar

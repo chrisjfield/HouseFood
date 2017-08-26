@@ -12,8 +12,6 @@ namespace HouseFoodAPI
         {
         }
         public virtual DbSet<Days> Days { get; set; }
-        public virtual DbSet<Groupingredients> Groupingredients { get; set; }
-        public virtual DbSet<Groups> Groups { get; set; }
         public virtual DbSet<Ingredients> Ingredients { get; set; }
         public virtual DbSet<Listitems> Listitems { get; set; }
         public virtual DbSet<Lists> Lists { get; set; }
@@ -26,7 +24,7 @@ namespace HouseFoodAPI
             modelBuilder.Entity<Days>(entity =>
             {
                 entity.HasKey(e => e.Date)
-                    .HasName("PK__DAYS__1F7C70C4DF52F3E2");
+                    .HasName("PK__DAYS__1F7C70C4EFB621FC");
 
                 entity.ToTable("DAYS");
 
@@ -36,56 +34,16 @@ namespace HouseFoodAPI
 
                 entity.Property(e => e.Mealid).HasColumnName("MEALID");
 
-                entity.Property(e => e.Numberofpeople).HasColumnName("NUMBEROFPEOPLE");
+                entity.Property(e => e.Numberofpeople)
+                    .HasColumnName("NUMBEROFPEOPLE")
+                    .HasComputedColumnSql("[dbo].[DAYS_GetNumberOfPeople]([DATE])")
+                    .ValueGeneratedOnAddOrUpdate();
 
                 entity.HasOne(d => d.Meal)
                     .WithMany(p => p.Days)
                     .HasForeignKey(d => d.Mealid)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("FK_DAYS_MEALID");
-            });
-
-            modelBuilder.Entity<Groupingredients>(entity =>
-            {
-                entity.HasKey(e => e.Groupingredientid)
-                    .HasName("PK__GROUPING__691449B485C5D8EE");
-
-                entity.ToTable("GROUPINGREDIENTS");
-
-                entity.Property(e => e.Groupingredientid).HasColumnName("GROUPINGREDIENTID");
-
-                entity.Property(e => e.Amount).HasColumnName("AMOUNT");
-
-                entity.Property(e => e.Groupid).HasColumnName("GROUPID");
-
-                entity.Property(e => e.Ingredientid).HasColumnName("INGREDIENTID");
-
-                entity.HasOne(d => d.Group)
-                    .WithMany(p => p.Groupingredients)
-                    .HasForeignKey(d => d.Groupid)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_GROUPINGREDIENTS_GROUPID");
-
-                entity.HasOne(d => d.Ingredient)
-                    .WithMany(p => p.Groupingredients)
-                    .HasForeignKey(d => d.Ingredientid)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_GROUPINGREDIENTS_INGREDIENTID");
-            });
-
-            modelBuilder.Entity<Groups>(entity =>
-            {
-                entity.HasKey(e => e.Groupid)
-                    .HasName("PK__GROUPS__2F41C6299375DCA9");
-
-                entity.ToTable("GROUPS");
-
-                entity.Property(e => e.Groupid).HasColumnName("GROUPID");
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasColumnName("NAME")
-                    .HasMaxLength(200);
             });
 
             modelBuilder.Entity<Ingredients>(entity =>
@@ -218,7 +176,7 @@ namespace HouseFoodAPI
             modelBuilder.Entity<People>(entity =>
             {
                 entity.HasKey(e => e.Personid)
-                    .HasName("PK__PEOPLE__0986239E96BD4D31");
+                    .HasName("PK__PEOPLE__0986239E70561B1A");
 
                 entity.ToTable("PEOPLE");
 
