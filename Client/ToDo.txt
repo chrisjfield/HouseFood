@@ -8,9 +8,6 @@ meals page:
 add - autoselect ingredients or add new
 edit
 
-Main page:
-View this week/ rolling 7 days
-
 Planner page:
 calendar
 add people
