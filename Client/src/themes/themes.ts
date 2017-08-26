@@ -1,19 +1,30 @@
 import {
-    fullBlack,
-    grey300,
-    grey500,
-    blue900,
-  } from 'material-ui/styles/colors';
+  grey400,
+  grey900,
+  blue900,
+  blueGrey700,
+  blueGrey800,
+  blueGrey900,
+} from 'material-ui/styles/colors';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-  
+
 const theme = getMuiTheme({
     palette: {
         primary1Color: blue900,
-        textColor: fullBlack,
-        alternateTextColor: grey500,
-        borderColor: grey300,
+        primary2Color: blue900,
+        textColor: grey400,
+        borderColor: blueGrey700,
+        disabledColor: grey900,
         pickerHeaderColor: blue900,
-        shadowColor: blue900,
+        canvasColor: blueGrey900,
+        alternateTextColor: grey400,
+        accent2Color: blueGrey800,
+        accent3Color: grey400,
+    },
+    toolbar: {
+        color: grey900,
+        backgroundColor: blue900,
+        iconColor: grey400,
     },
 });
 
