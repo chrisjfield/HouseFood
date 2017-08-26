@@ -12,7 +12,7 @@ namespace HouseFoodAPI.Model
 
         public DateTime Date { get; set; }
         public int Mealid { get; set; }
-        public int Numberofpeople { get; set; }
+        public byte? Numberofpeople { get; set; }
 
         public virtual ICollection<People> People { get; set; }
         public virtual Meals Meal { get; set; }
