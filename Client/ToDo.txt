@@ -1,18 +1,18 @@
 List Details:
-edit
+edit (include add/delete)
 tick all - DONE
 on all ticked - option to mark as completed - DONE
 
 List page:
-New
+New (include calculate for date range)
 Show completed - DONE
 order by date - DONE
 
 meals page:
 view
-add - autoselect or add new
-edit
 search (name or category) - autocomplete
+add - autoselect ingredients or add new
+edit
 
 Main page:
 View this week/ rolling 7 days

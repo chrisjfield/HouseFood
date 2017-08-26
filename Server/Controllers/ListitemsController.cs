@@ -94,7 +94,6 @@ namespace HouseFoodAPI.Controllers
         {
             try
             {
-
                 var rowsAffected = _context.Database.ExecuteSqlCommand("UPDATE LISTITEMS SET COMPLETE = {0} WHERE LISTID = {1}", isChecked, Listid);
                 _context.SaveChanges();
                 return Handler.HandleBulkCheckResponse(rowsAffected);
