@@ -26,6 +26,10 @@ const theme = getMuiTheme({
         backgroundColor: blue900,
         iconColor: grey400,
     },
+    avatar: {
+        backgroundColor: blue900,
+        color: grey400,
+    },
 });
 
 export default theme;
