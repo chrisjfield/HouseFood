@@ -4,9 +4,9 @@ import apiHelper from '../../helpers/apiHelper';
 export const GET_DAYS_STARTED = 'GET_DAYS_STARTED';
 export const GET_DAYS_SUCCESSFUL = 'GET_DAYS_SUCCESSFUL';
 export const GET_DAYS_FAILURE = 'GET_DAYS_FAILURE';
-export const UPDATE_DAY_STARTED = 'UPDATE_DAY_STARTED';
-export const UPDATE_DAY_SUCCESSFUL = 'UPDATE_DAY_SUCCESSFUL';
-export const UPDATE_DAY_FAILURE = 'UPDATE_DAY_FAILURE';
+export const GET_DAY_STARTED = 'GET_DAY_STARTED';
+export const GET_DAY_SUCCESSFUL = 'GET_DAY_SUCCESSFUL';
+export const GET_DAY_FAILURE = 'GET_DAY_FAILURE';
 
 export function getDays() {
     const request = apiHelper.apiCall(
@@ -47,7 +47,7 @@ function getDaysFailure(error: any) {
     };
 }
 
-export function updateDay(dayDate: string) {
+export function getDay(dayDate: string) {
     const endpoint = 'Days/' + dayDate;
     const request = apiHelper.apiCall(
         'GET',
@@ -55,34 +55,34 @@ export function updateDay(dayDate: string) {
       );
     
     return (dispatch : Function) => {
-        dispatch(updateDayStarted());
+        dispatch(getDayStarted());
         request
         .then((response : Day) =>
-          dispatch(updateDaySuccessful(response)),
+          dispatch(getDaySuccessful(response)),
         )
         .catch((error : any) => {
             console.log(error);
-            dispatch(updateDayFailure(error));
+            dispatch(getDayFailure(error));
         });
     };
 }
 
-function updateDayStarted() {
+function getDayStarted() {
     return {
-        type: UPDATE_DAY_STARTED,
+        type: GET_DAY_STARTED,
     };
 }
 
-function updateDaySuccessful(response: Day) {
+function getDaySuccessful(response: Day) {
     return {
-        type: UPDATE_DAY_SUCCESSFUL,
+        type: GET_DAY_SUCCESSFUL,
         payload: response,
     };
 }
 
-function updateDayFailure(error: any) {
+function getDayFailure(error: any) {
     return {
-        type: UPDATE_DAY_FAILURE,
+        type: GET_DAY_FAILURE,
         payload: error,
     };
 }

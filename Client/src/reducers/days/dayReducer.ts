@@ -3,14 +3,17 @@ import {
     GET_DAYS_STARTED,
     GET_DAYS_SUCCESSFUL,
     GET_DAYS_FAILURE,
-    UPDATE_DAY_STARTED,
-    UPDATE_DAY_SUCCESSFUL,
-    UPDATE_DAY_FAILURE,
+    GET_DAY_STARTED,
+    GET_DAY_SUCCESSFUL,
+    GET_DAY_FAILURE,
 } from '../../actions/days/dayActions';
 import { 
     POST_DAYS_STARTED,
     POST_DAYS_SUCCESSFUL,
     POST_DAYS_FAILURE,
+    UPDATE_DAY_STARTED,
+    UPDATE_DAY_SUCCESSFUL,
+    UPDATE_DAY_FAILURE,
 } from '../../actions/planner/plannerActions';
 
 interface daysReducerState {
@@ -60,6 +63,25 @@ function daysReducer(state: daysReducerState = {
             error: false,
         };
     case POST_DAYS_FAILURE:
+        return {
+            ...state,
+            loading: false,
+            error: true,
+        };
+    case GET_DAY_STARTED:
+        return {
+            ...state,
+            loading: true,
+            error: false,
+        };
+    case GET_DAY_SUCCESSFUL:
+        return {
+            ...state,
+            days: state.days.map((day: Day) => day.date === action.payload.date ? action.payload : day),
+            loading: false,
+            error: false,
+        };
+    case GET_DAY_FAILURE:
         return {
             ...state,
             loading: false,

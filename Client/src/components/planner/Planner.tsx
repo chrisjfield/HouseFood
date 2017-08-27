@@ -23,8 +23,9 @@ import { getMeals } from '../../actions/meals/mealActions';
 import { getDays } from '../../actions/days/dayActions';
 import { getPeople } from '../../actions/people/peopleActions';
 import { 
-    // saveDay,
+    updateDay,
     addDay, 
+    addPeople,
 } from '../../actions/planner/plannerActions';
 
 import AutoComplete from 'material-ui/AutoComplete';
@@ -193,7 +194,31 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
         }
 
         if (this.state.selectedDayInfo) {
-            null;
+            const updatedDate: string = moment(this.state.selectedDayInfo.date).format('YYYY-MM-DD');
+            const updatedDay: NewDay = {
+                mealid,
+                date: updatedDate,
+            };
+            const originalPeople: Person[] = this.props.people.filter((people: Person) => {
+                const personDate = new Date(people.date);
+                return moment(personDate).format('YYYY-MM-DD') === updatedDate;
+            });
+            const newPeople: NewPerson[] = people
+                .filter((person: Person) => originalPeople.indexOf(person) === -1)
+                .map((person: Person) => { 
+                    return {
+                        date: moment(person.date).format('YYYY-MM-DD'),
+                        person: person.person,
+                    };
+                },
+            );
+            const removedPeople: Person[] = originalPeople
+                .filter((person: Person) => people.indexOf(person) === -1);
+            
+            this.props.dispatch(updateDay(updatedDate, updatedDay));
+            newPeople.length > 0 ? this.props.dispatch(addPeople(newPeople, updatedDate)) : null;
+            // removedPeople.length > 0 ? this.props.dispatch(removePeople(removedPeople)) : null;
+            console.log(removedPeople);
         } else {
             const newDay: NewDay = {
                 mealid,

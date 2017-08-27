@@ -10,8 +10,7 @@ edit
 multi select should generate meal.
 
 Planner page:
-add people
-add meals
+remove people
 multi select should generate meal.
 
 Bootstrap/UI
