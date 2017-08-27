@@ -7,9 +7,9 @@ New (include calculate for date range)
 meals page:
 add - autoselect ingredients or add new
 edit
+multi select should generate meal.
 
 Planner page:
-calendar
 add people
 add meals
 auto generate meals - with criteria?

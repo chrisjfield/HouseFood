@@ -106,6 +106,7 @@ class Home extends React.Component<HomeProps, HomeState> {
     render() {
         return (
             <div>
+                <br/>
                 {(this.props.days && this.props.people && this.props.meals) ? this.generateWeek() : null}
             </div>
         );
