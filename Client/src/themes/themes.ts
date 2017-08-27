@@ -1,5 +1,6 @@
 import {
   grey400,
+  grey700,
   grey900,
   blue900,
   blueGrey700,
@@ -29,6 +30,9 @@ const theme = getMuiTheme({
     avatar: {
         backgroundColor: blue900,
         color: grey400,
+    },
+    textField: {
+        backgroundColor: grey700,
     },
 });
 

@@ -30,6 +30,13 @@ interface MealsState {
     searchString: string;
 }
 
+const styles = {
+    search: {
+        width: '60%',
+        marginLeft: '20%',
+    },
+};
+
 class Meals extends React.Component<MealsProps, MealsState> {
     constructor(props: any) {
         super();
@@ -106,6 +113,8 @@ class Meals extends React.Component<MealsProps, MealsState> {
                 maxSearchResults={5}
                 dataSource={this.state.searchTerms}
                 onUpdateInput={(searchText, dataSource) => this.applySearch(searchText)}
+                fullWidth={true}
+                style={styles.search}
             />
         );
     }
@@ -113,6 +122,7 @@ class Meals extends React.Component<MealsProps, MealsState> {
     render() {
         return (
             <div>
+                <br/>
                 {(this.state && this.state.searchTerms && this.props.meals)
                  ? this.createSearch()
                  : null}

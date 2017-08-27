@@ -11,6 +11,7 @@ import IconButton from 'material-ui/IconButton';
 import ActionHome from 'material-ui/svg-icons/action/home';
 import ActionShopping from 'material-ui/svg-icons/action/add-shopping-cart';
 import MapsRestaurant from 'material-ui/svg-icons/maps/restaurant';
+import ActionEvent from 'material-ui/svg-icons/action/event';
 
 function Header() {
     return (
@@ -24,6 +25,11 @@ function Header() {
                 <ToolbarTitle text="House Food" />
             </ToolbarGroup>
             <ToolbarGroup>
+                <Link to="/Planner">
+                    <IconButton tooltip="Planner">
+                        <ActionEvent />
+                    </IconButton>
+                </Link>
                 <Link to="/Meals">
                     <IconButton tooltip="Meals">
                         <MapsRestaurant />

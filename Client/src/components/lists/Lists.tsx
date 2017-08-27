@@ -156,6 +156,7 @@ class Lists extends React.Component<ListsProps, ListsState> {
     render() {
         return (
             <div>
+                <br/>
                 <div style={styles.toggle}>
                 <Toggle 
                     label="Show Completed"

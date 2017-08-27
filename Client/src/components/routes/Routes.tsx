@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 
 import NotFound404 from '../notFound404';
 import Home from '../home';
+import Planner from '../planner';
 import Lists from '../lists';
 import ListDetails from '../listDetails';
 import Meals from '../meals';
@@ -12,6 +13,7 @@ function Routes() {
     return (
         <Switch>
             <Route exact path="/" component={Home}/>
+            <Route exact path="/Planner" component={Planner}/>
             <Route exact path="/Lists" component={Lists}/>
             <Route exact path="/Lists/:listid" component={ListDetails}/>
             <Route exact path="/Meals" component={Meals}/>

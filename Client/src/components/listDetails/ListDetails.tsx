@@ -208,9 +208,12 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
 
     render() {
         return (
-            (this.state && this.state.filterdListDetails && this.props.ingredients)
-            ? this.createTable()
-            : null
+            <div>
+                <br/>
+                {(this.state && this.state.filterdListDetails && this.props.ingredients)
+                ? this.createTable()
+                : null}
+            </div>
         );
     }
 }

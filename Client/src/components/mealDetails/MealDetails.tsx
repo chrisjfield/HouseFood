@@ -108,9 +108,12 @@ class MealDetails extends React.Component<MealDetailsProps, MealDetailsState> {
 
     render() {
         return (
-            (this.state && this.state.filterdMealDetails && this.props.ingredients)
-            ? this.createTable()
-            : null
+            <div>
+                <br/>
+                {(this.state && this.state.filterdMealDetails && this.props.ingredients)
+                ? this.createTable()
+                : null}
+            </div>
         );
     }
 }
