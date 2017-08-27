@@ -41,6 +41,9 @@ interface PlannerState {
     selectedDayPeople: Person[];
     selectedSearchText: string;
     searchTerms: string[];
+    searchPeople: string[];
+    addPersonText: string;
+    selectedPeopleSearchText: string;
 }
 
 interface CalendarItem {
@@ -86,6 +89,10 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
         ? [...new Set<string>(nextProps.meals.map((meal: Meal) => meal.name))]
         : []; 
 
+        const searchPeople = nextProps.people 
+        ? [...new Set<string>(nextProps.people.map((person: Person) => person.person))]
+        : [];
+
         const calendarView = nextProps.days.map((day: Day) => {
             const mealName: string = nextProps.meals ? nextProps.meals.find((meal: Meal) => meal.mealid === day.mealid).name : null;
             const numberOfPeople: string = day.numberofpeople === 0 
@@ -103,6 +110,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
            
         this.setState({
             calendarView,
+            searchPeople,
             searchTerms: mealNames,
         });
     }
@@ -187,41 +195,64 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                         maxSearchResults={5}
                         dataSource={this.state.searchTerms}
                         searchText={this.state.selectedSearchText ? this.state.selectedSearchText : ''}
-                        onUpdateInput={(searchText, dataSource) => this.applySearch(searchText)}
+                        onUpdateInput={(searchText, dataSource) => this.applyMealSearch(searchText)}
                     />
                     <div>
                         <br/>
                     </div>
                     <div>
-                        {this.state.selectedDayPeople
-                            ? this.state.selectedDayPeople.map((person: Person) => this.createChips(person))
-                            : null}
-                        <Chip key="add" style={styles.chips} onTouchTap={this.handleChipAdd}>
-                            <Avatar size={32}>+</Avatar>
-                            Add person
-                        </Chip>
+                        <form onSubmit={this.handleChipAdd}>
+                            {this.state.selectedDayPeople
+                                ? this.state.selectedDayPeople.map((person: Person) => this.createChips(person))
+                                : null}
+                        
+                            <AutoComplete
+                                hintText="Add Person"
+                                maxSearchResults={5}
+                                dataSource={this.state.searchPeople}
+                                searchText={this.state.selectedPeopleSearchText ? this.state.selectedPeopleSearchText : ''}
+                                onUpdateInput={(searchText, dataSource) => this.applyPersonSearch(searchText)}
+                            />
+                            <FlatButton type="submit" label="Add" />
+                        </form>
                     </div>
                 </Dialog>
             </div>
         );
     }
 
-    handleChipAdd () {
-        console.log('chip added');
+    handleChipAdd = (event: any)  => {
+        event.preventDefault();
+        const personExists: Person = this.state.selectedDayPeople.find((person: Person) => person.person === this.state.addPersonText);
+        if (!personExists) {
+            const newPerson: Person = {
+                date: this.state.selectedDate,
+                person: this.state.addPersonText,
+                personid: undefined,
+            };
+            this.setState({
+                selectedDayPeople: [...this.state.selectedDayPeople, newPerson],
+                selectedPeopleSearchText: undefined,
+            });
+        } else {
+            this.setState({
+                selectedPeopleSearchText: undefined,
+            });
+        }
     }
 
-    handleChipDelete(personid: number) {
+    handleChipDelete(personName: string) {
         this.setState({
-            selectedDayPeople: this.state.selectedDayPeople.filter((person: Person) => person.personid !== personid),
+            selectedDayPeople: this.state.selectedDayPeople.filter((person: Person) => person.person !== personName),
         });
     }
 
     createChips (person: Person) {
         return (
             <Chip 
-                key={person.personid} 
+                key={person.person} 
                 style={styles.chips} 
-                onRequestDelete={() => this.handleChipDelete(person.personid)}
+                onRequestDelete={() => this.handleChipDelete(person.person)}
             >
                 <Avatar size={32}>{person.person.charAt(0).toUpperCase()}</Avatar>
                 {person.person}
@@ -229,7 +260,14 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
         );
     }
 
-    applySearch (searchText: string) {
+    applyPersonSearch (searchText: string) {
+        this.setState({
+            addPersonText: searchText === '' ? undefined : searchText,
+            selectedPeopleSearchText: searchText,
+        });
+    }
+
+    applyMealSearch (searchText: string) {
         this.setState({
             selectedSearchText: searchText,
         });
