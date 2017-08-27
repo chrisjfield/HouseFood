@@ -55,17 +55,21 @@ namespace HouseFoodAPI.Controllers
 
         // POST
         [HttpPost]
-        public IActionResult Post([FromBody]People Person)
+        public IActionResult Post([FromBody]People[] People)
         {
             try
             {
-                var Response = _context.People.Add(Person).Entity;
+                List<People> Response = new List<People>();
+                foreach (People person in People) {
+                    var IndividualResponse = _context.People.Add(person).Entity;
+                    Response.Add(IndividualResponse);
+                }
                 _context.SaveChanges();
                 return Handler.HandlePostResponse(Response);
             }
             catch (Exception ex)
             {
-                return Handler.HandleException(ex, Person);
+                return Handler.HandleException(ex, People);
             }
         }
 

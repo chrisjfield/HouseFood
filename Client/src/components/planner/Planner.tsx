@@ -10,12 +10,22 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../../css/app.css';
 BigCalendar.momentLocalizer(moment);
 
-import { Person } from '../../interfaces/peopleInterfaces';
-import { Day } from '../../interfaces/daysInterfaces';
+import { 
+    Person,
+    NewPerson,
+} from '../../interfaces/peopleInterfaces';
+import { 
+    Day,
+    NewDay,
+} from '../../interfaces/daysInterfaces';
 import { Meal } from '../../interfaces/mealsInterfaces';
 import { getMeals } from '../../actions/meals/mealActions';
 import { getDays } from '../../actions/days/dayActions';
 import { getPeople } from '../../actions/people/peopleActions';
+import { 
+    // saveDay,
+    addDay, 
+} from '../../actions/planner/plannerActions';
 
 import AutoComplete from 'material-ui/AutoComplete';
 import Dialog from 'material-ui/Dialog';
@@ -44,6 +54,7 @@ interface PlannerState {
     searchPeople: string[];
     addPersonText: string;
     selectedPeopleSearchText: string;
+    saveValidationMessage: string;
 }
 
 interface CalendarItem {
@@ -141,6 +152,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
             selectedDayInfo: day,
             selectedDayPeople: people,
             selectedSearchText: meal,
+            saveValidationMessage: undefined,
         });
     }
 
@@ -164,6 +176,42 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
         this.setState({ selectedDate: undefined });
     }
 
+    handleSave = () => {
+        const mealName = this.state.selectedSearchText;
+        const meal: Meal = this.props.meals.find((meal: Meal) => meal.name === mealName);
+        const mealid: number = meal ? meal.mealid : undefined;
+        const people: Person[] = this.state.selectedDayPeople;
+        if (!mealid) {
+            this.setState({
+                saveValidationMessage: 'Meal is invalid - please select a valid meal.',
+            });
+            return;
+        } else {
+            this.setState({
+                saveValidationMessage: undefined,
+            });
+        }
+
+        if (this.state.selectedDayInfo) {
+            null;
+        } else {
+            const newDay: NewDay = {
+                mealid,
+                date: moment(this.state.selectedDate).format('YYYY-MM-DD'),
+            };
+            const newPeople: NewPerson[] = people.map((person: Person) => { 
+                return {
+                    date: moment(person.date).format('YYYY-MM-DD'),
+                    person: person.person,
+                };
+            });
+            this.props.dispatch(addDay(newDay, newPeople));
+        }
+        this.setState({
+            selectedDate: undefined,
+        });
+    }
+
     getEditDialog () {
         const actions = [
             <FlatButton
@@ -175,6 +223,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
               label="Save"
               primary={true}
               keyboardFocused={true}
+              onClick={this.handleSave}
             />,
         ];
 
@@ -196,6 +245,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                         dataSource={this.state.searchTerms}
                         searchText={this.state.selectedSearchText ? this.state.selectedSearchText : ''}
                         onUpdateInput={(searchText, dataSource) => this.applyMealSearch(searchText)}
+                        errorText={this.state.saveValidationMessage ? this.state.saveValidationMessage : null}
                     />
                     <div>
                         <br/>
@@ -223,7 +273,8 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
 
     handleChipAdd = (event: any)  => {
         event.preventDefault();
-        const personExists: Person = this.state.selectedDayPeople.find((person: Person) => person.person === this.state.addPersonText);
+        const personExists: Person = this.state.selectedDayPeople
+            .find((person: Person) => person.person.toLowerCase() === this.state.addPersonText.toLowerCase());
         if (!personExists) {
             const newPerson: Person = {
                 date: this.state.selectedDate,

@@ -12,7 +12,7 @@ multi select should generate meal.
 Planner page:
 add people
 add meals
-auto generate meals - with criteria?
+multi select should generate meal.
 
 Bootstrap/UI
 Login

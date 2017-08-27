@@ -3,3 +3,8 @@ export interface Person {
     date: Date; 
     person: string;
 }
+
+export interface NewPerson {
+    date: string; 
+    person: string;
+}
