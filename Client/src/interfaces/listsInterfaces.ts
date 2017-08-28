@@ -5,3 +5,9 @@ export interface List {
     complete: boolean;
     datecompleted?: Date;
 }
+
+export interface GenerateListDetail {
+    startDate: Date;
+    endDate: Date;
+    listName: string;
+}

@@ -18,6 +18,7 @@ import {
     Day,
     NewDay,
 } from '../../interfaces/daysInterfaces';
+import { GenerateListDetail } from '../../interfaces/listsInterfaces';
 import { Meal } from '../../interfaces/mealsInterfaces';
 import { getMeals } from '../../actions/meals/mealActions';
 import { getDays } from '../../actions/days/dayActions';
@@ -27,6 +28,7 @@ import {
     addDay, 
     addPeople,
     removePeople,
+    generateList,
 } from '../../actions/planner/plannerActions';
 
 import AutoComplete from 'material-ui/AutoComplete';
@@ -34,6 +36,8 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
+import DatePicker from 'material-ui/DatePicker';
+import TextField from 'material-ui/TextField';
 
 interface PlannerProps {
     days: Day[];
@@ -57,6 +61,11 @@ interface PlannerState {
     addPersonText: string;
     selectedPeopleSearchText: string;
     saveValidationMessage: string;
+    generateListDialogOpen: boolean;
+    generateListDialogStart: Date;
+    generateListDialogEnd: Date;
+    generateListDialogListName: string;
+    generateListDialogValidationMessage: string;
 }
 
 interface CalendarItem {
@@ -131,8 +140,16 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
     }
 
     daySelected (slotInfo: SlotInfo) {
-        const selectedDate: Date = new Date(slotInfo.start);
-        this.editDay(selectedDate);
+        if (slotInfo.slots.length === 1) {
+            const selectedDate: Date = new Date(slotInfo.start);
+            this.editDay(selectedDate);
+        } else {
+            this.setState({
+                generateListDialogOpen: true,
+                generateListDialogStart: new Date(slotInfo.start),
+                generateListDialogEnd: new Date(slotInfo.end),
+            });
+        }
     }
 
     eventSelected (event: CalendarItem) {
@@ -164,7 +181,8 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
         return (
             <div style={styles.calendarContainer}>
                 <br/>
-                {this.getEditDialog ()}
+                {this.getEditDialog()}
+                {this.getgenerateListDialog()}
                 <BigCalendar
                     selectable={true}
                     events={this.state.calendarView}
@@ -177,7 +195,17 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
     }
   
     handleClose = () => {
-        this.setState({ selectedDate: undefined });
+        this.setState({ 
+            selectedDate: undefined, 
+            generateListDialogOpen: false,
+            generateListDialogStart: undefined,
+            generateListDialogEnd: undefined,
+            generateListDialogListName: undefined,
+            generateListDialogValidationMessage: undefined,
+            selectedSearchText: undefined,
+            saveValidationMessage: undefined,
+            selectedPeopleSearchText: undefined,
+        });
     }
 
     handleSave = () => {
@@ -236,6 +264,109 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
         }
         this.setState({
             selectedDate: undefined,
+        });
+    }
+
+    getgenerateListDialog () {
+        const actions = [
+            <FlatButton
+              label="Cancel"
+              primary={true}
+              onClick={this.handleClose}
+            />,
+            <FlatButton
+              label="Generate Meals"
+              primary={true}
+              keyboardFocused={true}
+              onClick={this.handleGenerateList}
+            />,
+        ];
+
+        return (
+            <div>
+                <Dialog
+                    title="Generate List"
+                    actions={actions}
+                    modal={false}
+                    open={this.state.generateListDialogOpen ? this.state.generateListDialogOpen : false}
+                    onRequestClose={this.handleClose}
+                >
+                Would you like to generate a shopping list for the following date range?
+                    <div>
+                        <br/>
+                    </div>
+                    <TextField
+                        hintText="List Name"
+                        defaultValue={this.state.generateListDialogListName}
+                        onChange={this.handleChangeListName}
+                        errorText={this.state.generateListDialogValidationMessage ? this.state.generateListDialogValidationMessage : null}
+                    />
+                    <div>
+                        <br/>
+                    </div>
+                    <DatePicker 
+                        hintText="Start Date" 
+                        autoOk={true} 
+                        defaultDate={this.state.generateListDialogStart}
+                        onChange={this.handleChangeStartDate}
+                        shouldDisableDate={this.disableDatesPastEnd}
+                    />
+                    <div>
+                        <br/>
+                    </div>
+                    <DatePicker 
+                        hintText="End Date" 
+                        autoOk={true} 
+                        defaultDate={this.state.generateListDialogEnd}
+                        onChange={this.handleChangeEndDate}
+                        shouldDisableDate={this.disableDatesBeforeStart}
+                    />
+                </Dialog>
+            </div>
+        );
+    }
+
+    handleGenerateList = () => {
+        const listName: string = this.state.generateListDialogListName;
+        const startDate: Date = this.state.generateListDialogStart;
+        const endDate: Date = this.state.generateListDialogEnd;
+        if (!listName || listName === '') {
+            this.setState({
+                generateListDialogValidationMessage: 'Please choose a list name',
+            });
+        } else {
+            const newListDetails: GenerateListDetail = {
+                startDate,
+                endDate,
+                listName,
+            };
+            this.props.dispatch(generateList(newListDetails));
+        }
+    }
+
+    disableDatesPastEnd = (date: Date) => {
+        return date > this.state.generateListDialogEnd;
+    }
+
+    disableDatesBeforeStart = (date: Date) => {
+        return date < this.state.generateListDialogStart;
+    }
+
+    handleChangeListName = (event: object, newValue: string) => {
+        this.setState({
+            generateListDialogListName: newValue,
+        });
+    }
+
+    handleChangeStartDate = (event: object, date: Date) => {
+        this.setState({
+            generateListDialogStart: date,
+        });
+    }
+    
+    handleChangeEndDate = (event: object, date: Date) => {
+        this.setState({
+            generateListDialogEnd: date,
         });
     }
 

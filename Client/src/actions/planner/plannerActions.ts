@@ -8,6 +8,7 @@ import {
 } from '../../interfaces/peopleInterfaces';
 import apiHelper from '../../helpers/apiHelper';
 import { getDay } from '../days/dayActions';
+import { GenerateListDetail } from '../../interfaces/listsInterfaces';
 
 export const POST_DAYS_STARTED = 'POST_DAYS_STARTED';
 export const POST_DAYS_SUCCESSFUL = 'POST_DAYS_SUCCESSFUL';
@@ -21,7 +22,9 @@ export const REMOVE_PEOPLE_FAILURE = 'REMOVE_PEOPLE_FAILURE';
 export const UPDATE_DAY_STARTED = 'UPDATE_DAY_STARTED';
 export const UPDATE_DAY_SUCCESSFUL = 'UPDATE_DAY_SUCCESSFUL';
 export const UPDATE_DAY_FAILURE = 'UPDATE_DAY_FAILURE';
-
+export const GENERATE_LIST_STARTED = 'GENERATE_LIST_STARTED';
+export const GENERATE_LIST_SUCCESSFUL = 'GENERATE_LIST_SUCCESSFUL';
+export const GENERATE_LIST_FAILURE = 'GENERATE_LIST_FAILURE';
 
 export function addDay(newDay: NewDay, newPeople: NewPerson[]) {
     const request = apiHelper.apiCall(
@@ -183,6 +186,48 @@ function updateDaySuccessful(response: Day) {
 function updateDayFailure(error: any) {
     return {
         type: UPDATE_DAY_FAILURE,
+        payload: error,
+    };
+}
+
+export function generateList(newListDetails: GenerateListDetail) {
+    const request = apiHelper.apiCall(
+        'POST',
+        'Lists/GenerateList',
+        newListDetails,
+      );
+    
+    return (dispatch: Function) => {
+        dispatch(generateListStarted());
+        request
+        .then((response: number) => {
+            dispatch(generateListSuccessful(response));
+            // dispatch(getList(response));
+            // dispatch(getListDetails(response));
+        })
+        .catch((error: any) => {
+            console.log(error);
+            dispatch(generateListFailure(error));
+        });
+    };
+}
+
+function generateListStarted() {
+    return {
+        type: GENERATE_LIST_STARTED,
+    };
+}
+
+function generateListSuccessful(listid: number) {
+    return {
+        type: GENERATE_LIST_SUCCESSFUL,
+        payload: listid,
+    };
+}
+
+function generateListFailure(error: any) {
+    return {
+        type: GENERATE_LIST_FAILURE,
         payload: error,
     };
 }
