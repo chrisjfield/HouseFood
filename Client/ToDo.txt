@@ -1,22 +1,19 @@
-List Details:
-edit (include add/delete)
-
 List page:
 New (include calculate for date range)
 
 meals page:
 add - autoselect ingredients or add new
 edit
-multi select should generate meal.
-
-Planner page:
-auto complete case sensitive
-
-Bootstrap/UI
-Login
-clever pull back of data (not just all - see what it does pull {profiler})
 
 error handling
 loading handling
 
+publish 
+
+Bootstrap/UI
+
 refactor all the things.
+
+v2:
+Login/ multi tennacy
+clever pull back of data (not just all - see what it does pull {profiler})
