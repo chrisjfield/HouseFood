@@ -108,11 +108,12 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
 
     componentWillReceiveProps(nextProps: PlannerProps) {
         const mealNames = nextProps.meals 
-        ? [...new Set<string>(nextProps.meals.map((meal: Meal) => meal.name))]
+        ? [...new Set<string>(nextProps.meals.map((meal: Meal) => meal.name.toLowerCase()))]
         : []; 
 
         const searchPeople = nextProps.people 
-        ? [...new Set<string>(nextProps.people.map((person: Person) => person.person))]
+        ? [...new Set<string>(nextProps.people.map((person: Person) => 
+            person.person.charAt(0).toUpperCase() + person.person.substr(1).toLowerCase()))]
         : [];
 
         const calendarView = nextProps.days
@@ -275,7 +276,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
               onClick={this.handleClose}
             />,
             <FlatButton
-              label="Generate Meals"
+              label="Generate List"
               primary={true}
               keyboardFocused={true}
               onClick={this.handleGenerateList}
@@ -402,7 +403,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                         maxSearchResults={5}
                         dataSource={this.state.searchTerms}
                         searchText={this.state.selectedSearchText ? this.state.selectedSearchText : ''}
-                        onUpdateInput={(searchText, dataSource) => this.applyMealSearch(searchText)}
+                        onUpdateInput={(searchText, dataSource) => this.applyMealSearch(searchText.toLowerCase())}
                         errorText={this.state.saveValidationMessage ? this.state.saveValidationMessage : null}
                     />
                     <div>
@@ -421,7 +422,8 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                                 maxSearchResults={5}
                                 dataSource={this.state.searchPeople}
                                 searchText={this.state.selectedPeopleSearchText ? this.state.selectedPeopleSearchText : ''}
-                                onUpdateInput={(searchText, dataSource) => this.applyPersonSearch(searchText)}
+                                onUpdateInput={(searchText, dataSource) => 
+                                    this.applyPersonSearch(searchText.charAt(0).toUpperCase() + searchText.substr(1).toLowerCase())}
                             />
                             <FlatButton type="submit" label="Add" />
                         </form>

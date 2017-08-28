@@ -9,6 +9,9 @@ add - autoselect ingredients or add new
 edit
 multi select should generate meal.
 
+Planner page:
+auto complete case sensitive
+
 Bootstrap/UI
 Login
 clever pull back of data (not just all - see what it does pull {profiler})
