@@ -9,10 +9,6 @@ add - autoselect ingredients or add new
 edit
 multi select should generate meal.
 
-Planner page:
-remove people
-multi select should generate meal.
-
 Bootstrap/UI
 Login
 clever pull back of data (not just all - see what it does pull {profiler})
