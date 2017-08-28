@@ -7,6 +7,7 @@ using HouseFoodAPI.Model;
 using HouseFoodAPI.Helpers;
 using HouseFoodAPI.Validation;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.EntityFrameworkCore;
 
 namespace HouseFoodAPI.Controllers
 {
@@ -66,6 +67,23 @@ namespace HouseFoodAPI.Controllers
             catch (Exception ex)
             {
                 return Handler.HandleException(ex, List);
+            }
+        }
+
+        [HttpPost("GenerateList")]
+        public IActionResult GenerateList([FromBody]GenerateList GenerateListDetails)
+        {
+            try
+            {
+                var Response = _context.Lists
+                    .FromSql("EXEC GenerateListFromDateRange @startDate={0}, @endDate={1}, @listName={2}"
+                    , GenerateListDetails.StartDate, GenerateListDetails.EndDate, GenerateListDetails.ListName);
+                _context.SaveChanges();
+                return Handler.HandlePostResponse(Response);
+            }
+            catch (Exception ex)
+            {
+                return Handler.HandleException(ex, GenerateListDetails);
             }
         }
 

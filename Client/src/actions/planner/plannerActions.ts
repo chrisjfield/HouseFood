@@ -1,3 +1,5 @@
+import history from '../../history';
+
 import { 
     Day,
     NewDay, 
@@ -8,7 +10,11 @@ import {
 } from '../../interfaces/peopleInterfaces';
 import apiHelper from '../../helpers/apiHelper';
 import { getDay } from '../days/dayActions';
-import { GenerateListDetail } from '../../interfaces/listsInterfaces';
+import { 
+    List,
+    GenerateListDetail,
+ } from '../../interfaces/listsInterfaces';
+import { getListDetails } from '../../actions/listDetail/listDetailActions';
 
 export const POST_DAYS_STARTED = 'POST_DAYS_STARTED';
 export const POST_DAYS_SUCCESSFUL = 'POST_DAYS_SUCCESSFUL';
@@ -200,10 +206,11 @@ export function generateList(newListDetails: GenerateListDetail) {
     return (dispatch: Function) => {
         dispatch(generateListStarted());
         request
-        .then((response: number) => {
+        .then((response: List) => {
+            const url: string = 'Lists/' + String(response[0].listid);
             dispatch(generateListSuccessful(response));
-            // dispatch(getList(response));
-            // dispatch(getListDetails(response));
+            dispatch(getListDetails());
+            history.push(url);
         })
         .catch((error: any) => {
             console.log(error);
@@ -218,10 +225,10 @@ function generateListStarted() {
     };
 }
 
-function generateListSuccessful(listid: number) {
+function generateListSuccessful(list: List) {
     return {
         type: GENERATE_LIST_SUCCESSFUL,
-        payload: listid,
+        payload: list,
     };
 }
 

@@ -7,7 +7,11 @@ import {
     COMPLETE_LISTS_SUCCESSFUL,
     COMPLETE_LISTS_FAILURE,
 } from '../../actions/lists/listActions';
-
+import { 
+    GENERATE_LIST_STARTED,
+    GENERATE_LIST_SUCCESSFUL,
+    GENERATE_LIST_FAILURE,
+} from '../../actions/planner/plannerActions';
 interface listsReducerState {
     lists: List[];
     loading: boolean;
@@ -58,6 +62,25 @@ function listsReducer(state: listsReducerState = {
         return {
             ...state,
             updating: false,
+            error: true,
+        };
+    case GENERATE_LIST_STARTED:
+        return {
+            ...state,
+            loading: true,
+            error: false,
+        };
+    case GENERATE_LIST_SUCCESSFUL:
+        return {
+            ...state,
+            lists: [...state.lists, ...action.payload],
+            loading: false,
+            error: false,
+        };
+    case GENERATE_LIST_FAILURE:
+        return {
+            ...state,
+            loading: false,
             error: true,
         };
     default:
