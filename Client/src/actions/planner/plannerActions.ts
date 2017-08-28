@@ -15,9 +15,13 @@ export const POST_DAYS_FAILURE = 'POST_DAYS_FAILURE';
 export const POST_PEOPLE_STARTED = 'POST_PEOPLE_STARTED';
 export const POST_PEOPLE_SUCCESSFUL = 'POST_PEOPLE_SUCCESSFUL';
 export const POST_PEOPLE_FAILURE = 'POST_PEOPLE_FAILURE';
+export const REMOVE_PEOPLE_STARTED = 'REMOVE_PEOPLE_STARTED';
+export const REMOVE_PEOPLE_SUCCESSFUL = 'REMOVE_PEOPLE_SUCCESSFUL';
+export const REMOVE_PEOPLE_FAILURE = 'REMOVE_PEOPLE_FAILURE';
 export const UPDATE_DAY_STARTED = 'UPDATE_DAY_STARTED';
 export const UPDATE_DAY_SUCCESSFUL = 'UPDATE_DAY_SUCCESSFUL';
 export const UPDATE_DAY_FAILURE = 'UPDATE_DAY_FAILURE';
+
 
 export function addDay(newDay: NewDay, newPeople: NewPerson[]) {
     const request = apiHelper.apiCall(
@@ -75,8 +79,8 @@ export function addPeople(newPeople: NewPerson[], newDate: string) {
             dispatch(getDay(newDate));
         })
         .catch((error: any) => {
+            console.log(error);
             dispatch(postPeopleFailure(error));
-            throw(error);
         });
     };
 }
@@ -97,6 +101,47 @@ function postPeopleSuccessful(response: Person[]) {
 function postPeopleFailure(error: any) {
     return {
         type: POST_PEOPLE_FAILURE,
+        payload: error,
+    };
+}
+
+export function removePeople(removedPeople: Person[], newDate: string) {
+    const request = apiHelper.apiCall(
+        'DELETE',
+        'People',
+        removedPeople,
+    );
+
+    return (dispatch: Function) => {
+        dispatch(removePeopleStarted());
+        request
+        .then((response: any) => {
+            dispatch(removePeopleSuccessful(removedPeople));
+            dispatch(getDay(newDate));
+        })
+        .catch((error: any) => {
+            console.log(error);
+            dispatch(removePeopleFailure(error));
+        });
+    };
+}
+
+function removePeopleStarted() {
+    return {
+        type: REMOVE_PEOPLE_STARTED,
+    };
+}
+
+function removePeopleSuccessful(response: Person[]) {
+    return {
+        type: REMOVE_PEOPLE_SUCCESSFUL,
+        payload: response,
+    };
+}
+
+function removePeopleFailure(error: any) {
+    return {
+        type: REMOVE_PEOPLE_FAILURE,
         payload: error,
     };
 }

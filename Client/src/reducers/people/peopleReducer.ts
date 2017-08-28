@@ -8,6 +8,9 @@ import {
     POST_PEOPLE_STARTED,
     POST_PEOPLE_SUCCESSFUL,
     POST_PEOPLE_FAILURE,
+    REMOVE_PEOPLE_STARTED,
+    REMOVE_PEOPLE_SUCCESSFUL,
+    REMOVE_PEOPLE_FAILURE,
 } from '../../actions/planner/plannerActions';
 
 interface peopleReducerState {
@@ -57,6 +60,25 @@ function peopleReducer(state: peopleReducerState = {
             error: false,
         };
     case POST_PEOPLE_FAILURE:
+        return {
+            ...state,
+            loading: false,
+            error: true,
+        };
+    case REMOVE_PEOPLE_STARTED:
+        return {
+            ...state,
+            loading: true,
+            error: false,
+        };
+    case REMOVE_PEOPLE_SUCCESSFUL:
+        return {
+            ...state,
+            people: [...state.people.filter((person: Person) => action.payload.indexOf(person) === -1)],
+            loading: false,
+            error: false,
+        };
+    case REMOVE_PEOPLE_FAILURE:
         return {
             ...state,
             loading: false,

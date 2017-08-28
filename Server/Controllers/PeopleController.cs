@@ -93,20 +93,23 @@ namespace HouseFoodAPI.Controllers
         }
 
         // DELETE
-        [HttpDelete("{Personid}")]
-        public IActionResult Delete(int Personid)
+        [HttpDelete]
+        public IActionResult Delete([FromBody]People[] People)
         {
             try
             {
-                Validation.PersonShouldExist(Personid);
-
-                var Response = _context.People.Remove(_context.People.Find(Personid)).Entity;
+                List<People> Response = new List<People>();
+                foreach (People person in People) {
+                    Validation.PersonShouldExist(person.Personid);
+                    var IndividualResponse = _context.People.Remove(_context.People.Find(person.Personid)).Entity;
+                    Response.Add(IndividualResponse);
+                }
                 _context.SaveChanges();
                 return Handler.HandleDeleteResponse(Response);
             }
             catch (Exception ex)
             {
-                return Handler.HandleException(ex, Personid);
+                return Handler.HandleException(ex, People);
             }
         }
     }

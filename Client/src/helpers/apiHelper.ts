@@ -25,7 +25,9 @@ class APIHelper {
     }
   
     static checkStatus(response : any) {
-        if (response.ok) {
+        if (response.ok && response.status === 204) {
+            return true;
+        } else if (response.ok) {
             return response.json();
         } else {
             const error = new Error(response.statusText);

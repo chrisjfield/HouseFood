@@ -26,6 +26,7 @@ import {
     updateDay,
     addDay, 
     addPeople,
+    removePeople,
 } from '../../actions/planner/plannerActions';
 
 import AutoComplete from 'material-ui/AutoComplete';
@@ -105,7 +106,8 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
         ? [...new Set<string>(nextProps.people.map((person: Person) => person.person))]
         : [];
 
-        const calendarView = nextProps.days.map((day: Day) => {
+        const calendarView = nextProps.days
+        ? nextProps.days.map((day: Day) => {
             const mealName: string = nextProps.meals ? nextProps.meals.find((meal: Meal) => meal.mealid === day.mealid).name : null;
             const numberOfPeople: string = day.numberofpeople === 0 
                 ? 'no one in' 
@@ -118,7 +120,8 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                 allDay: true,
             };
             return calendarItem;
-        });
+        })
+        : null;
            
         this.setState({
             calendarView,
@@ -217,8 +220,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
             
             this.props.dispatch(updateDay(updatedDate, updatedDay));
             newPeople.length > 0 ? this.props.dispatch(addPeople(newPeople, updatedDate)) : null;
-            // removedPeople.length > 0 ? this.props.dispatch(removePeople(removedPeople)) : null;
-            console.log(removedPeople);
+            removedPeople.length > 0 ? this.props.dispatch(removePeople(removedPeople, updatedDate)) : null;
         } else {
             const newDay: NewDay = {
                 mealid,
@@ -280,7 +282,9 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                             {this.state.selectedDayPeople
                                 ? this.state.selectedDayPeople.map((person: Person) => this.createChips(person))
                                 : null}
-                        
+                            <div>
+                                <br/>
+                            </div>
                             <AutoComplete
                                 hintText="Add Person"
                                 maxSearchResults={5}
@@ -298,9 +302,11 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
 
     handleChipAdd = (event: any)  => {
         event.preventDefault();
-        const personExists: Person = this.state.selectedDayPeople
-            .find((person: Person) => person.person.toLowerCase() === this.state.addPersonText.toLowerCase());
-        if (!personExists) {
+        const personExists: Person = (this.state.addPersonText && this.state.addPersonText !== '')
+            ? this.state.selectedDayPeople
+                .find((person: Person) => person.person.toLowerCase() === this.state.addPersonText.toLowerCase())
+            : undefined;
+        if (!personExists && this.state.addPersonText && this.state.addPersonText !== '') {
             const newPerson: Person = {
                 date: this.state.selectedDate,
                 person: this.state.addPersonText,
