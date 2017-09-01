@@ -6,7 +6,11 @@ import { Dispatch } from 'redux';
 import { MealDetail } from '../../interfaces/mealDetailsInterfaces';
 import { Ingredient } from '../../interfaces/ingredientInterfaces';
 
-import { getMealDetails } from '../../actions/mealDetails/mealDetailActions';
+import { 
+    getMealDetails,
+    deletetBulkMealDetails,
+    putBulkMealDetails, 
+} from '../../actions/mealDetails/mealDetailActions';
 import { getIngredients } from '../../actions/ingredient/ingredientActions';
 
 import {
@@ -19,6 +23,8 @@ import {
   } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
+import Delete from 'material-ui/svg-icons/action/delete';
+import IconButton from 'material-ui/IconButton';
 
 interface MealEditProps {
     mealDetails: MealDetail[];
@@ -32,6 +38,7 @@ interface MealEditProps {
 interface MealEditState {
     filterdMealDetails: MealDetail[];
     updatedMealDetails: MealDetail[];
+    deletedMealDetails: MealDetail[];
     mealid: number;
 }
 
@@ -42,6 +49,7 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
         this.state = {
             filterdMealDetails: [],
             updatedMealDetails: [],
+            deletedMealDetails: [],
             mealid: undefined,
         };
     }
@@ -69,20 +77,28 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
 
     getTableRows() {
         return this.state.updatedMealDetails
-            .map((mealDetail: MealDetail) => this.createTableRows(mealDetail)); 
-
+            .map((mealDetail: MealDetail) => this.createExistingTableRows(mealDetail)); 
     }
 
-    createTableRows(mealDetail: MealDetail) {
+    createExistingTableRows(mealDetail: MealDetail) {
         const ingredient: Ingredient = this.props.ingredients
             .find((ingredient: Ingredient) => ingredient.ingredientid === mealDetail.ingredientid);
         return (
             <TableRow key={mealDetail.mealingredientid}>
+                <TableRowColumn>
+                    <IconButton 
+                        tooltip="Remove Item" 
+                        onClick={() => this.handleDelete(mealDetail)}
+                    >
+                        <Delete/>
+                    </IconButton> 
+                </TableRowColumn>
                 <TableRowColumn>{ingredient.name}</TableRowColumn>
                 <TableRowColumn>
                     <TextField
                         defaultValue={mealDetail.amount}
                         hintText="Quantity"
+                        errorText={!mealDetail.amount ? 'Please set a quantity' : null}
                         onChange={(event: object, newValue: string) => this.editExistingItemQuantity(mealDetail.mealingredientid, newValue)}
                         type="number"
                     />
@@ -90,6 +106,14 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
                 <TableRowColumn>{ingredient.units}</TableRowColumn>
             </TableRow>
         );
+    }
+
+    handleDelete = (removedMealDetail: MealDetail) => {
+        this.setState({
+            updatedMealDetails: [...this.state.updatedMealDetails
+                .filter((mealDetail: MealDetail) => mealDetail.mealingredientid !== removedMealDetail.mealingredientid)],
+            deletedMealDetails: [...this.state.deletedMealDetails, removedMealDetail],
+        });
     }
 
     editExistingItemQuantity = (mealingredientid: number, newValue: string) => {
@@ -108,6 +132,7 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
         return (
             <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                 <TableRow>
+                    <TableHeaderColumn></TableHeaderColumn>
                     <TableHeaderColumn>Item</TableHeaderColumn>
                     <TableHeaderColumn>Quantity</TableHeaderColumn>
                     <TableHeaderColumn>Units</TableHeaderColumn>
@@ -134,7 +159,13 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
     }
 
     saveMeal = () => {
-
+        const invalidQuantity: MealDetail = this.state.updatedMealDetails.find((mealDetail: MealDetail) => !mealDetail.amount);
+        const url: string = '/Meals/' + String(this.state.mealid);
+        if (!invalidQuantity) {
+            this.props.dispatch(deletetBulkMealDetails(this.state.deletedMealDetails));
+            this.props.dispatch(putBulkMealDetails(this.state.updatedMealDetails));
+            this.props.history.push(url);
+        }
     }
 
     render() {

@@ -89,6 +89,27 @@ namespace HouseFoodAPI.Controllers
             }
         }
 
+        [HttpPut("bulk")]
+        public IActionResult BulkPut([FromBody]Mealingredients[] Mealingredients)
+        {
+            try
+            {
+                List<Mealingredients> Response = new List<Mealingredients>();
+                foreach (Mealingredients mealingredients in Mealingredients) {
+                    Validation.MealIngredientShouldExist(mealingredients.Mealingredientid);
+
+                    var IndividualResponse = _context.Mealingredients.Update(mealingredients).Entity;
+                    Response.Add(IndividualResponse);
+                }
+                _context.SaveChanges();
+                return Handler.HandlePutResponse(Response);
+            }
+            catch (Exception ex)
+            {
+                return Handler.HandleException(ex, Mealingredients);
+            }
+        }
+
         // DELETE
         [HttpDelete("{Mealingredientid}")]
         public IActionResult Delete(int Mealingredientid)
@@ -107,18 +128,26 @@ namespace HouseFoodAPI.Controllers
             }
         }
 
-        [HttpDelete("bulk/{Mealid}")]
-        public IActionResult BulkDelete(int Mealid)
+        [HttpDelete("bulk")]
+        public IActionResult BulkDelete([FromBody]Mealingredients[] Mealingredients)
         {
             try
             {
-                var rowsAffected = _context.Database.ExecuteSqlCommand("DELETE FROM MEALINGREDIENTS WHERE MEALID = {0}", Mealid);
+                List<Mealingredients> Response = new List<Mealingredients>();
+                foreach (Mealingredients mealingredients in Mealingredients) {
+                    Validation.MealIngredientShouldExist(mealingredients.Mealingredientid);
+
+                    var IndividualResponse = _context.Mealingredients
+                        .Remove(_context.Mealingredients
+                        .Find(mealingredients.Mealingredientid)).Entity;
+                    Response.Add(IndividualResponse);
+                }
                 _context.SaveChanges();
-                return Handler.HandleBulkDeleteResponse(rowsAffected);
+                return Handler.HandleDeleteResponse(Response);
             }
             catch (Exception ex)
             {
-                return Handler.HandleException(ex, Mealid);
+                return Handler.HandleException(ex, Mealingredients);
             }
         }
     }
