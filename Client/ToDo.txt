@@ -1,9 +1,15 @@
 List page:
 New (include calculate for date range)
 
-meals page:
-add - autoselect ingredients or add new
-edit
+list edit page:
+save existing record edit
+remove existing rows
+add new rows (+ ingredients...)
+
+meal edit page:
+save existing record edit
+remove existing rows
+add new rows (+ ingredients...)
 
 error handling
 loading handling

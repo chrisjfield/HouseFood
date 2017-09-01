@@ -11,3 +11,9 @@ export interface GenerateListDetail {
     endDate: Date;
     listName: string;
 }
+
+export interface NewList {
+    name: string; 
+    datecreated: Date;
+    complete: boolean;
+}

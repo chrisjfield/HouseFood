@@ -3,6 +3,8 @@ import {
     GET_MEALS_STARTED,
     GET_MEALS_SUCCESSFUL,
     GET_MEALS_FAILURE,
+    SAVE_MEAL_SUCCESSFUL,
+    EDIT_MEAL_SUCCESSFUL,
 } from '../../actions/meals/mealActions';
 
 interface mealReducerState {
@@ -37,6 +39,20 @@ function mealReducer(state: mealReducerState = {
             ...state,
             loading: false,
             error: true,
+        };
+    case SAVE_MEAL_SUCCESSFUL:
+        return {
+            ...state,
+            meals: [...state.meals, action.payload],
+            loading: false,
+            error: false,
+        };
+    case EDIT_MEAL_SUCCESSFUL:
+        return {
+            ...state,
+            meals: [...state.meals.map((meal: Meal) => meal.mealid === action.payload.mealid ? action.payload : meal)],
+            loading: false,
+            error: false,
         };
     default:
         return state;

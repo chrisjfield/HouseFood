@@ -6,6 +6,8 @@ import {
     COMPLETE_LISTS_STARTED,
     COMPLETE_LISTS_SUCCESSFUL,
     COMPLETE_LISTS_FAILURE,
+    SAVE_LIST_SUCCESSFUL,
+    EDIT_LIST_SUCCESSFUL,
 } from '../../actions/lists/listActions';
 import { 
     GENERATE_LIST_STARTED,
@@ -82,6 +84,20 @@ function listsReducer(state: listsReducerState = {
             ...state,
             loading: false,
             error: true,
+        };
+    case SAVE_LIST_SUCCESSFUL:
+        return {
+            ...state,
+            lists: [...state.lists, action.payload],
+            loading: false,
+            error: false,
+        };
+    case EDIT_LIST_SUCCESSFUL:
+        return {
+            ...state,
+            lists: [...state.lists.map((list: List) => list.listid === action.payload.listid ? action.payload : list)],
+            loading: false,
+            error: false,
         };
     default:
         return state;

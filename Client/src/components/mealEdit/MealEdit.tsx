@@ -18,8 +18,9 @@ import {
     TableRowColumn,
   } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
+import TextField from 'material-ui/TextField';
 
-interface MealDetailsProps {
+interface MealEditProps {
     mealDetails: MealDetail[];
     ingredients: Ingredient[];
     updating: boolean;
@@ -28,17 +29,19 @@ interface MealDetailsProps {
     match: any;
 }
 
-interface MealDetailsState {
+interface MealEditState {
     filterdMealDetails: MealDetail[];
+    updatedMealDetails: MealDetail[];
     mealid: number;
 }
 
-class MealDetails extends React.Component<MealDetailsProps, MealDetailsState> {
+class MealEdit extends React.Component<MealEditProps, MealEditState> {
     constructor(props: any) {
         super();
 
         this.state = {
             filterdMealDetails: [],
+            updatedMealDetails: [],
             mealid: undefined,
         };
     }
@@ -48,20 +51,24 @@ class MealDetails extends React.Component<MealDetailsProps, MealDetailsState> {
         this.props.dispatch(getIngredients());
     }
 
-    componentWillReceiveProps(nextProps: MealDetailsProps) {
+    componentWillReceiveProps(nextProps: MealEditProps) {
         const mealid: number =  Number(nextProps.match.params.mealid);
-        const filterdMealDetails = nextProps.mealDetails 
+        const filterdMealDetails: MealDetail[] = nextProps.mealDetails 
             ? nextProps.mealDetails.filter((mealDetail: MealDetail) => mealDetail.mealid === mealid) 
             : []; 
-           
+        const updatedMealDetails: MealDetail[] = (this.state && this.state.updatedMealDetails.length !== 0)
+            ? this.state.updatedMealDetails
+            : [...filterdMealDetails];
+
         this.setState({
             mealid,
             filterdMealDetails, 
+            updatedMealDetails,
         });
     }
 
     getTableRows() {
-        return this.state.filterdMealDetails
+        return this.state.updatedMealDetails
             .map((mealDetail: MealDetail) => this.createTableRows(mealDetail)); 
 
     }
@@ -72,10 +79,29 @@ class MealDetails extends React.Component<MealDetailsProps, MealDetailsState> {
         return (
             <TableRow key={mealDetail.mealingredientid}>
                 <TableRowColumn>{ingredient.name}</TableRowColumn>
-                <TableRowColumn>{mealDetail.amount} {ingredient.units}</TableRowColumn>
-                <TableRowColumn></TableRowColumn>
+                <TableRowColumn>
+                    <TextField
+                        defaultValue={mealDetail.amount}
+                        hintText="Quantity"
+                        onChange={(event: object, newValue: string) => this.editExistingItemQuantity(mealDetail.mealingredientid, newValue)}
+                        type="number"
+                    />
+                </TableRowColumn>
+                <TableRowColumn>{ingredient.units}</TableRowColumn>
             </TableRow>
         );
+    }
+
+    editExistingItemQuantity = (mealingredientid: number, newValue: string) => {
+        this.setState({
+            updatedMealDetails: [...this.state.updatedMealDetails
+                .map((mealDetail: MealDetail) => { 
+                    return mealDetail.mealingredientid === mealingredientid 
+                    ? { ...mealDetail, amount: Number(newValue) }
+                    : mealDetail;
+                },
+            )],
+        });
     }
 
     createTableHeader() {
@@ -84,7 +110,7 @@ class MealDetails extends React.Component<MealDetailsProps, MealDetailsState> {
                 <TableRow>
                     <TableHeaderColumn>Item</TableHeaderColumn>
                     <TableHeaderColumn>Quantity</TableHeaderColumn>
-                    <TableHeaderColumn></TableHeaderColumn>
+                    <TableHeaderColumn>Units</TableHeaderColumn>
                 </TableRow>
             </TableHeader>
         );
@@ -107,9 +133,8 @@ class MealDetails extends React.Component<MealDetailsProps, MealDetailsState> {
         );
     }
 
-    editMeal = () => {
-        const url: string = '/Meals/Edit/' + String(this.state.mealid);
-        this.props.history.push(url);
+    saveMeal = () => {
+
     }
 
     render() {
@@ -117,12 +142,12 @@ class MealDetails extends React.Component<MealDetailsProps, MealDetailsState> {
             <div>
                 <br/>
                 <FlatButton
-                    label="Edit Meal"
+                    label="Save"
                     primary={true}
-                    onClick={this.state.mealid ? this.editMeal : undefined}
+                    onClick={this.state.mealid ? this.saveMeal : undefined}
                 />
                 <br/>
-                {(this.state && this.state.filterdMealDetails && this.props.ingredients)
+                {(this.state && this.state.updatedMealDetails && this.props.ingredients)
                 ? this.createTable()
                 : null}
             </div>
@@ -137,5 +162,5 @@ const mapStateToProps = (store : any, props : any) => {
     };
 };
   
-const ConnectedMealDetails = connect(mapStateToProps)(MealDetails);
-export default ConnectedMealDetails;
+const ConnectedMealEdit = connect(mapStateToProps)(MealEdit);
+export default ConnectedMealEdit;

@@ -7,6 +7,7 @@ using HouseFoodAPI.Model;
 using HouseFoodAPI.Helpers;
 using HouseFoodAPI.Validation;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.EntityFrameworkCore;
 
 namespace HouseFoodAPI.Controllers
 {
@@ -103,6 +104,21 @@ namespace HouseFoodAPI.Controllers
             catch (Exception ex)
             {
                 return Handler.HandleException(ex, Mealingredientid);
+            }
+        }
+
+        [HttpDelete("bulk/{Mealid}")]
+        public IActionResult BulkDelete(int Mealid)
+        {
+            try
+            {
+                var rowsAffected = _context.Database.ExecuteSqlCommand("DELETE FROM MEALINGREDIENTS WHERE MEALID = {0}", Mealid);
+                _context.SaveChanges();
+                return Handler.HandleBulkDeleteResponse(rowsAffected);
+            }
+            catch (Exception ex)
+            {
+                return Handler.HandleException(ex, Mealid);
             }
         }
     }
