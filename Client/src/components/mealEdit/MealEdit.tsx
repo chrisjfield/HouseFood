@@ -97,13 +97,16 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
     }
 
     getNewTableRows = () => {
-        this.getBlankRow();
         return this.state.newMealDetails
             .map((newMealDetail: NewMealDetail) => this.createNewTableRows(newMealDetail)); 
     }
 
-    getBlankRow = () => {
-        const lastRow: NewMealDetail = this.state.newMealDetails.slice(-1).pop();
+    getBlankRow = (updatedMealDetails: NewMealDetail[]) => {
+        const lastRow: NewMealDetail = updatedMealDetails.slice(-1).pop();
+        let newMealDetails: NewMealDetail[] = [...updatedMealDetails];
+        let lastRowKey: string = this.state.lastRowKey;
+        let newDetailKey: number = this.state.newDetailKey;
+
         if (lastRow.amount && lastRow.ingredient && lastRow.unit) {
             const newRow: NewMealDetail = {
                 uniqueKey: 'new' + String(this.state.newDetailKey),
@@ -112,12 +115,16 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
                 unit: '',
             };
 
-            this.setState({
-                lastRowKey: 'new' + String(this.state.newDetailKey),
-                newDetailKey: this.state.newDetailKey + 1,
-                newMealDetails: [...this.state.newMealDetails, newRow],
-            });
+            newMealDetails = [...newMealDetails, newRow];
+            lastRowKey = 'new' + String(this.state.newDetailKey);
+            newDetailKey = this.state.newDetailKey + 1;
         }
+
+        this.setState({
+            newMealDetails,
+            lastRowKey,
+            newDetailKey,
+        });
     }
 
     handleRemoveNew = (removedNewMealDetail: string) => {
@@ -128,46 +135,51 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
     }
 
     editNewItemQuantity = (uniqueKey: string, newValue: string) => {
-        this.setState({
-            newMealDetails: [...this.state.newMealDetails
-                .map((newMealDetail: NewMealDetail) => { 
-                    return newMealDetail.uniqueKey === uniqueKey 
-                    ? { ...newMealDetail, amount: Number(newValue) }
+        let newMealDetails: NewMealDetail[] = JSON.parse(JSON.stringify(this.state.newMealDetails));
+        newMealDetails = [...newMealDetails
+            .map((newMealDetail: NewMealDetail) => { 
+                return newMealDetail.uniqueKey === uniqueKey 
+                    ? 
+                    { ...newMealDetail, 
+                        amount: Number(newValue), 
+                    }
                     : newMealDetail;
-                },
-            )],
-        });
+            })],
+        this.getBlankRow(newMealDetails);
     }
 
     editNewItemUnit = (uniqueKey: string, newValue: string) => {
-        this.setState({
-            newMealDetails: [...this.state.newMealDetails
-                .map((newMealDetail: NewMealDetail) => { 
-                    return newMealDetail.uniqueKey === uniqueKey 
-                    ? { ...newMealDetail, unit: newValue }
+        let newMealDetails: NewMealDetail[] = JSON.parse(JSON.stringify(this.state.newMealDetails));
+        newMealDetails = [...newMealDetails
+            .map((newMealDetail: NewMealDetail) => { 
+                return newMealDetail.uniqueKey === uniqueKey 
+                    ?
+                    { ...newMealDetail, 
+                        unit: newValue ,
+                    }
                     : newMealDetail;
-                },
-            )],
-        });
+            })],
+
+        this.getBlankRow(newMealDetails);
     }
 
     editNewItemIngredient = (uniqueKey: string, newValue: string) => {
         const existingIngredient: Ingredient = this.props.ingredients
             .find((ingredient: Ingredient) => ingredient.name.toLowerCase() === newValue.toLowerCase());
 
-        this.setState({
-            newMealDetails: [...this.state.newMealDetails
-                .map((newMealDetail: NewMealDetail) => { 
-                    return newMealDetail.uniqueKey === uniqueKey 
-                    ? 
-                        { ...newMealDetail, 
-                            ingredient: newValue, 
-                            unit: existingIngredient ? existingIngredient.units : newMealDetail.unit, 
-                        }
+        let newMealDetails: NewMealDetail[] = JSON.parse(JSON.stringify(this.state.newMealDetails));
+        newMealDetails = [...newMealDetails
+            .map((newMealDetail: NewMealDetail) => { 
+                return newMealDetail.uniqueKey === uniqueKey 
+                    ?   
+                    { ...newMealDetail, 
+                        ingredient: newValue, 
+                        unit: existingIngredient ? existingIngredient.units : newMealDetail.unit, 
+                    }
                     : newMealDetail;
-                },
-            )],
-        });
+            })],
+
+        this.getBlankRow(newMealDetails);
     }
 
     createNewTableRows(newMealDetail: NewMealDetail) {
