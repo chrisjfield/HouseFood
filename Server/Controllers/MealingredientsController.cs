@@ -70,6 +70,25 @@ namespace HouseFoodAPI.Controllers
             }
         }
 
+        [HttpPost("bulk")]
+        public IActionResult BulkPost([FromBody]Mealingredients[] Mealingredients)
+        {
+            try
+            {
+                List<Mealingredients> Response = new List<Mealingredients>();
+                foreach (Mealingredients mealingredient in Mealingredients) {
+                    var IndividualResponse = _context.Mealingredients.Add(mealingredient).Entity;
+                    Response.Add(IndividualResponse);
+                }
+                _context.SaveChanges();
+                return Handler.HandlePostResponse(Response);
+            }
+            catch (Exception ex)
+            {
+                return Handler.HandleException(ex, Mealingredients);
+            }
+        }
+
         // PUT
         [HttpPut("{Mealingredientid}")]
         public IActionResult Put(int Mealingredientid, [FromBody]Mealingredients Mealingredient)

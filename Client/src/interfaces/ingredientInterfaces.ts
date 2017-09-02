@@ -3,3 +3,8 @@ export interface Ingredient {
     name: string;
     units: string; 
 }
+
+export interface NewIngredient {
+    name: string;
+    units: string; 
+}

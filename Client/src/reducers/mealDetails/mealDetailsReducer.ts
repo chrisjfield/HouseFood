@@ -5,6 +5,7 @@ import {
     GET_MEALDETAILS_FAILURE,
     DELETE_BULK_MEALDETAILS_SUCCESSFUL,
     PUT_BULK_MEALDETAILS_SUCCESSFUL,
+    POST_BULK_MEALDETAILS_SUCCESSFUL,
 } from '../../actions/mealDetails/mealDetailActions';
 
 interface mealDetailsReducerState {
@@ -61,6 +62,13 @@ function mealDetailsReducer(state: mealDetailsReducerState = {
                         .find((payload: MealDetail) => payload.mealingredientid === mealDetail.mealingredientid);
                     return wasUpdated ? wasUpdated : mealDetail;
                 })],
+            loading: false,
+            error: false,
+        };
+    case POST_BULK_MEALDETAILS_SUCCESSFUL:
+        return {
+            ...state,
+            mealDetails: [...state.mealDetails, ...action.payload],
             loading: false,
             error: false,
         };

@@ -69,6 +69,25 @@ namespace HouseFoodAPI.Controllers
             }
         }
 
+        [HttpPost("bulk")]
+        public IActionResult BulkPost([FromBody]Ingredients[] ingredients)
+        {
+            try
+            {
+                List<Ingredients> Response = new List<Ingredients>();
+                foreach (Ingredients ingredient in ingredients) {
+                    var IndividualResponse = _context.Ingredients.Add(ingredient).Entity;
+                    Response.Add(IndividualResponse);
+                }
+                _context.SaveChanges();
+                return Handler.HandlePostResponse(Response);
+            }
+            catch (Exception ex)
+            {
+                return Handler.HandleException(ex, ingredients);
+            }
+        }
+
         // PUT
         [HttpPut("{Ingredientid}")]
         public IActionResult Put(int Ingredientid, [FromBody]Ingredients Ingredient)

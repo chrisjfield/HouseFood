@@ -5,9 +5,15 @@ export interface MealDetail {
     amount: number;
 }
 
-export interface NewMealDetail {
+export interface NewMealItem {
     uniqueKey: string;
     ingredient: string;
     amount: number;
     unit: string;
+}
+
+export interface NewMealDetail {
+    mealid: number; 
+    ingredientid: number;
+    amount: number;
 }

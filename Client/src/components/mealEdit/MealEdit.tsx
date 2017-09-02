@@ -5,16 +5,25 @@ import { Dispatch } from 'redux';
 
 import { 
     MealDetail, 
+    NewMealItem,
     NewMealDetail, 
 } from '../../interfaces/mealDetailsInterfaces';
-import { Ingredient } from '../../interfaces/ingredientInterfaces';
+import { 
+    Ingredient,
+    NewIngredient, 
+} from '../../interfaces/ingredientInterfaces';
 
 import { 
     getMealDetails,
     deletetBulkMealDetails,
     putBulkMealDetails, 
+    postBulkMealDetails,
 } from '../../actions/mealDetails/mealDetailActions';
-import { getIngredients } from '../../actions/ingredient/ingredientActions';
+
+import { 
+    getIngredients,
+    postBulkIngredients, 
+} from '../../actions/ingredient/ingredientActions';
 
 import {
     Table,
@@ -43,7 +52,7 @@ interface MealEditState {
     filterdMealDetails: MealDetail[];
     updatedMealDetails: MealDetail[];
     deletedMealDetails: MealDetail[];
-    newMealDetails: NewMealDetail[];
+    newMealDetails: NewMealItem[];
     mealid: number;
     newDetailKey: number;
     ingredientList: string[];
@@ -98,17 +107,17 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
 
     getNewTableRows = () => {
         return this.state.newMealDetails
-            .map((newMealDetail: NewMealDetail) => this.createNewTableRows(newMealDetail)); 
+            .map((newMealItem: NewMealItem) => this.createNewTableRows(newMealItem)); 
     }
 
-    getBlankRow = (updatedMealDetails: NewMealDetail[]) => {
-        const lastRow: NewMealDetail = updatedMealDetails.slice(-1).pop();
-        let newMealDetails: NewMealDetail[] = [...updatedMealDetails];
+    getBlankRow = (updatedMealDetails: NewMealItem[]) => {
+        const lastRow: NewMealItem = updatedMealDetails.slice(-1).pop();
+        let newMealDetails: NewMealItem[] = [...updatedMealDetails];
         let lastRowKey: string = this.state.lastRowKey;
         let newDetailKey: number = this.state.newDetailKey;
 
         if (lastRow.amount && lastRow.ingredient && lastRow.unit) {
-            const newRow: NewMealDetail = {
+            const newRow: NewMealItem = {
                 uniqueKey: 'new' + String(this.state.newDetailKey),
                 ingredient: '',
                 amount: 0,
@@ -130,14 +139,14 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
     handleRemoveNew = (removedNewMealDetail: string) => {
         this.setState({
             newMealDetails: [...this.state.newMealDetails
-                .filter((newMealDetail: NewMealDetail) => newMealDetail.uniqueKey !== removedNewMealDetail)],
+                .filter((newMealDetail: NewMealItem) => newMealDetail.uniqueKey !== removedNewMealDetail)],
         });
     }
 
     editNewItemQuantity = (uniqueKey: string, newValue: string) => {
-        let newMealDetails: NewMealDetail[] = JSON.parse(JSON.stringify(this.state.newMealDetails));
+        let newMealDetails: NewMealItem[] = JSON.parse(JSON.stringify(this.state.newMealDetails));
         newMealDetails = [...newMealDetails
-            .map((newMealDetail: NewMealDetail) => { 
+            .map((newMealDetail: NewMealItem) => { 
                 return newMealDetail.uniqueKey === uniqueKey 
                     ? 
                     { ...newMealDetail, 
@@ -149,9 +158,9 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
     }
 
     editNewItemUnit = (uniqueKey: string, newValue: string) => {
-        let newMealDetails: NewMealDetail[] = JSON.parse(JSON.stringify(this.state.newMealDetails));
+        let newMealDetails: NewMealItem[] = JSON.parse(JSON.stringify(this.state.newMealDetails));
         newMealDetails = [...newMealDetails
-            .map((newMealDetail: NewMealDetail) => { 
+            .map((newMealDetail: NewMealItem) => { 
                 return newMealDetail.uniqueKey === uniqueKey 
                     ?
                     { ...newMealDetail, 
@@ -167,9 +176,9 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
         const existingIngredient: Ingredient = this.props.ingredients
             .find((ingredient: Ingredient) => ingredient.name.toLowerCase() === newValue.toLowerCase());
 
-        let newMealDetails: NewMealDetail[] = JSON.parse(JSON.stringify(this.state.newMealDetails));
+        let newMealDetails: NewMealItem[] = JSON.parse(JSON.stringify(this.state.newMealDetails));
         newMealDetails = [...newMealDetails
-            .map((newMealDetail: NewMealDetail) => { 
+            .map((newMealDetail: NewMealItem) => { 
                 return newMealDetail.uniqueKey === uniqueKey 
                     ?   
                     { ...newMealDetail, 
@@ -182,7 +191,7 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
         this.getBlankRow(newMealDetails);
     }
 
-    createNewTableRows(newMealDetail: NewMealDetail) {
+    createNewTableRows(newMealDetail: NewMealItem) {
         const existingIngredient: Ingredient = this.props.ingredients
             .find((ingredient: Ingredient) => ingredient.name.toLowerCase() === newMealDetail.ingredient.toLowerCase());
         return (
@@ -321,12 +330,47 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
     }
 
     saveMeal = () => {
-        const invalidQuantity: MealDetail = this.state.updatedMealDetails.find((mealDetail: MealDetail) => !mealDetail.amount);
+        const invalidExistingItem: MealDetail = this.state.updatedMealDetails
+            .find((mealDetail: MealDetail) => !mealDetail.amount);
+        const newItems: NewMealItem[] = this.state.newMealDetails
+            .filter((mealDetail: NewMealItem) => mealDetail.uniqueKey !== this.state.lastRowKey);
+        const invalidNewItem: NewMealItem = newItems
+            .find((mealDetail: NewMealItem) => !mealDetail.ingredient || !mealDetail.amount || !mealDetail.unit);
+
+        const newIngredients: NewIngredient[] = newItems
+            .filter((newMealDetail: NewMealItem) => this.state.ingredientList.indexOf(newMealDetail.ingredient) === -1)
+            .map((newMealDetail: NewMealItem) => {
+                return {
+                    name: newMealDetail.ingredient,
+                    units: newMealDetail.unit,
+                };
+            });
+
         const url: string = '/Meals/' + String(this.state.mealid);
-        if (!invalidQuantity) {
-            this.props.dispatch(deletetBulkMealDetails(this.state.deletedMealDetails));
-            this.props.dispatch(putBulkMealDetails(this.state.updatedMealDetails));
-            this.props.history.push(url);
+
+        if (!invalidExistingItem && !invalidNewItem) {
+            this.props.dispatch(postBulkIngredients(newIngredients))
+            .then((reponse: Ingredient[]) => {
+                const fullIngredients: Ingredient[] = [...this.props.ingredients, ...reponse];
+
+                const newMealDetail: NewMealDetail[] = newItems
+                .map((newMealItem: NewMealItem) => {
+                    const newIngredient: Ingredient = fullIngredients
+                        .find((ingredients: Ingredient) => ingredients.name.toLowerCase() === newMealItem.ingredient.toLowerCase());
+                    return {
+                        mealid: this.state.mealid, 
+                        ingredientid: newIngredient.ingredientid,
+                        amount: newMealItem.amount,
+                    };
+                });
+                this.props.dispatch(postBulkMealDetails(newMealDetail));
+                this.props.dispatch(deletetBulkMealDetails(this.state.deletedMealDetails));
+                this.props.dispatch(putBulkMealDetails(this.state.updatedMealDetails));
+                this.props.history.push(url);
+            })
+            .catch((error: any) => {
+                console.log(error);
+            });
         }
     }
 
