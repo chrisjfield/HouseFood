@@ -3,10 +3,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import Moment from 'react-moment';
+import * as moment from 'moment';
 
 import { 
     List, 
     NewList,
+    GenerateListDetail,
 } from '../../interfaces/listsInterfaces';
 import { 
     getLists,
@@ -14,6 +16,7 @@ import {
     editList,
     saveList, 
 } from '../../actions/lists/listActions';
+import { generateList } from '../../actions/planner/plannerActions';
 
 import {
     Card, 
@@ -29,6 +32,7 @@ import FlatButton from 'material-ui/FlatButton';
 import Toggle from 'material-ui/Toggle';
 import Edit from 'material-ui/svg-icons/editor/mode-edit';
 import TextField from 'material-ui/TextField';
+import DatePicker from 'material-ui/DatePicker';
 
 interface ListsProps {
     lists: List[];
@@ -48,6 +52,11 @@ interface ListsState {
     editListDialogOpen: boolean;
     listEditing: List;
     nameErrorText: string;
+    generateListDialogOpen: boolean;
+    generateListDetail: GenerateListDetail;
+    generateListDialogNameValidation: string;
+    generateListDialogStartValidation: string;
+    generateListDialogEndValidation: string;
 }
 
 const styles = {
@@ -70,6 +79,11 @@ class Lists extends React.Component<ListsProps, ListsState> {
             editListDialogOpen: false,
             listEditing: undefined,
             nameErrorText: undefined,
+            generateListDialogOpen: false,
+            generateListDetail: undefined,
+            generateListDialogNameValidation: undefined,
+            generateListDialogStartValidation: undefined,
+            generateListDialogEndValidation: undefined,
         };
     }
 
@@ -91,6 +105,8 @@ class Lists extends React.Component<ListsProps, ListsState> {
             newListDialogOpen: false,            
             editListDialogOpen: false,
             listEditing: undefined,
+            generateListDialogOpen: false,
+            generateListDetail: undefined,
         });
     }
 
@@ -294,6 +310,120 @@ class Lists extends React.Component<ListsProps, ListsState> {
         });
     }
 
+    getgenerateListDialog () {
+        const actions = [
+            <FlatButton
+              label="Cancel"
+              primary={true}
+              onClick={this.handleDialogClose}
+            />,
+            <FlatButton
+              label="Generate List"
+              primary={true}
+              keyboardFocused={true}
+              onClick={this.handleGenerateList}
+            />,
+        ];
+
+        return (
+            <div>
+                <Dialog
+                    title="Generate List"
+                    actions={actions}
+                    open={this.state.generateListDialogOpen}
+                    onRequestClose={this.handleDialogClose}
+                >
+                Would you like to generate a shopping list for the following date range?
+                    <div>
+                        <br/>
+                    </div>
+                    <TextField
+                        hintText="List Name"
+                        defaultValue={this.state.generateListDetail.listName}
+                        onChange={this.handleChangeListName}
+                        errorText={this.state.generateListDialogNameValidation}
+                    />
+                    <div>
+                        <br/>
+                    </div>
+                    <DatePicker 
+                        hintText="Start Date" 
+                        autoOk={true} 
+                        defaultDate={this.state.generateListDetail.startDate}
+                        onChange={this.handleChangeStartDate}
+                        shouldDisableDate={this.disableDatesPastEnd}
+                        errorText={this.state.generateListDialogStartValidation}
+                    />
+                    <div>
+                        <br/>
+                    </div>
+                    <DatePicker 
+                        hintText="End Date" 
+                        autoOk={true} 
+                        defaultDate={this.state.generateListDetail.endDate}
+                        onChange={this.handleChangeEndDate}
+                        shouldDisableDate={this.disableDatesBeforeStart}
+                        errorText={this.state.generateListDialogEndValidation}
+                    />
+                </Dialog>
+            </div>
+        );
+    }
+
+    handleGenerateList = () => {
+        const newList: GenerateListDetail = this.state.generateListDetail;
+        if (!newList.endDate || !newList.listName || !newList.startDate) {
+            this.setState({
+                generateListDialogNameValidation: !newList.listName ? 'Please choose a list name' : undefined,
+                generateListDialogStartValidation: !newList.startDate ? 'Please choose a start date' : undefined,
+                generateListDialogEndValidation: !newList.endDate ? 'Please choose an end date' : undefined,
+            });
+        } else {
+            this.props.dispatch(generateList(newList));
+        }
+    }
+
+    disableDatesPastEnd = (date: Date) => {
+        return date > this.state.generateListDetail.endDate;
+    }
+
+    disableDatesBeforeStart = (date: Date) => {
+        return date < this.state.generateListDetail.startDate;
+    }
+
+    handleChangeListName = (event: object, newValue: string) => {
+        this.setState({
+            generateListDetail: { ...this.state.generateListDetail, listName: newValue },
+            generateListDialogNameValidation: !newValue ? 'Please choose a list name' : undefined,
+        });
+    }
+
+    handleChangeStartDate = (event: object, date: Date) => {
+        this.setState({
+            generateListDetail: { ...this.state.generateListDetail, startDate: date },
+            generateListDialogStartValidation: !date ? 'Please choose a start date' : undefined,
+        });
+    }
+    
+    handleChangeEndDate = (event: object, date: Date) => {
+        this.setState({
+            generateListDetail: { ...this.state.generateListDetail, endDate: date },
+            generateListDialogEndValidation: !date ? 'Please choose an end date' : undefined,
+        });
+    }
+
+    openGenerateListDialog = () => {
+        const date: Date = new Date();
+        this.setState({
+            generateListDialogOpen: true,
+            generateListDetail: {
+                startDate: date,
+                endDate: moment(date).add(1, 'week').toDate(),
+                listName: null,
+            },
+        });
+    }
+
     render() {
         return (
             <div>
@@ -306,10 +436,18 @@ class Lists extends React.Component<ListsProps, ListsState> {
                     onToggle={(event, isInputChecked) => this.setToggle(isInputChecked)}
                 />
                 <FlatButton
-                    label="Add List"
+                    label="Add New List"
                     primary={true}
                     onClick={this.openNewListDialog}
                 />
+                <FlatButton
+                    label="Generate List"
+                    primary={true}
+                    onClick={this.openGenerateListDialog}
+                />
+                {(this.state && this.state.generateListDialogOpen && this.state.generateListDetail)
+                    ? this.getgenerateListDialog()
+                    : null}
                 {(this.state && this.state.editListDialogOpen && this.state.listEditing)
                     ? this.getEditListDialog()
                     : null}

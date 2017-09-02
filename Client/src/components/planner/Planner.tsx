@@ -211,7 +211,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
 
     handleSave = () => {
         const mealName = this.state.selectedSearchText;
-        const meal: Meal = this.props.meals.find((meal: Meal) => meal.name === mealName);
+        const meal: Meal = this.props.meals.find((meal: Meal) => meal.name.toLowerCase() === mealName.toLowerCase());
         const mealid: number = meal ? meal.mealid : undefined;
         const people: Person[] = this.state.selectedDayPeople;
         if (!mealid) {
