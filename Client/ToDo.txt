@@ -1,14 +1,3 @@
-List page:
-New (include calculate for date range)
-
-list edit page:
-save existing record edit
-remove existing rows
-add new rows (+ ingredients...)
-
-meal edit page:
-add new rows (+ ingredients...)
-
 error handling (global error handler, all reducers feed in errors, snackbar shows them + component will error to custom error page)
 loading handling (need getting, updating, posting and deleting on all reducers. check all are 0 before loading, otherwise progress)
 
