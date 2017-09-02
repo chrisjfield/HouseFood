@@ -4,3 +4,10 @@ export interface MealDetail {
     ingredientid: number;
     amount: number;
 }
+
+export interface NewMealDetail {
+    uniqueKey: string;
+    ingredient: string;
+    amount: number;
+    unit: string;
+}

@@ -3,7 +3,10 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { MealDetail } from '../../interfaces/mealDetailsInterfaces';
+import { 
+    MealDetail, 
+    NewMealDetail, 
+} from '../../interfaces/mealDetailsInterfaces';
 import { Ingredient } from '../../interfaces/ingredientInterfaces';
 
 import { 
@@ -25,6 +28,7 @@ import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import Delete from 'material-ui/svg-icons/action/delete';
 import IconButton from 'material-ui/IconButton';
+import AutoComplete from 'material-ui/AutoComplete';
 
 interface MealEditProps {
     mealDetails: MealDetail[];
@@ -39,7 +43,11 @@ interface MealEditState {
     filterdMealDetails: MealDetail[];
     updatedMealDetails: MealDetail[];
     deletedMealDetails: MealDetail[];
+    newMealDetails: NewMealDetail[];
     mealid: number;
+    newDetailKey: number;
+    ingredientList: string[];
+    lastRowKey: string;
 }
 
 class MealEdit extends React.Component<MealEditProps, MealEditState> {
@@ -51,6 +59,15 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
             updatedMealDetails: [],
             deletedMealDetails: [],
             mealid: undefined,
+            newMealDetails: [{
+                uniqueKey: 'new1',
+                ingredient: '',
+                amount: 0,
+                unit: '',
+            }],
+            newDetailKey: 2,
+            ingredientList: [],
+            lastRowKey: 'new1',
         };
     }
 
@@ -67,15 +84,147 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
         const updatedMealDetails: MealDetail[] = (this.state && this.state.updatedMealDetails.length !== 0)
             ? this.state.updatedMealDetails
             : [...filterdMealDetails];
+        const ingredientList = nextProps.ingredients 
+            ? [...new Set<string>(nextProps.ingredients.map((ingredient: Ingredient) => ingredient.name.toLowerCase()))]
+            : []; 
 
         this.setState({
             mealid,
             filterdMealDetails, 
             updatedMealDetails,
+            ingredientList,
         });
     }
 
-    getTableRows() {
+    getNewTableRows = () => {
+        this.getBlankRow();
+        return this.state.newMealDetails
+            .map((newMealDetail: NewMealDetail) => this.createNewTableRows(newMealDetail)); 
+    }
+
+    getBlankRow = () => {
+        const lastRow: NewMealDetail = this.state.newMealDetails.slice(-1).pop();
+        if (lastRow.amount && lastRow.ingredient && lastRow.unit) {
+            const newRow: NewMealDetail = {
+                uniqueKey: 'new' + String(this.state.newDetailKey),
+                ingredient: '',
+                amount: 0,
+                unit: '',
+            };
+
+            this.setState({
+                lastRowKey: 'new' + String(this.state.newDetailKey),
+                newDetailKey: this.state.newDetailKey + 1,
+                newMealDetails: [...this.state.newMealDetails, newRow],
+            });
+        }
+    }
+
+    handleRemoveNew = (removedNewMealDetail: string) => {
+        this.setState({
+            newMealDetails: [...this.state.newMealDetails
+                .filter((newMealDetail: NewMealDetail) => newMealDetail.uniqueKey !== removedNewMealDetail)],
+        });
+    }
+
+    editNewItemQuantity = (uniqueKey: string, newValue: string) => {
+        this.setState({
+            newMealDetails: [...this.state.newMealDetails
+                .map((newMealDetail: NewMealDetail) => { 
+                    return newMealDetail.uniqueKey === uniqueKey 
+                    ? { ...newMealDetail, amount: Number(newValue) }
+                    : newMealDetail;
+                },
+            )],
+        });
+    }
+
+    editNewItemUnit = (uniqueKey: string, newValue: string) => {
+        this.setState({
+            newMealDetails: [...this.state.newMealDetails
+                .map((newMealDetail: NewMealDetail) => { 
+                    return newMealDetail.uniqueKey === uniqueKey 
+                    ? { ...newMealDetail, unit: newValue }
+                    : newMealDetail;
+                },
+            )],
+        });
+    }
+
+    editNewItemIngredient = (uniqueKey: string, newValue: string) => {
+        const existingIngredient: Ingredient = this.props.ingredients
+            .find((ingredient: Ingredient) => ingredient.name.toLowerCase() === newValue.toLowerCase());
+
+        this.setState({
+            newMealDetails: [...this.state.newMealDetails
+                .map((newMealDetail: NewMealDetail) => { 
+                    return newMealDetail.uniqueKey === uniqueKey 
+                    ? 
+                        { ...newMealDetail, 
+                            ingredient: newValue, 
+                            unit: existingIngredient ? existingIngredient.units : newMealDetail.unit, 
+                        }
+                    : newMealDetail;
+                },
+            )],
+        });
+    }
+
+    createNewTableRows(newMealDetail: NewMealDetail) {
+        const existingIngredient: Ingredient = this.props.ingredients
+            .find((ingredient: Ingredient) => ingredient.name.toLowerCase() === newMealDetail.ingredient.toLowerCase());
+        return (
+            <TableRow key={newMealDetail.uniqueKey}>
+                <TableRowColumn>
+                    {newMealDetail.uniqueKey !== this.state.lastRowKey
+                        ?   (<IconButton 
+                                tooltip="Remove Item" 
+                                onClick={() => this.handleRemoveNew(newMealDetail.uniqueKey)}
+                            >
+                                <Delete/>
+                            </IconButton>)
+                        :null
+                    }
+                </TableRowColumn>
+                <TableRowColumn>
+                    <AutoComplete
+                        hintText="Ingredient"
+                        maxSearchResults={5}
+                        dataSource={this.state.ingredientList}
+                        searchText={newMealDetail.ingredient}
+                        onUpdateInput={(searchText, dataSource) => this.editNewItemIngredient(newMealDetail.uniqueKey, searchText)}
+                        errorText={(!newMealDetail.ingredient  && newMealDetail.uniqueKey !== this.state.lastRowKey) 
+                            ? 'Please set a unit' 
+                            : null}
+                    />
+                </TableRowColumn>
+                <TableRowColumn>
+                    <TextField
+                        value={newMealDetail.amount}
+                        hintText="Quantity"
+                        errorText={(!newMealDetail.amount && newMealDetail.uniqueKey !== this.state.lastRowKey) 
+                            ? 'Please set a quantity' 
+                            : null}
+                        onChange={(event: object, newValue: string) => this.editNewItemQuantity(newMealDetail.uniqueKey, newValue)}
+                        type="number"
+                    />
+                </TableRowColumn>
+                <TableRowColumn>
+                    <TextField
+                        value={newMealDetail.unit}
+                        disabled={existingIngredient ? true : false}
+                        hintText="Units"
+                        errorText={(!newMealDetail.unit && newMealDetail.uniqueKey !== this.state.lastRowKey) 
+                            ? 'Please set a unit' 
+                            : null}
+                        onChange={(event: object, newValue: string) => this.editNewItemUnit(newMealDetail.uniqueKey, newValue)}
+                    />
+                </TableRowColumn>
+            </TableRow>
+        );
+    }
+
+    getExistingTableRows() {
         return this.state.updatedMealDetails
             .map((mealDetail: MealDetail) => this.createExistingTableRows(mealDetail)); 
     }
@@ -151,7 +300,8 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
                         showRowHover={true} 
                         displayRowCheckbox={false}
                     >
-                        {this.getTableRows()}
+                        {this.getExistingTableRows()}
+                        {this.getNewTableRows()}
                     </TableBody>
                 </Table>
             </div>
