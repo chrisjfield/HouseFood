@@ -70,6 +70,25 @@ namespace HouseFoodAPI.Controllers
             }
         }
 
+        [HttpPost("bulk")]
+        public IActionResult BulkPost([FromBody]Listitems[] Listitems)
+        {
+            try
+            {
+                List<Listitems> Response = new List<Listitems>();
+                foreach (Listitems listitem in Listitems) {
+                    var IndividualResponse = _context.Listitems.Add(listitem).Entity;
+                    Response.Add(IndividualResponse);
+                }
+                _context.SaveChanges();
+                return Handler.HandlePostResponse(Response);
+            }
+            catch (Exception ex)
+            {
+                return Handler.HandleException(ex, Listitems);
+            }
+        }
+
         // PUT
         [HttpPut("{Listitemid}")]
         public IActionResult Put(int Listitemid, [FromBody]Listitems Listitem)
@@ -86,6 +105,27 @@ namespace HouseFoodAPI.Controllers
             catch (Exception ex)
             {
                 return Handler.HandleException(ex, Listitemid, Listitem);
+            }
+        }
+
+        [HttpPut("bulk")]
+        public IActionResult BulkPut([FromBody]Listitems[] Listitem)
+        {
+            try
+            {
+                List<Listitems> Response = new List<Listitems>();
+                foreach (Listitems listitem in Listitem) {
+                    Validation.ListItemShouldExist(listitem.Listitemid);
+
+                    var IndividualResponse = _context.Listitems.Update(listitem).Entity;
+                    Response.Add(IndividualResponse);
+                }
+                _context.SaveChanges();
+                return Handler.HandlePutResponse(Response);
+            }
+            catch (Exception ex)
+            {
+                return Handler.HandleException(ex, Listitem);
             }
         }
 
@@ -119,6 +159,29 @@ namespace HouseFoodAPI.Controllers
             catch (Exception ex)
             {
                 return Handler.HandleException(ex, Listitemid);
+            }
+        }
+
+        [HttpDelete("bulk")]
+        public IActionResult BulkDelete([FromBody]Listitems[] Listitems)
+        {
+            try
+            {
+                List<Listitems> Response = new List<Listitems>();
+                foreach (Listitems listitem in Listitems) {
+                    Validation.ListItemShouldExist(listitem.Listitemid);
+
+                    var IndividualResponse = _context.Listitems
+                        .Remove(_context.Listitems
+                        .Find(listitem.Listitemid)).Entity;
+                    Response.Add(IndividualResponse);
+                }
+                _context.SaveChanges();
+                return Handler.HandleDeleteResponse(Response);
+            }
+            catch (Exception ex)
+            {
+                return Handler.HandleException(ex, Listitems);
             }
         }
     }

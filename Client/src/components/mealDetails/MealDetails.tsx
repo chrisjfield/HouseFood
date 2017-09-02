@@ -70,11 +70,15 @@ class MealDetails extends React.Component<MealDetailsProps, MealDetailsState> {
         const ingredient: Ingredient = this.props.ingredients
             .find((ingredient: Ingredient) => ingredient.ingredientid === mealDetail.ingredientid);
         return (
-            <TableRow key={mealDetail.mealingredientid}>
-                <TableRowColumn>{ingredient.name}</TableRowColumn>
-                <TableRowColumn>{mealDetail.amount} {ingredient.units}</TableRowColumn>
-                <TableRowColumn></TableRowColumn>
-            </TableRow>
+            ingredient
+            ?   (
+                <TableRow key={mealDetail.mealingredientid}>
+                    <TableRowColumn>{ingredient.name}</TableRowColumn>
+                    <TableRowColumn>{mealDetail.amount} {ingredient.units}</TableRowColumn>
+                    <TableRowColumn></TableRowColumn>
+                </TableRow>
+            )
+            : null
         );
     }
 

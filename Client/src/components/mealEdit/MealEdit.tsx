@@ -350,27 +350,28 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
 
         if (!invalidExistingItem && !invalidNewItem) {
             this.props.dispatch(postBulkIngredients(newIngredients))
-            .then((reponse: Ingredient[]) => {
-                const fullIngredients: Ingredient[] = [...this.props.ingredients, ...reponse];
+                .then((reponse: Ingredient[]) => {
+                    const fullIngredients: Ingredient[] = [...this.props.ingredients, ...reponse];
 
-                const newMealDetail: NewMealDetail[] = newItems
-                .map((newMealItem: NewMealItem) => {
-                    const newIngredient: Ingredient = fullIngredients
-                        .find((ingredients: Ingredient) => ingredients.name.toLowerCase() === newMealItem.ingredient.toLowerCase());
-                    return {
-                        mealid: this.state.mealid, 
-                        ingredientid: newIngredient.ingredientid,
-                        amount: newMealItem.amount,
-                    };
+                    const newMealDetail: NewMealDetail[] = newItems
+                    .map((newMealItem: NewMealItem) => {
+                        const newIngredient: Ingredient = fullIngredients
+                            .find((ingredients: Ingredient) => ingredients.name.toLowerCase() === newMealItem.ingredient.toLowerCase());
+                        return {
+                            mealid: this.state.mealid, 
+                            ingredientid: newIngredient.ingredientid,
+                            amount: newMealItem.amount,
+                        };
+                    });
+
+                    this.props.dispatch(postBulkMealDetails(newMealDetail));
+                    this.props.dispatch(deletetBulkMealDetails(this.state.deletedMealDetails));
+                    this.props.dispatch(putBulkMealDetails(this.state.updatedMealDetails));
+                    this.props.history.push(url);
+                })
+                .catch((error: any) => {
+                    console.log(error);
                 });
-                this.props.dispatch(postBulkMealDetails(newMealDetail));
-                this.props.dispatch(deletetBulkMealDetails(this.state.deletedMealDetails));
-                this.props.dispatch(putBulkMealDetails(this.state.updatedMealDetails));
-                this.props.history.push(url);
-            })
-            .catch((error: any) => {
-                console.log(error);
-            });
         }
     }
 
@@ -384,7 +385,7 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
                     onClick={this.state.mealid ? this.saveMeal : undefined}
                 />
                 <br/>
-                {(this.state && this.state.updatedMealDetails && this.props.ingredients)
+                {(this.state && this.state.mealid && this.state.updatedMealDetails && this.props.ingredients)
                 ? this.createTable()
                 : null}
             </div>

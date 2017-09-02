@@ -104,18 +104,23 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
         const ingredient: Ingredient = this.props.ingredients
             .find((ingredient: Ingredient) => ingredient.ingredientid === listDetail.ingredientid);
         return (
-            <TableRow key={listDetail.listitemid}>
-                <TableRowColumn>
-                    <Checkbox 
-                        checked={listDetail.complete} 
-                        onCheck={(event, isInputChecked) => this.handleCheck(isInputChecked, listDetail)}
-                        disabled={this.state.listComplete}
-                    />
-                </TableRowColumn>
-                <TableRowColumn>{ingredient.name}</TableRowColumn>
-                <TableRowColumn>{listDetail.amount} {ingredient.units}</TableRowColumn>
-                <TableRowColumn></TableRowColumn>
-            </TableRow>
+            ingredient
+            ?   (
+                <TableRow key={listDetail.listitemid}>
+                    <TableRowColumn>
+                        <Checkbox 
+                            checked={listDetail.complete} 
+                            onCheck={(event, isInputChecked) => this.handleCheck(isInputChecked, listDetail)}
+                            disabled={this.state.listComplete}
+                        />
+                    </TableRowColumn>
+                    <TableRowColumn>{ingredient.name}</TableRowColumn>
+                    <TableRowColumn>{listDetail.amount} {ingredient.units}</TableRowColumn>
+                    <TableRowColumn></TableRowColumn>
+                </TableRow>
+            )
+            : null
+            
         );
     }
 
@@ -206,9 +211,24 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
         );
     }
 
+    editList = () => {
+        const url: string = '/Lists/Edit/' + String(this.state.listid);
+        this.props.history.push(url);
+    }
+
     render() {
         return (
             <div>
+                <br/>
+                {this.state && !this.state.listComplete 
+                ? (
+                    <FlatButton
+                        label="Edit List"
+                        primary={true}
+                        onClick={this.state.listid ? this.editList : undefined}
+                    />)
+                : null
+                }
                 <br/>
                 {(this.state && this.state.filterdListDetails && this.props.ingredients)
                 ? this.createTable()

@@ -9,6 +9,9 @@ import {
     CHECK_ALL_LISTDETAILS_STARTED,
     CHECK_ALL_LISTDETAILS_SUCCESSFUL,
     CHECK_ALL_LISTDETAILS_FAILURE,
+    DELETE_BULK_LISTDETAILS_SUCCESSFUL,
+    POST_BULK_LISTDETAILS_SUCCESSFUL,
+    PUT_BULK_LISTDETAILS_SUCCESSFUL,
 } from '../../actions/listDetail/listDetailActions';
 
 interface listDetailsReducerState {
@@ -88,6 +91,37 @@ function listDetailsReducer(state: listDetailsReducerState = {
             ...state,
             loading: false,
             error: true,
+        };
+    case DELETE_BULK_LISTDETAILS_SUCCESSFUL:
+        return {
+            ...state,
+            listDetails: [...state.listDetails
+                .filter((listDetail: ListDetail) => {
+                    const wasDeleted: ListDetail = action.payload
+                        .find((payload: ListDetail) => payload.listitemid === listDetail.listitemid);
+                    return wasDeleted ? false : true;
+                })],
+            loading: false,
+            error: false,
+        };
+    case PUT_BULK_LISTDETAILS_SUCCESSFUL:
+        return {
+            ...state,
+            listDetails: [...state.listDetails
+                .map((listDetails: ListDetail) => {
+                    const wasUpdated: ListDetail = action.payload
+                        .find((payload: ListDetail) => payload.listitemid === listDetails.listitemid);
+                    return wasUpdated ? wasUpdated : listDetails;
+                })],
+            loading: false,
+            error: false,
+        };
+    case POST_BULK_LISTDETAILS_SUCCESSFUL:
+        return {
+            ...state,
+            listDetails: [...state.listDetails, ...action.payload],
+            loading: false,
+            error: false,
         };
     default:
         return state;
