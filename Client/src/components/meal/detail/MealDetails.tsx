@@ -3,11 +3,11 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { MealDetail } from '../../interfaces/mealDetailsInterfaces';
-import { Ingredient } from '../../interfaces/ingredientInterfaces';
+import { MealDetail } from '../../../interfaces/mealDetailsInterfaces';
+import { Ingredient } from '../../../interfaces/ingredientInterfaces';
 
-import { getMealDetails } from '../../actions/mealDetails/mealDetailActions';
-import { getIngredients } from '../../actions/ingredient/ingredientActions';
+import { getMealDetails } from '../../../actions/mealDetails/mealDetailActions';
+import { getIngredients } from '../../../actions/ingredient/ingredientActions';
 
 import {
     Table,
@@ -112,7 +112,7 @@ class MealDetails extends React.Component<MealDetailsProps, MealDetailsState> {
     }
 
     editMeal = () => {
-        const url: string = '/Meals/Edit/' + String(this.state.mealid);
+        const url: string = '/Meal/Edit/' + String(this.state.mealid);
         this.props.history.push(url);
     }
 

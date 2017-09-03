@@ -7,23 +7,23 @@ import {
     MealDetail, 
     NewMealItem,
     NewMealDetail, 
-} from '../../interfaces/mealDetailsInterfaces';
+} from '../../../interfaces/mealDetailsInterfaces';
 import { 
     Ingredient,
     NewIngredient, 
-} from '../../interfaces/ingredientInterfaces';
+} from '../../../interfaces/ingredientInterfaces';
 
 import { 
     getMealDetails,
     deletetBulkMealDetails,
     putBulkMealDetails, 
     postBulkMealDetails,
-} from '../../actions/mealDetails/mealDetailActions';
+} from '../../../actions/mealDetails/mealDetailActions';
 
 import { 
     getIngredients,
     postBulkIngredients, 
-} from '../../actions/ingredient/ingredientActions';
+} from '../../../actions/ingredient/ingredientActions';
 
 import {
     Table,
@@ -346,7 +346,7 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
                 };
             });
 
-        const url: string = '/Meals/' + String(this.state.mealid);
+        const url: string = '/Meal/Detail/' + String(this.state.mealid);
 
         if (!invalidExistingItem && !invalidNewItem) {
             this.props.dispatch(postBulkIngredients(newIngredients))

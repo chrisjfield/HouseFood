@@ -2,44 +2,35 @@ import * as React from 'react';
 
 import { Link } from 'react-router-dom';
 
-import { 
-    Toolbar, 
-    ToolbarGroup, 
-    ToolbarTitle, 
-} from 'material-ui/Toolbar';
+import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
-import ActionHome from 'material-ui/svg-icons/action/home';
-import ActionShopping from 'material-ui/svg-icons/action/add-shopping-cart';
-import MapsRestaurant from 'material-ui/svg-icons/maps/restaurant';
-import ActionEvent from 'material-ui/svg-icons/action/event';
+
+import Home from 'material-ui/svg-icons/action/home';
+import Planner from 'material-ui/svg-icons/action/event';
+import Meal from 'material-ui/svg-icons/maps/restaurant';
+import List from 'material-ui/svg-icons/action/add-shopping-cart';
+
+function getLink(path: string, tooltipText: string, icon: JSX.Element) {
+    return (
+        <Link to={path}>
+            <IconButton tooltip={tooltipText}>
+                {icon}
+            </IconButton>
+        </Link>
+    );
+}
 
 function Header() {
     return (
         <Toolbar>
             <ToolbarGroup>
-                <Link to="/">
-                    <IconButton tooltip="Home">
-                        <ActionHome />
-                    </IconButton>
-                </Link>
+                {getLink('/', 'Home', <Home/>)}
                 <ToolbarTitle text="House Food" />
             </ToolbarGroup>
             <ToolbarGroup>
-                <Link to="/Planner">
-                    <IconButton tooltip="Planner">
-                        <ActionEvent />
-                    </IconButton>
-                </Link>
-                <Link to="/Meals">
-                    <IconButton tooltip="Meals">
-                        <MapsRestaurant />
-                    </IconButton>
-                </Link>
-                <Link to="/List/Header">
-                    <IconButton tooltip="Lists">
-                        <ActionShopping />
-                    </IconButton>
-                </Link>
+                {getLink('/Planner', 'Meal planner', <Planner/>)}
+                {getLink('/Meal/Header', 'Meals', <Meal/>)}
+                {getLink('/List/Header', 'Shopping lists', <List/>)}
             </ToolbarGroup>
         </Toolbar>
     );

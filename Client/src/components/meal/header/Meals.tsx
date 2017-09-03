@@ -6,12 +6,12 @@ import { Dispatch } from 'redux';
 import { 
     Meal,
     NewMeal, 
-} from '../../interfaces/mealsInterfaces';
+} from '../../../interfaces/mealsInterfaces';
 import { 
     getMeals,
     saveMeal,
     editMeal,
- } from '../../actions/meals/mealActions';
+ } from '../../../actions/meals/mealActions';
 
 import {
     List, 
@@ -80,7 +80,7 @@ class Meals extends React.Component<MealsProps, MealsState> {
     }
 
     handleViewDetails = (mealId: number) => {
-        const url: string = '/Meals/' + String(mealId);
+        const url: string = '/Meal/Detail/' + String(mealId);
         this.props.history.push(url);
     }
 
