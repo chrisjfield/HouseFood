@@ -3,20 +3,20 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { List } from '../../interfaces/listsInterfaces';
-import { ListDetail } from '../../interfaces/listDetailInterfaces';
-import { Ingredient } from '../../interfaces/ingredientInterfaces';
+import { List } from '../../../interfaces/listsInterfaces';
+import { ListDetail } from '../../../interfaces/listDetailInterfaces';
+import { Ingredient } from '../../../interfaces/ingredientInterfaces';
 
 import { 
     getLists,
     completeList, 
-} from '../../actions/lists/listActions';
+} from '../../../actions/lists/listActions';
 import { 
     getListDetails,
     checkListDetail,
     checkAllListDetail,
-} from '../../actions/listDetail/listDetailActions';
-import { getIngredients } from '../../actions/ingredient/ingredientActions';
+} from '../../../actions/listDetail/listDetailActions';
+import { getIngredients } from '../../../actions/ingredient/ingredientActions';
 
 import {
     Table,
@@ -212,7 +212,7 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
     }
 
     editList = () => {
-        const url: string = '/Lists/Edit/' + String(this.state.listid);
+        const url: string = '/List/Edit/' + String(this.state.listid);
         this.props.history.push(url);
     }
 

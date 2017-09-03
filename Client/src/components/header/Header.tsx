@@ -35,7 +35,7 @@ function Header() {
                         <MapsRestaurant />
                     </IconButton>
                 </Link>
-                <Link to="/Lists">
+                <Link to="/List/Header">
                     <IconButton tooltip="Lists">
                         <ActionShopping />
                     </IconButton>

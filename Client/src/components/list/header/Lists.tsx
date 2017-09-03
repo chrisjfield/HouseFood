@@ -9,14 +9,14 @@ import {
     List, 
     NewList,
     GenerateListDetail,
-} from '../../interfaces/listsInterfaces';
+} from '../../../interfaces/listsInterfaces';
 import { 
     getLists,
     completeList,
     editList,
     saveList, 
-} from '../../actions/lists/listActions';
-import { generateList } from '../../actions/planner/plannerActions';
+} from '../../../actions/lists/listActions';
+import { generateList } from '../../../actions/planner/plannerActions';
 
 import {
     Card, 
@@ -119,7 +119,7 @@ class Lists extends React.Component<ListsProps, ListsState> {
     }
 
     handleViewDetails = (listId: number) => {
-        const url: string = '/Lists/' + String(listId);
+        const url: string = '/List/Detail/' + String(listId);
         this.props.history.push(url);
     }
 

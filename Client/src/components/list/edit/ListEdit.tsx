@@ -7,23 +7,23 @@ import {
     ListDetail, 
     NewListItem,
     NewListDetail, 
-} from '../../interfaces/listDetailInterfaces';
+} from '../../../interfaces/listDetailInterfaces';
 import { 
     Ingredient,
     NewIngredient, 
-} from '../../interfaces/ingredientInterfaces';
+} from '../../../interfaces/ingredientInterfaces';
 
 import { 
     getListDetails,
     deletetBulkListDetails,
     putBulkListDetails, 
     postBulkListDetails,
-} from '../../actions/listDetail/listDetailActions';
+} from '../../../actions/listDetail/listDetailActions';
 
 import { 
     getIngredients,
     postBulkIngredients, 
-} from '../../actions/ingredient/ingredientActions';
+} from '../../../actions/ingredient/ingredientActions';
 
 import {
     Table,
@@ -346,7 +346,7 @@ class ListEdit extends React.Component<ListEditProps, ListEditState> {
                 };
             });
 
-        const url: string = '/Lists/' + String(this.state.listid);
+        const url: string = '/List/Detail/' + String(this.state.listid);
         
         if (!invalidExistingItem && !invalidNewItem) {
             this.props.dispatch(postBulkIngredients(newIngredients))
