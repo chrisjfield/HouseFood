@@ -110,7 +110,7 @@ export function saveList(meal: NewList) {
         dispatch(getListsStarted());
         request
         .then((response : List) => {
-            const url: string = 'Lists/Edit/' + String(response.listid);
+            const url: string = '/List/Edit/' + String(response.listid);
             dispatch(saveListSuccessful(response)),
             history.push(url);
         })

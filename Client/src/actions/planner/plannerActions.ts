@@ -207,7 +207,7 @@ export function generateList(newListDetails: GenerateListDetail) {
         dispatch(generateListStarted());
         request
         .then((response: List) => {
-            const url: string = 'Lists/' + String(response[0].listid);
+            const url: string = '/List/Detail/' + String(response[0].listid);
             dispatch(generateListSuccessful(response));
             dispatch(getListDetails());
             history.push(url);

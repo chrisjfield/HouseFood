@@ -62,7 +62,7 @@ export function saveMeal(meal: NewMeal) {
         dispatch(getMealsStarted());
         request
         .then((response : Meal) => {
-            const url: string = 'Meals/Edit/' + String(response.mealid);
+            const url: string = '/Meal/Edit/' + String(response.mealid);
             dispatch(saveMealSuccessful(response)),
             history.push(url);
         })

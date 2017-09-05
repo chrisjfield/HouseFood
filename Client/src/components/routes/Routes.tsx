@@ -9,7 +9,7 @@ import ListEdit from '../list/edit';
 import MealHeader from '../meal/header';
 import MealDetail from '../meal/detail';
 import MealEdit from '../meal/edit';
-import NotFound404 from '../notFound404';
+import NotFound404 from '../errorHandling/notFound404';
 
 function Routes() {
     return (
