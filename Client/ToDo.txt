@@ -1,13 +1,13 @@
-error handling (global error handler, all reducers feed in errors, snackbar shows them + component will error to custom error page)
 loading handling (need getting, updating, posting and deleting on all reducers. check all are 0 before loading, otherwise progress)
-
-publish 
-
+publish using surge
+cors issue with puts and deletes
+refactor all the things (validation)
+refactor API - neaten and handle errors better
 Bootstrap/UI
 
-refactor all the things.
+test
 
 v2:
 Login/ multi tennacy
 clever pull back of data (not just all - see what it does pull {profiler})
-update to react16 for component will catch
+update to react16 for component will catch - add catch page for JS error

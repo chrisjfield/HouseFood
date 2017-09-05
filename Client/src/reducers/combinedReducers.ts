@@ -8,6 +8,7 @@ import mealReducer from './meals';
 import mealDetailsReducer from './mealDetails';
 import dayReducer from './days';
 import peopleReducer from './people';
+import errorReducer from './error';
 
 // combine all the reducers for export
 const combinedReducers = combineReducers({
@@ -18,6 +19,7 @@ const combinedReducers = combineReducers({
     mealDetailsReducer,
     dayReducer,
     peopleReducer,
+    errorReducer,
 });
 
 export default combinedReducers;

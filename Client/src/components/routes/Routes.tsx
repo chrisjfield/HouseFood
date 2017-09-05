@@ -3,13 +3,9 @@ import { Switch, Route } from 'react-router-dom';
 
 import Home from '../home';
 import Planner from '../planner';
-import ListHeader from '../list/header';
-import ListDetail from '../list/detail';
-import ListEdit from '../list/edit';
-import MealHeader from '../meal/header';
-import MealDetail from '../meal/detail';
-import MealEdit from '../meal/edit';
-import NotFound404 from '../errorHandling/notFound404';
+import { ListHeader, ListDetail, ListEdit } from '../list';
+import { MealHeader, MealDetail, MealEdit } from '../meal';
+import { NotFound404 } from '../errorHandler';
 
 function Routes() {
     return (

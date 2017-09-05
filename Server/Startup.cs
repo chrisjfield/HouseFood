@@ -28,8 +28,6 @@ namespace HouseFoodAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-            services.AddMvc();
             services.AddDbContext<HouseFoodContext>(
                options => options.UseSqlServer(
                    Configuration.GetConnectionString("DefaultConnection")));
@@ -40,6 +38,7 @@ namespace HouseFoodAPI
                            .AllowAnyMethod();
                 });
             });
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,9 +47,9 @@ namespace HouseFoodAPI
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            app.UseCors("AllowAllHeaders");
             app.UseMvc();
 
-            app.UseCors("AllowAllHeaders");
         }
     }
 }
