@@ -3,7 +3,7 @@ import history from '../../history';
 import { 
     Meal, 
     NewMeal, 
-} from '../../interfaces/mealsInterfaces';
+} from '../../interfaces/mealInterfaces';
 import apiHelper from '../../helpers/apiHelper';
 
 export const GET_MEALS_STARTED = 'GET_MEALS_STARTED';

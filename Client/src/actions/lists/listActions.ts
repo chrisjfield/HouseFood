@@ -3,7 +3,7 @@ import history from '../../history';
 import { 
     List,
     NewList, 
-} from '../../interfaces/listsInterfaces';
+} from '../../interfaces/listInterfaces';
 import apiHelper from '../../helpers/apiHelper';
 
 export const GET_LISTS_STARTED = 'GET_LISTS_STARTED';

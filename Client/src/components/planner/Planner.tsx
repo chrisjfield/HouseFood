@@ -13,13 +13,13 @@ BigCalendar.momentLocalizer(moment);
 import { 
     Person,
     NewPerson,
-} from '../../interfaces/peopleInterfaces';
+} from '../../interfaces/personInterfaces';
 import { 
     Day,
     NewDay,
-} from '../../interfaces/daysInterfaces';
-import { GenerateListDetail } from '../../interfaces/listsInterfaces';
-import { Meal } from '../../interfaces/mealsInterfaces';
+} from '../../interfaces/dayInterfaces';
+import { GenerateListDetail } from '../../interfaces/listInterfaces';
+import { Meal } from '../../interfaces/mealInterfaces';
 import { getMeals } from '../../actions/meals/mealActions';
 import { getDays } from '../../actions/days/dayActions';
 import { getPeople } from '../../actions/people/peopleActions';
@@ -498,7 +498,7 @@ const mapStateToProps = (store : any, props : any) => {
     return {
         meals: store.mealReducer.meals,
         days: store.dayReducer.days,
-        people: store.peopleReducer.people,
+        people: store.personReducer.people,
     };
 };
   

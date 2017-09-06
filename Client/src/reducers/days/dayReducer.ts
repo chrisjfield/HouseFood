@@ -1,4 +1,4 @@
-import { Day } from '../../interfaces/daysInterfaces';
+import { Day } from '../../interfaces/dayInterfaces';
 import { 
     GET_DAYS_STARTED,
     GET_DAYS_SUCCESSFUL,

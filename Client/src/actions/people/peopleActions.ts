@@ -1,4 +1,4 @@
-import { Person } from '../../interfaces/peopleInterfaces';
+import { Person } from '../../interfaces/personInterfaces';
 import apiHelper from '../../helpers/apiHelper';
 
 export const GET_PEOPLE_STARTED = 'GET_PEOPLE_STARTED';

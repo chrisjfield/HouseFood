@@ -12,29 +12,29 @@ interface AppErrorProps {
 }
 
 interface AppErrorState {
-    errorText: string;
+    errorMessage: string;
 }
 
 class AppError extends React.Component<AppErrorProps, AppErrorState> {
     constructor(props: any) {
         super();
         this.state = {
-            errorText: undefined,
+            errorMessage: undefined,
         };
     }
 
     componentWillReceiveProps(nextProps: any) {
         this.setState({ 
-            errorText: nextProps.errorText, 
+            errorMessage: nextProps.errorMessage, 
         });
     }
 
     buildErrors = () => {
-        const errorText: string = this.state.errorText;
-        const errorMessage: JSX.Element = (
+        const errorMessage: string = this.state.errorMessage;
+        const error: JSX.Element = (
             <Snackbar
-                open={!errorText}
-                message={errorText}
+                open={!errorMessage}
+                message={errorMessage}
                 autoHideDuration={4000}
                 onRequestClose={this.handleClose}
                 bodyStyle={{ 
@@ -43,12 +43,12 @@ class AppError extends React.Component<AppErrorProps, AppErrorState> {
             />
         );
 
-        return errorMessage;
+        return error;
     }
 
     handleClose = () => {
         this.setState({ 
-            errorText: undefined, 
+            errorMessage: undefined, 
         });
         this.props.dispatch(removeError());
     }
@@ -56,7 +56,7 @@ class AppError extends React.Component<AppErrorProps, AppErrorState> {
     render() {
         return (
             <div>
-                {!this.state.errorText ? this.buildErrors() : undefined}
+                {this.state && this.state.errorMessage ? this.buildErrors() : null}
             </div>
         );
     }
@@ -64,7 +64,7 @@ class AppError extends React.Component<AppErrorProps, AppErrorState> {
 
 const mapStateToProps = (store : any, props : any) => {
     return {
-        errorText: store.errorReducer.errorText,
+        errorMessage: store.appReducer.errorMessage,
     };
 };
 

@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import Moment from 'react-moment';
 
-import { Day } from '../../interfaces/daysInterfaces';
-import { Person } from '../../interfaces/peopleInterfaces';
-import { Meal } from '../../interfaces/mealsInterfaces';
+import { Day } from '../../interfaces/dayInterfaces';
+import { Person } from '../../interfaces/personInterfaces';
+import { Meal } from '../../interfaces/mealInterfaces';
 import { getMeals } from '../../actions/meals/mealActions';
 import { getDays } from '../../actions/days/dayActions';
 import { getPeople } from '../../actions/people/peopleActions';
@@ -117,7 +117,7 @@ const mapStateToProps = (store : any, props : any) => {
     return {
         meals: store.mealReducer.meals,
         days: store.dayReducer.days,
-        people: store.peopleReducer.people,
+        people: store.personReducer.people,
     };
 };
   

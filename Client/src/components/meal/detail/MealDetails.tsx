@@ -3,7 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { MealDetail } from '../../../interfaces/mealDetailsInterfaces';
+import { MealDetail } from '../../../interfaces/mealDetailInterfaces';
 import { Ingredient } from '../../../interfaces/ingredientInterfaces';
 
 import { getMealDetails } from '../../../actions/mealDetails/mealDetailActions';
@@ -136,8 +136,8 @@ class MealDetails extends React.Component<MealDetailsProps, MealDetailsState> {
 
 const mapStateToProps = (store : any, props : any) => {
     return {
-        mealDetails: store.mealDetailsReducer.mealDetails,
-        ingredients: store.ingredientsReducer.ingredients,
+        mealDetails: store.mealDetailReducer.mealDetails,
+        ingredients: store.ingredientReducer.ingredients,
     };
 };
   

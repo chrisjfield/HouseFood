@@ -7,7 +7,7 @@ import {
     MealDetail, 
     NewMealItem,
     NewMealDetail, 
-} from '../../../interfaces/mealDetailsInterfaces';
+} from '../../../interfaces/mealDetailInterfaces';
 import { 
     Ingredient,
     NewIngredient, 
@@ -395,8 +395,8 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
 
 const mapStateToProps = (store : any, props : any) => {
     return {
-        mealDetails: store.mealDetailsReducer.mealDetails,
-        ingredients: store.ingredientsReducer.ingredients,
+        mealDetails: store.mealDetailReducer.mealDetails,
+        ingredients: store.ingredientReducer.ingredients,
     };
 };
   

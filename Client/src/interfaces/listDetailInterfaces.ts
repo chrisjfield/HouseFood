@@ -6,15 +6,15 @@ export interface ListDetail {
     complete: boolean;
 }
 
+export interface NewListDetail {
+    listid: number; 
+    ingredientid: number;
+    amount: number;
+}
+
 export interface NewListItem {
     uniqueKey: string;
     ingredient: string;
     amount: number;
     unit: string;
-}
-
-export interface NewListDetail {
-    listid: number; 
-    ingredientid: number;
-    amount: number;
 }

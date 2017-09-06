@@ -1,4 +1,4 @@
-import { Person } from '../../interfaces/peopleInterfaces';
+import { Person } from '../../interfaces/personInterfaces';
 import { 
     GET_PEOPLE_STARTED,
     GET_PEOPLE_SUCCESSFUL,
@@ -20,7 +20,7 @@ interface peopleReducerState {
     error: boolean;
 }
 
-function peopleReducer(state: peopleReducerState = { 
+function personReducer(state: peopleReducerState = { 
     people: undefined, 
     loading: false,
     updating: false,
@@ -89,4 +89,4 @@ function peopleReducer(state: peopleReducerState = {
     }
 }
   
-export default peopleReducer;
+export default personReducer;

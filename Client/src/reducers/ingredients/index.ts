@@ -1,2 +1,2 @@
-import ingredientsReducer from './ingredientsReducer';
-export default ingredientsReducer;
+import ingredientReducer from './ingredientReducer';
+export default ingredientReducer;

@@ -9,7 +9,7 @@ import {
     List, 
     NewList,
     GenerateListDetail,
-} from '../../../interfaces/listsInterfaces';
+} from '../../../interfaces/listInterfaces';
 import { 
     getLists,
     completeList,
@@ -463,10 +463,10 @@ class Lists extends React.Component<ListsProps, ListsState> {
 
 const mapStateToProps = (store : any, props : any) => {
     return {
-        lists: store.listsReducer.lists,
-        loading: store.listsReducer.loading,
-        error: store.listsReducer.error,
-        updating: store.listsReducer.updating,
+        lists: store.listReducer.lists,
+        loading: store.listReducer.loading,
+        error: store.listReducer.error,
+        updating: store.listReducer.updating,
     };
 };
   

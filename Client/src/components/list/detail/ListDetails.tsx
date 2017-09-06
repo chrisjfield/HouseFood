@@ -3,7 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { List } from '../../../interfaces/listsInterfaces';
+import { List } from '../../../interfaces/listInterfaces';
 import { ListDetail } from '../../../interfaces/listDetailInterfaces';
 import { Ingredient } from '../../../interfaces/ingredientInterfaces';
 
@@ -240,9 +240,9 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
 
 const mapStateToProps = (store : any, props : any) => {
     return {
-        lists: store.listsReducer.lists,
-        listDetails: store.listDetailsReducer.listDetails,
-        ingredients: store.ingredientsReducer.ingredients,
+        lists: store.listReducer.lists,
+        listDetails: store.listDetailReducer.listDetails,
+        ingredients: store.ingredientReducer.ingredients,
     };
 };
   

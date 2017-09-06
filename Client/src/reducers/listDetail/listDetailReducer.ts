@@ -21,12 +21,12 @@ interface listDetailsReducerState {
     error: boolean;
 }
 
-function listDetailsReducer(state: listDetailsReducerState = { 
+function listDetailReducer(state: listDetailsReducerState = { 
     listDetails: undefined, 
     loading: false,
     updating: false,
     error: false,
-},                          action: any) {
+},                         action: any) {
     switch (action.type) {
     case GET_LISTDETAILS_STARTED:
         return {
@@ -128,4 +128,4 @@ function listDetailsReducer(state: listDetailsReducerState = {
     }
 }
   
-export default listDetailsReducer;
+export default listDetailReducer;

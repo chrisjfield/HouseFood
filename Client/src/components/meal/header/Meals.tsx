@@ -6,7 +6,7 @@ import { Dispatch } from 'redux';
 import { 
     Meal,
     NewMeal, 
-} from '../../../interfaces/mealsInterfaces';
+} from '../../../interfaces/mealInterfaces';
 import { 
     getMeals,
     saveMeal,
@@ -332,9 +332,9 @@ class Meals extends React.Component<MealsProps, MealsState> {
 const mapStateToProps = (store : any, props : any) => {
     return {
         meals: store.mealReducer.meals,
-        loading: store.listsReducer.loading,
-        error: store.listsReducer.error,
-        updating: store.listsReducer.updating,
+        loading: store.listReducer.loading,
+        error: store.listReducer.error,
+        updating: store.listReducer.updating,
     };
 };
   

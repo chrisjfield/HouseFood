@@ -1,7 +1,7 @@
 import {
     MealDetail,
     NewMealDetail,
-} from '../../interfaces/mealDetailsInterfaces';
+} from '../../interfaces/mealDetailInterfaces';
 import apiHelper from '../../helpers/apiHelper';
 
 export const GET_MEALDETAILS_STARTED = 'GET_MEALDETAILS_STARTED';

@@ -6,14 +6,14 @@ export interface List {
     datecompleted?: Date;
 }
 
-export interface GenerateListDetail {
-    startDate: Date;
-    endDate: Date;
-    listName: string;
-}
-
 export interface NewList {
     name: string; 
     datecreated: Date;
     complete: boolean;
+}
+
+export interface GenerateListDetail {
+    startDate: Date;
+    endDate: Date;
+    listName: string;
 }

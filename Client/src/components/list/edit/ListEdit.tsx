@@ -395,8 +395,8 @@ class ListEdit extends React.Component<ListEditProps, ListEditState> {
 
 const mapStateToProps = (store : any, props : any) => {
     return {
-        listDetails: store.listDetailsReducer.listDetails,
-        ingredients: store.ingredientsReducer.ingredients,
+        listDetails: store.listDetailReducer.listDetails,
+        ingredients: store.ingredientReducer.ingredients,
     };
 };
   

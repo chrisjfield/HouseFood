@@ -1,4 +1,4 @@
-import { List } from '../../interfaces/listsInterfaces';
+import { List } from '../../interfaces/listInterfaces';
 import { 
     GET_LISTS_STARTED,
     GET_LISTS_SUCCESSFUL,
@@ -21,12 +21,12 @@ interface listsReducerState {
     error: boolean;
 }
 
-function listsReducer(state: listsReducerState = { 
+function listReducer(state: listsReducerState = { 
     lists: undefined, 
     loading: false,
     updating: false,
     error: false,
-},                    action: any) {
+},                   action: any) {
     switch (action.type) {
     case GET_LISTS_STARTED:
         return {
@@ -104,4 +104,4 @@ function listsReducer(state: listsReducerState = {
     }
 }
   
-export default listsReducer;
+export default listReducer;

@@ -1,25 +1,23 @@
 import { combineReducers } from 'redux';
 
-// import the reducers from in individual components
-import listsReducer from './lists';
-import listDetailsReducer from './listDetails';
-import ingredientsReducer from './ingredients';
-import mealReducer from './meals';
-import mealDetailsReducer from './mealDetails';
+import listReducer from './list';
+import listDetailReducer from './listDetail';
+import ingredientReducer from './ingredients';
+import mealReducer from './meal';
+import mealDetailReducer from './mealDetail';
 import dayReducer from './days';
-import peopleReducer from './people';
-import errorReducer from './error';
+import personReducer from './person';
+import appReducer from './app';
 
-// combine all the reducers for export
 const combinedReducers = combineReducers({
-    listsReducer,
-    listDetailsReducer,
-    ingredientsReducer,
+    listReducer,
+    listDetailReducer,
+    ingredientReducer,
     mealReducer,
-    mealDetailsReducer,
+    mealDetailReducer,
     dayReducer,
-    peopleReducer,
-    errorReducer,
+    personReducer,
+    appReducer,
 });
 
 export default combinedReducers;

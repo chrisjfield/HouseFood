@@ -3,17 +3,17 @@ import history from '../../history';
 import { 
     Day,
     NewDay, 
-} from '../../interfaces/daysInterfaces';
+} from '../../interfaces/dayInterfaces';
 import { 
     Person,
     NewPerson,
-} from '../../interfaces/peopleInterfaces';
+} from '../../interfaces/personInterfaces';
 import apiHelper from '../../helpers/apiHelper';
 import { getDay } from '../days/dayActions';
 import { 
     List,
     GenerateListDetail,
- } from '../../interfaces/listsInterfaces';
+ } from '../../interfaces/listInterfaces';
 import { getListDetails } from '../../actions/listDetail/listDetailActions';
 
 export const POST_DAYS_STARTED = 'POST_DAYS_STARTED';

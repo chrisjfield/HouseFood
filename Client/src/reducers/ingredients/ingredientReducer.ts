@@ -12,12 +12,12 @@ interface ingredientsReducerState {
     error: boolean;
 }
 
-function ingredientsReducer(state: ingredientsReducerState = { 
+function ingredientReducer(state: ingredientsReducerState = { 
     ingredients: undefined, 
     loading: false,
     updating: false,
     error: false,
-},                          action: any) {
+},                         action: any) {
     switch (action.type) {
     case GET_INGREDIENTS_STARTED:
         return {
@@ -43,4 +43,4 @@ function ingredientsReducer(state: ingredientsReducerState = {
     }
 }
   
-export default ingredientsReducer;
+export default ingredientReducer;

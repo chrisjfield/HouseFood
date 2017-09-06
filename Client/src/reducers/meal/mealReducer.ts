@@ -1,4 +1,4 @@
-import { Meal } from '../../interfaces/mealsInterfaces';
+import { Meal } from '../../interfaces/mealInterfaces';
 import { 
     GET_MEALS_STARTED,
     GET_MEALS_SUCCESSFUL,

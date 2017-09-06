@@ -1,4 +1,4 @@
-import { MealDetail } from '../../interfaces/mealDetailsInterfaces';
+import { MealDetail } from '../../interfaces/mealDetailInterfaces';
 import { 
     GET_MEALDETAILS_STARTED,
     GET_MEALDETAILS_SUCCESSFUL,
