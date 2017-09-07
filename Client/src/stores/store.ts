@@ -9,8 +9,6 @@ import * as localForage from 'localforage';
 import combinedReducers from '../reducers';
 import history from '../history';
 
-
-
 const rmiddleware: Middleware = routerMiddleware(history);
 
 const store: Store<{}> = createStore(
