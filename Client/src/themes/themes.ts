@@ -9,7 +9,7 @@ import {
 } from 'material-ui/styles/colors';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
-const theme = getMuiTheme({
+const theme: __MaterialUI.Styles.MuiTheme = getMuiTheme({
     palette: {
         primary1Color: blue900,
         primary2Color: blue900,
