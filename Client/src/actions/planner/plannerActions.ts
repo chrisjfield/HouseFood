@@ -16,20 +16,21 @@ import {
  } from '../../interfaces/listInterfaces';
 import { getListDetails } from '../../actions/listDetail/listDetailActions';
 
+import { POST_LIST_SUCCESSFUL } from '../../actions/lists/listActions';
+
 export const POST_DAYS_STARTED = 'POST_DAYS_STARTED';
-export const POST_DAYS_SUCCESSFUL = 'POST_DAYS_SUCCESSFUL';
+export const POST_DAY_SUCCESSFUL = 'POST_DAY_SUCCESSFUL';
 export const POST_DAYS_FAILURE = 'POST_DAYS_FAILURE';
 export const POST_PEOPLE_STARTED = 'POST_PEOPLE_STARTED';
 export const POST_PEOPLE_SUCCESSFUL = 'POST_PEOPLE_SUCCESSFUL';
 export const POST_PEOPLE_FAILURE = 'POST_PEOPLE_FAILURE';
 export const REMOVE_PEOPLE_STARTED = 'REMOVE_PEOPLE_STARTED';
-export const REMOVE_PEOPLE_SUCCESSFUL = 'REMOVE_PEOPLE_SUCCESSFUL';
+export const DELETE_PEOPLE_SUCCESSFUL = 'DELETE_PEOPLE_SUCCESSFUL';
 export const REMOVE_PEOPLE_FAILURE = 'REMOVE_PEOPLE_FAILURE';
 export const UPDATE_DAY_STARTED = 'UPDATE_DAY_STARTED';
-export const UPDATE_DAY_SUCCESSFUL = 'UPDATE_DAY_SUCCESSFUL';
+export const PUT_DAY_SUCCESSFUL = 'PUT_DAY_SUCCESSFUL';
 export const UPDATE_DAY_FAILURE = 'UPDATE_DAY_FAILURE';
 export const GENERATE_LIST_STARTED = 'GENERATE_LIST_STARTED';
-export const GENERATE_LIST_SUCCESSFUL = 'GENERATE_LIST_SUCCESSFUL';
 export const GENERATE_LIST_FAILURE = 'GENERATE_LIST_FAILURE';
 
 export function addDay(newDay: NewDay, newPeople: NewPerson[]) {
@@ -61,7 +62,7 @@ function postDayStarted() {
 
 function postDateSuccessful(response: Day[]) {
     return {
-        type: POST_DAYS_SUCCESSFUL,
+        type: POST_DAY_SUCCESSFUL,
         payload: response,
     };
 }
@@ -143,7 +144,7 @@ function removePeopleStarted() {
 
 function removePeopleSuccessful(response: Person[]) {
     return {
-        type: REMOVE_PEOPLE_SUCCESSFUL,
+        type: DELETE_PEOPLE_SUCCESSFUL,
         payload: response,
     };
 }
@@ -184,7 +185,7 @@ function updateDayStarted() {
 
 function updateDaySuccessful(response: Day) {
     return {
-        type: UPDATE_DAY_SUCCESSFUL,
+        type: PUT_DAY_SUCCESSFUL,
         payload: response,
     };
 }
@@ -227,7 +228,7 @@ function generateListStarted() {
 
 function generateListSuccessful(list: List) {
     return {
-        type: GENERATE_LIST_SUCCESSFUL,
+        type: POST_LIST_SUCCESSFUL,
         payload: list,
     };
 }

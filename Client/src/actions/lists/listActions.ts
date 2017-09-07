@@ -10,10 +10,9 @@ export const GET_LISTS_STARTED = 'GET_LISTS_STARTED';
 export const GET_LISTS_SUCCESSFUL = 'GET_LISTS_SUCCESSFUL';
 export const GET_LISTS_FAILURE = 'GET_LISTS_FAILURE';
 export const COMPLETE_LISTS_STARTED = 'COMPLETE_LISTS_STARTED';
-export const COMPLETE_LISTS_SUCCESSFUL = 'COMPLETE_LISTS_SUCCESSFUL';
 export const COMPLETE_LISTS_FAILURE = 'COMPLETE_LISTS_FAILURE';
-export const SAVE_LIST_SUCCESSFUL = 'SAVE_LIST_SUCCESSFUL';
-export const EDIT_LIST_SUCCESSFUL = 'EDIT_LIST_SUCCESSFUL';
+export const POST_LIST_SUCCESSFUL = 'POST_LIST_SUCCESSFUL';
+export const PUT_LIST_SUCCESSFUL = 'PUT_LIST_SUCCESSFUL';
 
 export function getLists() {
     const request = apiHelper.apiCall(
@@ -69,7 +68,7 @@ export function completeList(list : List) {
     return (dispatch : Function) => {
         dispatch(completeListsStarted());
         request
-        .then((response : List[]) => {
+        .then((response : List) => {
             dispatch(completetListsSuccessful(response));
         })
         .catch((error : any) => {
@@ -85,9 +84,9 @@ function completeListsStarted() {
     };
 }
 
-function completetListsSuccessful(response: List[]) {
+function completetListsSuccessful(response: List) {
     return {
-        type: COMPLETE_LISTS_SUCCESSFUL,
+        type: PUT_LIST_SUCCESSFUL,
         payload: response,
     };
 }
@@ -123,7 +122,7 @@ export function saveList(meal: NewList) {
 
 function saveListSuccessful(response: List) {
     return {
-        type: SAVE_LIST_SUCCESSFUL,
+        type: POST_LIST_SUCCESSFUL,
         payload: response,
     };
 }
@@ -151,7 +150,7 @@ export function editList(list: List) {
 
 function editListSuccessful(response: List) {
     return {
-        type: EDIT_LIST_SUCCESSFUL,
+        type: PUT_LIST_SUCCESSFUL,
         payload: response,
     };
 }

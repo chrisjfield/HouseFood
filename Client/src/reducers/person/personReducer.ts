@@ -1,88 +1,27 @@
+import { personReducerState } from '../../interfaces/stateInterfaces';
 import { Person } from '../../interfaces/personInterfaces';
-import { 
-    GET_PEOPLE_STARTED,
-    GET_PEOPLE_SUCCESSFUL,
-    GET_PEOPLE_FAILURE,
-} from '../../actions/people/peopleActions';
-import { 
-    POST_PEOPLE_STARTED,
-    POST_PEOPLE_SUCCESSFUL,
-    POST_PEOPLE_FAILURE,
-    REMOVE_PEOPLE_STARTED,
-    REMOVE_PEOPLE_SUCCESSFUL,
-    REMOVE_PEOPLE_FAILURE,
-} from '../../actions/planner/plannerActions';
 
-interface peopleReducerState {
-    people: Person[];
-    loading: boolean;
-    updating: boolean;
-    error: boolean;
-}
+import { GET_PEOPLE_SUCCESSFUL } from '../../actions/people/peopleActions';
+import { POST_PEOPLE_SUCCESSFUL, DELETE_PEOPLE_SUCCESSFUL } from '../../actions/planner/plannerActions';
 
-function personReducer(state: peopleReducerState = { 
+function personReducer(state: personReducerState = { 
     people: undefined, 
-    loading: false,
-    updating: false,
-    error: false,
 },                     action: any) {
     switch (action.type) {
-    case GET_PEOPLE_STARTED:
-        return {
-            ...state,
-            loading: true,
-            error: false,
-        };
     case GET_PEOPLE_SUCCESSFUL:
         return {
             ...state,
             people: action.payload,
-            loading: false,
-            error: false,
-        };
-    case GET_PEOPLE_FAILURE:
-        return {
-            ...state,
-            loading: false,
-            error: true,
-        };
-    case POST_PEOPLE_STARTED:
-        return {
-            ...state,
-            loading: true,
-            error: false,
         };
     case POST_PEOPLE_SUCCESSFUL:
         return {
             ...state,
             people: [...state.people, ...action.payload],
-            loading: false,
-            error: false,
         };
-    case POST_PEOPLE_FAILURE:
-        return {
-            ...state,
-            loading: false,
-            error: true,
-        };
-    case REMOVE_PEOPLE_STARTED:
-        return {
-            ...state,
-            loading: true,
-            error: false,
-        };
-    case REMOVE_PEOPLE_SUCCESSFUL:
+    case DELETE_PEOPLE_SUCCESSFUL:
         return {
             ...state,
             people: [...state.people.filter((person: Person) => action.payload.indexOf(person) === -1)],
-            loading: false,
-            error: false,
-        };
-    case REMOVE_PEOPLE_FAILURE:
-        return {
-            ...state,
-            loading: false,
-            error: true,
         };
     default:
         return state;

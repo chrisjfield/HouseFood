@@ -1,110 +1,37 @@
+import { dayReducerState } from '../../interfaces/stateInterfaces';
 import { Day } from '../../interfaces/dayInterfaces';
 import { 
-    GET_DAYS_STARTED,
-    GET_DAYS_SUCCESSFUL,
-    GET_DAYS_FAILURE,
-    GET_DAY_STARTED,
+    GET_DAY_BULK_SUCCESSFUL,
     GET_DAY_SUCCESSFUL,
-    GET_DAY_FAILURE,
 } from '../../actions/days/dayActions';
 import { 
-    POST_DAYS_STARTED,
-    POST_DAYS_SUCCESSFUL,
-    POST_DAYS_FAILURE,
-    UPDATE_DAY_STARTED,
-    UPDATE_DAY_SUCCESSFUL,
-    UPDATE_DAY_FAILURE,
+    POST_DAY_SUCCESSFUL,
+    PUT_DAY_SUCCESSFUL,
 } from '../../actions/planner/plannerActions';
 
-interface daysReducerState {
-    days: Day[];
-    loading: boolean;
-    updating: boolean;
-    error: boolean;
-}
-
-function daysReducer(state: daysReducerState = { 
+function daysReducer(state: dayReducerState = { 
     days: undefined, 
-    loading: false,
-    updating: false,
-    error: false,
 },                   action: any) {
     switch (action.type) {
-    case GET_DAYS_STARTED:
-        return {
-            ...state,
-            loading: true,
-            error: false,
-        };
-    case GET_DAYS_SUCCESSFUL:
-        return {
-            ...state,
-            days: action.payload,
-            loading: false,
-            error: false,
-        };
-    case GET_DAYS_FAILURE:
-        return {
-            ...state,
-            loading: false,
-            error: true,
-        };
-    case POST_DAYS_STARTED:
-        return {
-            ...state,
-            loading: true,
-            error: false,
-        };
-    case POST_DAYS_SUCCESSFUL:
-        return {
-            ...state,
-            days: [...state.days, action.payload],
-            loading: false,
-            error: false,
-        };
-    case POST_DAYS_FAILURE:
-        return {
-            ...state,
-            loading: false,
-            error: true,
-        };
-    case GET_DAY_STARTED:
-        return {
-            ...state,
-            loading: true,
-            error: false,
-        };
     case GET_DAY_SUCCESSFUL:
         return {
             ...state,
-            days: state.days.map((day: Day) => day.date === action.payload.date ? action.payload : day),
-            loading: false,
-            error: false,
+            days: [...state.days.map((day: Day) => day.date === action.payload.date ? action.payload : day)],
         };
-    case GET_DAY_FAILURE:
+    case GET_DAY_BULK_SUCCESSFUL:
         return {
             ...state,
-            loading: false,
-            error: true,
+            days: action.payload,
         };
-    case UPDATE_DAY_STARTED:
+    case POST_DAY_SUCCESSFUL:
         return {
             ...state,
-            loading: true,
-            error: false,
+            days: [...state.days, ...action.payload],
         };
-    case UPDATE_DAY_SUCCESSFUL:
+    case PUT_DAY_SUCCESSFUL:
         return {
             ...state,
-            days: state.days.map((day: Day) => day.date === action.payload.date ? action.payload : day),
-            loading: false,
-            error: false,
-        };
-    case UPDATE_DAY_FAILURE:
-        return {
-            ...state,
-            loading: false,
-            error: true,
+            days: [...state.days.map((day: Day) => day.date === action.payload.date ? action.payload : day)],
         };
     default:
         return state;

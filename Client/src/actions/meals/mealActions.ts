@@ -9,8 +9,8 @@ import apiHelper from '../../helpers/apiHelper';
 export const GET_MEALS_STARTED = 'GET_MEALS_STARTED';
 export const GET_MEALS_SUCCESSFUL = 'GET_MEALS_SUCCESSFUL';
 export const GET_MEALS_FAILURE = 'GET_MEALS_FAILURE';
-export const SAVE_MEAL_SUCCESSFUL = 'SAVE_MEAL_SUCCESSFUL';
-export const EDIT_MEAL_SUCCESSFUL = 'EDIT_MEAL_SUCCESSFUL';
+export const POST_MEAL_SUCCESSFUL = 'POST_MEAL_SUCCESSFUL';
+export const PUT_MEAL_SUCCESSFUL = 'PUT_MEAL_SUCCESSFUL';
 
 export function getMeals() {
     const request = apiHelper.apiCall(
@@ -75,7 +75,7 @@ export function saveMeal(meal: NewMeal) {
 
 function saveMealSuccessful(response: Meal) {
     return {
-        type: SAVE_MEAL_SUCCESSFUL,
+        type: POST_MEAL_SUCCESSFUL,
         payload: response,
     };
 }
@@ -103,7 +103,7 @@ export function editMeal(meal: Meal) {
 
 function editMealSuccessful(response: Meal) {
     return {
-        type: EDIT_MEAL_SUCCESSFUL,
+        type: PUT_MEAL_SUCCESSFUL,
         payload: response,
     };
 }

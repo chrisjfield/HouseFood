@@ -1,42 +1,19 @@
-import { Ingredient } from '../../interfaces/ingredientInterfaces';
-import { 
-    GET_INGREDIENTS_STARTED,
-    GET_INGREDIENTS_SUCCESSFUL,
-    GET_INGREDIENTS_FAILURE,
-} from '../../actions/ingredient/ingredientActions';
+import { ingredientReducerState } from '../../interfaces/stateInterfaces';
+import { GET_INGREDIENTS_SUCCESSFUL, POST_INGREDIENTS_BULK_SUCCESSFUL } from '../../actions/ingredient/ingredientActions';
 
-interface ingredientsReducerState {
-    ingredients: Ingredient[];
-    loading: boolean;
-    updating: boolean;
-    error: boolean;
-}
-
-function ingredientReducer(state: ingredientsReducerState = { 
+function ingredientReducer(state: ingredientReducerState = { 
     ingredients: undefined, 
-    loading: false,
-    updating: false,
-    error: false,
 },                         action: any) {
     switch (action.type) {
-    case GET_INGREDIENTS_STARTED:
-        return {
-            ...state,
-            loading: true,
-            error: false,
-        };
     case GET_INGREDIENTS_SUCCESSFUL:
         return {
             ...state,
             ingredients: action.payload,
-            loading: false,
-            error: false,
         };
-    case GET_INGREDIENTS_FAILURE:
+    case POST_INGREDIENTS_BULK_SUCCESSFUL:
         return {
             ...state,
-            loading: false,
-            error: true,
+            ingredients: [...state.ingredients, ...action.payload],
         };
     default:
         return state;

@@ -27,49 +27,28 @@ export interface appReducerState {
 
 export interface dayReducerState {
     days: Day[];
-    loading: boolean;
-    updating: boolean;
-    error: boolean;
 }
 
 export interface ingredientReducerState {
     ingredients: Ingredient[];
-    loading: boolean;
-    updating: boolean;
-    error: boolean;
 }
 
 export interface listReducerState {
     lists: List[];
-    loading: boolean;
-    updating: boolean;
-    error: boolean;
 }
 
 export interface listDetailReducerState {
     listDetails: ListDetail[];
-    loading: boolean;
-    updating: boolean;
-    error: boolean;
 }
 
 export interface mealReducerState {
     meals: Meal[];
-    loading: boolean;
-    updating: boolean;
-    error: boolean;
 }
 
 export interface mealDetailReducerState {
     mealDetails: MealDetail[];
-    loading: boolean;
-    updating: boolean;
-    error: boolean;
 }
 
 export interface personReducerState {
     people: Person[];
-    loading: boolean;
-    updating: boolean;
-    error: boolean;
 }

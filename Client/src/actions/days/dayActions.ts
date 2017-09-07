@@ -2,7 +2,7 @@ import { Day } from '../../interfaces/dayInterfaces';
 import apiHelper from '../../helpers/apiHelper';
 
 export const GET_DAYS_STARTED = 'GET_DAYS_STARTED';
-export const GET_DAYS_SUCCESSFUL = 'GET_DAYS_SUCCESSFUL';
+export const GET_DAY_BULK_SUCCESSFUL = 'GET_DAY_BULK_SUCCESSFUL';
 export const GET_DAYS_FAILURE = 'GET_DAYS_FAILURE';
 export const GET_DAY_STARTED = 'GET_DAY_STARTED';
 export const GET_DAY_SUCCESSFUL = 'GET_DAY_SUCCESSFUL';
@@ -35,7 +35,7 @@ function getDaysStarted() {
 
 function getDaysSuccessful(response: Day[]) {
     return {
-        type: GET_DAYS_SUCCESSFUL,
+        type: GET_DAY_BULK_SUCCESSFUL,
         payload: response,
     };
 }
