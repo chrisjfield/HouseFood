@@ -1,8 +1,8 @@
-import { ADD_ERROR, REMOVE_ERROR } from '../../components/errorHandler/appError/appErrorActions';
+import { ADD_ERROR, REMOVE_ERROR } from '../../actions/app/appErrorActions';
 import { 
     START_GET, START_POST, START_PUT, START_DELETE,
     STOP_GET, STOP_POST, STOP_PUT, STOP_DELETE,
-} from '../../components/loadingHandler/appLoadingActions';
+} from '../../actions/app/appLoadingActions';
 
 interface appReducerState {
     getting: number;

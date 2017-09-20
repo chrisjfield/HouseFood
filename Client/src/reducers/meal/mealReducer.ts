@@ -14,7 +14,7 @@ function mealReducer(state: mealReducerState = {
     case POST_MEAL_SUCCESSFUL:
         return {
             ...state,
-            meals: [...state.meals, ...action.payload],
+            meals: [...state.meals, action.payload],
         };
     case PUT_MEAL_SUCCESSFUL:
         return {

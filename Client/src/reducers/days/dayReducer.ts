@@ -3,11 +3,9 @@ import { Day } from '../../interfaces/dayInterfaces';
 import { 
     GET_DAY_BULK_SUCCESSFUL,
     GET_DAY_SUCCESSFUL,
-} from '../../actions/days/dayActions';
-import { 
     POST_DAY_SUCCESSFUL,
     PUT_DAY_SUCCESSFUL,
-} from '../../actions/planner/plannerActions';
+} from '../../actions/days/dayActions';
 
 function daysReducer(state: dayReducerState = { 
     days: undefined, 
@@ -26,7 +24,7 @@ function daysReducer(state: dayReducerState = {
     case POST_DAY_SUCCESSFUL:
         return {
             ...state,
-            days: [...state.days, ...action.payload],
+            days: [...state.days, action.payload],
         };
     case PUT_DAY_SUCCESSFUL:
         return {

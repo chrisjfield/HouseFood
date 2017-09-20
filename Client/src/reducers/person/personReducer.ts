@@ -1,8 +1,7 @@
 import { personReducerState } from '../../interfaces/stateInterfaces';
 import { Person } from '../../interfaces/personInterfaces';
 
-import { GET_PEOPLE_SUCCESSFUL } from '../../actions/people/peopleActions';
-import { POST_PEOPLE_SUCCESSFUL, DELETE_PEOPLE_SUCCESSFUL } from '../../actions/planner/plannerActions';
+import { GET_PEOPLE_SUCCESSFUL, POST_PEOPLE_SUCCESSFUL, DELETE_PEOPLE_SUCCESSFUL } from '../../actions/people/peopleActions';
 
 function personReducer(state: personReducerState = { 
     people: undefined, 

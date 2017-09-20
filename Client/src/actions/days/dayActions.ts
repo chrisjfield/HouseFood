@@ -1,12 +1,18 @@
-import { Day } from '../../interfaces/dayInterfaces';
+import { Day, NewDay } from '../../interfaces/dayInterfaces';
+import { NewPerson } from '../../interfaces/personInterfaces';
 import apiHelper from '../../helpers/apiHelper';
 
-export const GET_DAYS_STARTED = 'GET_DAYS_STARTED';
+import { 
+    startGet, stopGet, startPost, stopPost,
+    startPut, stopPut,
+} from '../app/appLoadingActions';
+import { addError } from '../app/appErrorActions';
+import { addPeople } from '../people/peopleActions';
+
 export const GET_DAY_BULK_SUCCESSFUL = 'GET_DAY_BULK_SUCCESSFUL';
-export const GET_DAYS_FAILURE = 'GET_DAYS_FAILURE';
-export const GET_DAY_STARTED = 'GET_DAY_STARTED';
 export const GET_DAY_SUCCESSFUL = 'GET_DAY_SUCCESSFUL';
-export const GET_DAY_FAILURE = 'GET_DAY_FAILURE';
+export const POST_DAY_SUCCESSFUL = 'POST_DAY_SUCCESSFUL';
+export const PUT_DAY_SUCCESSFUL = 'PUT_DAY_SUCCESSFUL';
 
 export function getDays() {
     const request = apiHelper.apiCall(
@@ -14,22 +20,17 @@ export function getDays() {
         'Days',
       );
     
-    return (dispatch : Function) => {
-        dispatch(getDaysStarted());
+    return (dispatch: Function) => {
+        dispatch(startGet());
         request
-        .then((response : Day[]) =>
-          dispatch(getDaysSuccessful(response)),
-        )
-        .catch((error : any) => {
-            console.log(error);
-            dispatch(getDaysFailure(error));
+        .then((response: Day[]) => {
+            dispatch(getDaysSuccessful(response));
+            dispatch(stopGet());
+        })
+        .catch((error: any) => {
+            dispatch(addError(error));
+            dispatch(stopGet());
         });
-    };
-}
-
-function getDaysStarted() {
-    return {
-        type: GET_DAYS_STARTED,
     };
 }
 
@@ -40,13 +41,6 @@ function getDaysSuccessful(response: Day[]) {
     };
 }
 
-function getDaysFailure(error: any) {
-    return {
-        type: GET_DAYS_FAILURE,
-        payload: error,
-    };
-}
-
 export function getDay(dayDate: string) {
     const endpoint = 'Days/' + dayDate;
     const request = apiHelper.apiCall(
@@ -54,22 +48,17 @@ export function getDay(dayDate: string) {
         endpoint,
       );
     
-    return (dispatch : Function) => {
-        dispatch(getDayStarted());
+    return (dispatch: Function) => {
+        dispatch(startGet());
         request
-        .then((response : Day) =>
-          dispatch(getDaySuccessful(response)),
-        )
-        .catch((error : any) => {
-            console.log(error);
-            dispatch(getDayFailure(error));
+        .then((response: Day) => {
+            dispatch(getDaySuccessful(response));
+            dispatch(stopGet());
+        })
+        .catch((error: any) => {
+            dispatch(addError(error));
+            dispatch(stopGet());
         });
-    };
-}
-
-function getDayStarted() {
-    return {
-        type: GET_DAY_STARTED,
     };
 }
 
@@ -80,9 +69,60 @@ function getDaySuccessful(response: Day) {
     };
 }
 
-function getDayFailure(error: any) {
+export function addDay(newDay: NewDay, newPeople: NewPerson[]) {
+    const request = apiHelper.apiCall(
+        'POST',
+        'Days',
+        newDay,
+    );
+    
+    return (dispatch : Function) => {
+        dispatch(startPost());
+        request
+        .then((response: Day[]) => {
+            dispatch(postDateSuccessful(response));
+            dispatch(addPeople(newPeople, newDay.date));
+            dispatch(stopPost());
+        })
+        .catch((error: any) => {
+            dispatch(addError(error));
+            dispatch(stopPost());
+        });
+    };
+}
+
+function postDateSuccessful(response: Day[]) {
     return {
-        type: GET_DAY_FAILURE,
-        payload: error,
+        type: POST_DAY_SUCCESSFUL,
+        payload: response,
+    };
+}
+
+export function updateDay(dayDate: string, day: NewDay) {
+    const endpoint = 'Days/' + dayDate;
+    const request = apiHelper.apiCall(
+        'PUT',
+        endpoint,
+        day,
+      );
+    
+    return (dispatch : Function) => {
+        dispatch(startPut());
+        request
+        .then((response: Day) => {
+            dispatch(updateDaySuccessful(response));
+            dispatch(stopPut());
+        })
+        .catch((error: any) => {
+            dispatch(addError(error));
+            dispatch(stopPut());
+        });
+    };
+}
+
+function updateDaySuccessful(response: Day) {
+    return {
+        type: PUT_DAY_SUCCESSFUL,
+        payload: response,
     };
 }

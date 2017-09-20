@@ -5,6 +5,8 @@ import { Dispatch } from 'redux';
 import Moment from 'react-moment';
 import * as moment from 'moment';
 
+import history from '../../../history';
+
 import { 
     List, 
     NewList,
@@ -244,7 +246,14 @@ class Lists extends React.Component<ListsProps, ListsState> {
                 nameErrorText: (!this.state.newList.name) ? 'Please enter a List name' : undefined, 
             });
         } else {
-            this.props.dispatch(saveList(this.state.newList));
+            this.props.dispatch(saveList(this.state.newList))
+            .then((response: List) => {
+                const url: string = '/List/Edit/' + String(response.listid);
+                history.push(url);
+            })
+            .catch((error: any) => {
+                console.log(error);
+            });
         }
     }
 
@@ -379,7 +388,14 @@ class Lists extends React.Component<ListsProps, ListsState> {
                 generateListDialogEndValidation: !newList.endDate ? 'Please choose an end date' : undefined,
             });
         } else {
-            this.props.dispatch(generateList(newList));
+            this.props.dispatch(generateList(newList))
+            .then((response: List) => {
+                const url: string = '/List/Detail/' + String(response[0].listid);
+                history.push(url);
+            })
+            .catch((error: any) => {
+                console.log(error);
+            });
         }
     }
 

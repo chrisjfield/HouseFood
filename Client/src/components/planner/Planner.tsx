@@ -2,6 +2,8 @@ import * as React from 'react';
 import * as moment from 'moment';
 import Moment from 'react-moment';
 
+import history from '../../history';
+
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
@@ -18,18 +20,12 @@ import {
     Day,
     NewDay,
 } from '../../interfaces/dayInterfaces';
-import { GenerateListDetail } from '../../interfaces/listInterfaces';
+import { List, GenerateListDetail } from '../../interfaces/listInterfaces';
 import { Meal } from '../../interfaces/mealInterfaces';
 import { getMeals } from '../../actions/meals/mealActions';
-import { getDays } from '../../actions/days/dayActions';
-import { getPeople } from '../../actions/people/peopleActions';
-import { 
-    updateDay,
-    addDay, 
-    addPeople,
-    removePeople,
-    generateList,
-} from '../../actions/planner/plannerActions';
+import { getDays, addDay, updateDay } from '../../actions/days/dayActions';
+import { getPeople, addPeople, removePeople } from '../../actions/people/peopleActions';
+import { generateList } from '../../actions/planner/plannerActions';
 
 import AutoComplete from 'material-ui/AutoComplete';
 import Dialog from 'material-ui/Dialog';
@@ -341,7 +337,14 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                 endDate,
                 listName,
             };
-            this.props.dispatch(generateList(newListDetails));
+            this.props.dispatch(generateList(newListDetails))
+            .then((response: List) => {
+                const url: string = '/List/Detail/' + String(response[0].listid);
+                history.push(url);
+            })
+            .catch((error: any) => {
+                console.log(error);
+            });
         }
     }
 

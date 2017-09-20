@@ -3,6 +3,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
+import history from '../../../history';
+
 import { 
     Meal,
     NewMeal, 
@@ -189,7 +191,14 @@ class Meals extends React.Component<MealsProps, MealsState> {
                 categoryErrorText: (!this.state.newMeal.category) ? 'Please enter a category' : undefined, 
             });
         } else {
-            this.props.dispatch(saveMeal(this.state.newMeal));
+            this.props.dispatch(saveMeal(this.state.newMeal))
+            .then((response: Meal) => {
+                const url: string = '/Meal/Edit/' + String(response.mealid);
+                history.push(url);
+            })
+            .catch((error: any) => {
+                console.log(error);
+            });
         }
     }
 

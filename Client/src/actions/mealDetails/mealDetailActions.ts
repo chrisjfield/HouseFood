@@ -4,12 +4,16 @@ import {
 } from '../../interfaces/mealDetailInterfaces';
 import apiHelper from '../../helpers/apiHelper';
 
-export const GET_MEALDETAILS_STARTED = 'GET_MEALDETAILS_STARTED';
+import { 
+    startGet, stopGet, startPost, stopPost,
+    startPut, stopPut, startDelete, stopDelete,
+} from '../app/appLoadingActions';
+import { addError } from '../app/appErrorActions';
+
 export const GET_MEALDETAILS_SUCCESSFUL = 'GET_MEALDETAILS_SUCCESSFUL';
-export const GET_MEALDETAILS_FAILURE = 'GET_MEALDETAILS_FAILURE';
+export const POST_BULK_MEALDETAILS_SUCCESSFUL = 'POST_BULK_MEALDETAILS_SUCCESSFUL';
 export const PUT_BULK_MEALDETAILS_SUCCESSFUL = 'PUT_BULK_MEALDETAILS_SUCCESSFUL';
 export const DELETE_BULK_MEALDETAILS_SUCCESSFUL = 'DELETE_BULK_MEALDETAILS_SUCCESSFUL';
-export const POST_BULK_MEALDETAILS_SUCCESSFUL = 'POST_BULK_MEALDETAILS_SUCCESSFUL';
 
 export function getMealDetails() {
     const request = apiHelper.apiCall(
@@ -17,89 +21,23 @@ export function getMealDetails() {
         'mealingredients',
       );
 
-    return (dispatch : Function) => {
-        dispatch(getMealDetailsStarted());
+    return (dispatch: Function) => {
+        dispatch(startGet());
         request
-        .then((response : MealDetail[]) =>
-          dispatch(getMealDetailsSuccessful(response)),
-        )
-        .catch((error : any) => {
-            console.log(error);
-            dispatch(getMealDetailsFailure(error));
+        .then((response: MealDetail[]) => {
+            dispatch(getMealDetailsSuccessful(response));
+            dispatch(stopGet());
+        })
+        .catch((error: any) => {
+            dispatch(addError(error));
+            dispatch(stopGet());
         });
-    };
-}
-
-function getMealDetailsStarted() {
-    return {
-        type: GET_MEALDETAILS_STARTED,
     };
 }
 
 function getMealDetailsSuccessful(response: MealDetail[]) {
     return {
         type: GET_MEALDETAILS_SUCCESSFUL,
-        payload: response,
-    };
-}
-
-function getMealDetailsFailure(error: any) {
-    return {
-        type: GET_MEALDETAILS_FAILURE,
-        payload: error,
-    };
-}
-
-export function putBulkMealDetails(mealDetails: MealDetail[]) {
-    const request = apiHelper.apiCall(
-        'PUT',
-        'mealingredients/bulk',
-        mealDetails,
-      );
-
-    return (dispatch : Function) => {
-        dispatch(getMealDetailsStarted());
-        request
-        .then((response : MealDetail[]) =>
-          dispatch(putBulkMealDetailsSuccessful(response)),
-        )
-        .catch((error : any) => {
-            console.log(error);
-            dispatch(getMealDetailsFailure(error));
-        });
-    };
-}
-
-function putBulkMealDetailsSuccessful(response: MealDetail[]) {
-    return {
-        type: PUT_BULK_MEALDETAILS_SUCCESSFUL,
-        payload: response,
-    };
-}
-
-export function deletetBulkMealDetails(mealDetails: MealDetail[]) {
-    const request = apiHelper.apiCall(
-        'DELETE',
-        'mealingredients/bulk',
-        mealDetails,
-      );
-
-    return (dispatch : Function) => {
-        dispatch(getMealDetailsStarted());
-        request
-        .then((response : any) =>
-          dispatch(deleteBulkMealDetailsSuccessful(mealDetails)),
-        )
-        .catch((error : any) => {
-            console.log(error);
-            dispatch(getMealDetailsFailure(error));
-        });
-    };
-}
-
-function deleteBulkMealDetailsSuccessful(response: MealDetail[]) {
-    return {
-        type: DELETE_BULK_MEALDETAILS_SUCCESSFUL,
         payload: response,
     };
 }
@@ -112,14 +50,15 @@ export function postBulkMealDetails(mealDetails: NewMealDetail[]) {
       );
 
     return (dispatch : Function) => {
-        dispatch(getMealDetailsStarted());
+        dispatch(startPost());
         request
-        .then((response : MealDetail[]) =>
-          dispatch(postBulkMealDetailsSuccessful(response)),
-        )
-        .catch((error : any) => {
-            console.log(error);
-            dispatch(getMealDetailsFailure(error));
+        .then((response: MealDetail[]) => {
+            dispatch(postBulkMealDetailsSuccessful(response));
+            dispatch(stopPost());
+        })
+        .catch((error: any) => {
+            dispatch(addError(error));
+            dispatch(stopPost());
         });
     };
 }
@@ -127,6 +66,62 @@ export function postBulkMealDetails(mealDetails: NewMealDetail[]) {
 function postBulkMealDetailsSuccessful(response: MealDetail[]) {
     return {
         type: POST_BULK_MEALDETAILS_SUCCESSFUL,
+        payload: response,
+    };
+}
+
+export function putBulkMealDetails(mealDetails: MealDetail[]) {
+    const request = apiHelper.apiCall(
+        'PUT',
+        'mealingredients/bulk',
+        mealDetails,
+      );
+
+    return (dispatch : Function) => {
+        dispatch(startPut());
+        request
+        .then((response: MealDetail[]) => {
+            dispatch(putBulkMealDetailsSuccessful(response));
+            dispatch(stopPut());
+        })
+        .catch((error: any) => {
+            dispatch(addError(error));
+            dispatch(stopPut());
+        });
+    };
+}
+
+function putBulkMealDetailsSuccessful(response: MealDetail[]) {
+    return {
+        type: PUT_BULK_MEALDETAILS_SUCCESSFUL,
+        payload: response,
+    };
+}
+
+export function deleteBulkMealDetails(mealDetails: MealDetail[]) {
+    const request = apiHelper.apiCall(
+        'DELETE',
+        'mealingredients/bulk',
+        mealDetails,
+      );
+
+    return (dispatch : Function) => {
+        dispatch(startDelete());
+        request
+        .then((response: MealDetail[]) => {
+            dispatch(deleteBulkMealDetailsSuccessful(response));
+            dispatch(stopDelete());
+        })
+        .catch((error: any) => {
+            dispatch(addError(error));
+            dispatch(stopDelete());
+        });
+    };
+}
+
+function deleteBulkMealDetailsSuccessful(response: MealDetail[]) {
+    return {
+        type: DELETE_BULK_MEALDETAILS_SUCCESSFUL,
         payload: response,
     };
 }

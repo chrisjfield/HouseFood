@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
-import { removeError } from './appErrorActions';
+import { removeError } from '../../../actions/app/appErrorActions';
 
 import Snackbar from 'material-ui/Snackbar';
 

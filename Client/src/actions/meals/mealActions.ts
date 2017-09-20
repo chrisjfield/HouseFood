@@ -1,14 +1,16 @@
-import history from '../../history';
-
 import { 
     Meal, 
     NewMeal, 
 } from '../../interfaces/mealInterfaces';
 import apiHelper from '../../helpers/apiHelper';
 
-export const GET_MEALS_STARTED = 'GET_MEALS_STARTED';
+import { 
+    startGet, stopGet, startPost, stopPost,
+    startPut, stopPut,
+} from '../app/appLoadingActions';
+import { addError } from '../app/appErrorActions';
+
 export const GET_MEALS_SUCCESSFUL = 'GET_MEALS_SUCCESSFUL';
-export const GET_MEALS_FAILURE = 'GET_MEALS_FAILURE';
 export const POST_MEAL_SUCCESSFUL = 'POST_MEAL_SUCCESSFUL';
 export const PUT_MEAL_SUCCESSFUL = 'PUT_MEAL_SUCCESSFUL';
 
@@ -19,21 +21,16 @@ export function getMeals() {
       );
     
     return (dispatch : Function) => {
-        dispatch(getMealsStarted());
+        dispatch(startGet());
         request
-        .then((response : Meal[]) =>
-          dispatch(getMealsSuccessful(response)),
-        )
-        .catch((error : any) => {
-            console.log(error);
-            dispatch(getMealsFailure(error));
+        .then((response: Meal[]) => {
+            dispatch(getMealsSuccessful(response));
+            dispatch(stopGet());
+        })
+        .catch((error: any) => {
+            dispatch(addError(error));
+            dispatch(stopGet());
         });
-    };
-}
-
-function getMealsStarted() {
-    return {
-        type: GET_MEALS_STARTED,
     };
 }
 
@@ -44,13 +41,6 @@ function getMealsSuccessful(response: Meal[]) {
     };
 }
 
-function getMealsFailure(error: any) {
-    return {
-        type: GET_MEALS_FAILURE,
-        payload: error,
-    };
-}
-
 export function saveMeal(meal: NewMeal) {
     const request = apiHelper.apiCall(
         'POST',
@@ -58,17 +48,18 @@ export function saveMeal(meal: NewMeal) {
         meal,
       );
     
-    return (dispatch : Function) => {
-        dispatch(getMealsStarted());
-        request
-        .then((response : Meal) => {
-            const url: string = '/Meal/Edit/' + String(response.mealid);
-            dispatch(saveMealSuccessful(response)),
-            history.push(url);
+    return (dispatch: Function) => {
+        dispatch(startPost());
+        return request
+        .then((response: Meal) => {
+            dispatch(saveMealSuccessful(response));
+            dispatch(stopPost());
+            return response;
         })
-        .catch((error : any) => {
-            console.log(error);
-            dispatch(getMealsFailure(error));
+        .catch((error: any) => {
+            dispatch(addError(error));
+            dispatch(stopPost());
+            throw(error);
         });
     };
 }
@@ -88,15 +79,16 @@ export function editMeal(meal: Meal) {
         meal,
       );
     
-    return (dispatch : Function) => {
-        dispatch(getMealsStarted());
+    return (dispatch: Function) => {
+        dispatch(startPut());
         request
-        .then((response : Meal) => 
-            dispatch(editMealSuccessful(response)),
-        )
-        .catch((error : any) => {
-            console.log(error);
-            dispatch(getMealsFailure(error));
+        .then((response : Meal) => {
+            dispatch(editMealSuccessful(response));
+            dispatch(stopPut());
+        })
+        .catch((error: any) => {
+            dispatch(addError(error));
+            dispatch(stopPut());
         });
     };
 }

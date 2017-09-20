@@ -1,12 +1,10 @@
-import { 
-    Ingredient,
-    NewIngredient, 
-} from '../../interfaces/ingredientInterfaces';
+import { Ingredient, NewIngredient } from '../../interfaces/ingredientInterfaces';
 import apiHelper from '../../helpers/apiHelper';
 
-export const GET_INGREDIENTS_STARTED = 'GET_INGREDIENTS_STARTED';
+import { startGet, stopGet, startPost, stopPost } from '../app/appLoadingActions';
+import { addError } from '../app/appErrorActions';
+
 export const GET_INGREDIENTS_SUCCESSFUL = 'GET_INGREDIENTS_SUCCESSFUL';
-export const GET_INGREDIENTS_FAILURE = 'GET_INGREDIENTS_FAILURE';
 export const POST_INGREDIENTS_BULK_SUCCESSFUL = 'POST_INGREDIENTS_BULK_SUCCESSFUL';
 
 export function getIngredients() {
@@ -15,22 +13,17 @@ export function getIngredients() {
         'Ingredients',
       );
     
-    return (dispatch : Function) => {
-        dispatch(getIngredientsStarted());
+    return (dispatch: Function) => {
+        dispatch(startGet());
         request
-        .then((response : Ingredient[]) =>
-          dispatch(getIngredientsSuccessful(response)),
-        )
-        .catch((error : any) => {
-            console.log(error);
-            dispatch(getIngredientsFailure(error));
+        .then((response: Ingredient[]) => {
+            dispatch(getIngredientsSuccessful(response));
+            dispatch(stopGet());
+        })
+        .catch((error: any) => {
+            dispatch(addError(error));
+            dispatch(stopGet());
         });
-    };
-}
-
-function getIngredientsStarted() {
-    return {
-        type: GET_INGREDIENTS_STARTED,
     };
 }
 
@@ -41,13 +34,6 @@ function getIngredientsSuccessful(response: Ingredient[]) {
     };
 }
 
-function getIngredientsFailure(error: any) {
-    return {
-        type: GET_INGREDIENTS_FAILURE,
-        payload: error,
-    };
-}
-
 export function postBulkIngredients(newIngredients: NewIngredient[]) {
     const request = apiHelper.apiCall(
         'POST',
@@ -55,16 +41,17 @@ export function postBulkIngredients(newIngredients: NewIngredient[]) {
         newIngredients,
       );
 
-    return (dispatch : Function) => {
-        dispatch(getIngredientsStarted());
+    return (dispatch: Function) => {
+        dispatch(startPost());
         return request
-        .then((response : Ingredient[]) => {
+        .then((response: Ingredient[]) => {
             dispatch(postIngredientsBulkSuccessful(response));
+            dispatch(stopPost());
             return response;
         })
         .catch((error: any) => {
-            console.log(error);
-            dispatch(getIngredientsFailure(error));
+            dispatch(addError(error));
+            dispatch(stopPost());
             throw(error);
         });
     };

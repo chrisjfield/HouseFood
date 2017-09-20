@@ -15,7 +15,7 @@ import {
 
 import { 
     getMealDetails,
-    deletetBulkMealDetails,
+    deleteBulkMealDetails,
     putBulkMealDetails, 
     postBulkMealDetails,
 } from '../../../actions/mealDetails/mealDetailActions';
@@ -365,7 +365,7 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
                     });
 
                     this.props.dispatch(postBulkMealDetails(newMealDetail));
-                    this.props.dispatch(deletetBulkMealDetails(this.state.deletedMealDetails));
+                    this.props.dispatch(deleteBulkMealDetails(this.state.deletedMealDetails));
                     this.props.dispatch(putBulkMealDetails(this.state.updatedMealDetails));
                     this.props.history.push(url);
                 })

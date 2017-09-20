@@ -4,18 +4,18 @@ import {
 } from '../../interfaces/listDetailInterfaces';
 import apiHelper from '../../helpers/apiHelper';
 
-export const GET_LISTDETAILS_STARTED = 'GET_LISTDETAILS_STARTED';
+import { 
+    startGet, stopGet, startPost, stopPost,
+    startPut, stopPut, startDelete, stopDelete,
+} from '../app/appLoadingActions';
+import { addError } from '../app/appErrorActions';
+
 export const GET_LISTDETAILS_SUCCESSFUL = 'GET_LISTDETAILS_SUCCESSFUL';
-export const GET_LISTDETAILS_FAILURE = 'GET_LISTDETAILS_FAILURE';
-export const CHECK_LISTDETAILS_STARTED = 'CHECK_LISTDETAILS_STARTED';
-export const PUT_LISTDETAILS_SUCCESSFUL = 'PUT_LISTDETAILS_SUCCESSFUL';
-export const CHECK_LISTDETAILS_FAILURE = 'CHECK_LISTDETAILS_FAILURE';
-export const CHECK_ALL_LISTDETAILS_STARTED = 'CHECK_ALL_LISTDETAILS_STARTED';
-export const CHECK_ALL_LISTDETAILS_SUCCESSFUL = 'CHECK_ALL_LISTDETAILS_SUCCESSFUL';
-export const CHECK_ALL_LISTDETAILS_FAILURE = 'CHECK_ALL_LISTDETAILS_FAILURE';
-export const PUT_BULK_LISTDETAILS_SUCCESSFUL = 'PUT_BULK_LISTDETAILS_SUCCESSFUL';
-export const DELETE_BULK_LISTDETAILS_SUCCESSFUL = 'DELETE_BULK_LISTDETAILS_SUCCESSFUL';
 export const POST_BULK_LISTDETAILS_SUCCESSFUL = 'POST_BULK_LISTDETAILS_SUCCESSFUL';
+export const PUT_LISTDETAILS_SUCCESSFUL = 'PUT_LISTDETAILS_SUCCESSFUL';
+export const PUT_BULK_LISTDETAILS_SUCCESSFUL = 'PUT_BULK_LISTDETAILS_SUCCESSFUL';
+export const CHECK_ALL_LISTDETAILS_SUCCESSFUL = 'CHECK_ALL_LISTDETAILS_SUCCESSFUL';
+export const DELETE_BULK_LISTDETAILS_SUCCESSFUL = 'DELETE_BULK_LISTDETAILS_SUCCESSFUL';
 
 export function getListDetails() {
     const request = apiHelper.apiCall(
@@ -23,22 +23,17 @@ export function getListDetails() {
         'listitems',
       );
     
-    return (dispatch : Function) => {
-        dispatch(getListDetailsStarted());
+    return (dispatch: Function) => {
+        dispatch(startGet());
         request
-        .then((response : ListDetail[]) =>
-          dispatch(getListDetailsSuccessful(response)),
-        )
-        .catch((error : any) => {
-            console.log(error);
-            dispatch(getListDetailsFailure(error));
+        .then((response: ListDetail[]) => {
+            dispatch(getListDetailsSuccessful(response));
+            dispatch(stopGet());
+        })
+        .catch((error: any) => {
+            dispatch(addError(error));
+            dispatch(stopGet());
         });
-    };
-}
-
-function getListDetailsStarted() {
-    return {
-        type: GET_LISTDETAILS_STARTED,
     };
 }
 
@@ -49,10 +44,31 @@ function getListDetailsSuccessful(response: ListDetail[]) {
     };
 }
 
-function getListDetailsFailure(error: any) {
+export function postBulkListDetails(listDetails: NewListDetail[]) {
+    const request = apiHelper.apiCall(
+        'POST',
+        'Listitems/bulk',
+        listDetails,
+      );
+
+    return (dispatch: Function) => {
+        dispatch(startPost());
+        request
+        .then((response: ListDetail[]) => {
+            dispatch(postBulkListDetailsSuccessful(response));
+            dispatch(stopPost());
+        })
+        .catch((error: any) => {
+            dispatch(addError(error));
+            dispatch(stopPost());
+        });
+    };
+}
+
+function postBulkListDetailsSuccessful(response: ListDetail[]) {
     return {
-        type: GET_LISTDETAILS_FAILURE,
-        payload: error,
+        type: POST_BULK_LISTDETAILS_SUCCESSFUL,
+        payload: response,
     };
 }
 
@@ -67,22 +83,17 @@ export function checkListDetail(listDetail: ListDetail) {
         updatedListDetail,
       );
 
-    return (dispatch : Function) => {
-        dispatch(checkListDetailStarted());
+    return (dispatch: Function) => {
+        dispatch(startPut());
         request
-        .then((response : ListDetail) =>
-          dispatch(checkListDetailSuccessful(response)),
-        )
-        .catch((error : any) => {
-            console.log(error);
-            dispatch(checkListDetailFailure(error));
+        .then((response: ListDetail) => {
+            dispatch(checkListDetailSuccessful(response));
+            dispatch(stopPut());
+        })
+        .catch((error: any) => {
+            dispatch(addError(error));
+            dispatch(stopPut());
         });
-    };
-}
-
-function checkListDetailStarted() {
-    return {
-        type: CHECK_LISTDETAILS_STARTED,
     };
 }
 
@@ -90,13 +101,6 @@ function checkListDetailSuccessful(response: ListDetail) {
     return {
         type: PUT_LISTDETAILS_SUCCESSFUL,
         payload: response,
-    };
-}
-
-function checkListDetailFailure(error: any) {
-    return {
-        type: CHECK_LISTDETAILS_FAILURE,
-        payload: error,
     };
 }
 
@@ -111,21 +115,16 @@ export function checkAllListDetail(checked: boolean, listid: number) {
       );
 
     return (dispatch: Function) => {
-        dispatch(checkAllListDetailStarted());
+        dispatch(startPut());
         request
-        .then((response: number) =>
-          dispatch(checkAllListDetailSuccessful(checked, listid)),
-        )
+        .then((response: number) => {
+            dispatch(checkAllListDetailSuccessful(checked, listid));
+            dispatch(stopPut());
+        })
         .catch((error: any) => {
-            console.log(error);
-            dispatch(checkAllListDetailFailure(error));
+            dispatch(addError(error));
+            dispatch(stopPut());
         });
-    };
-}
-
-function checkAllListDetailStarted() {
-    return {
-        type: CHECK_ALL_LISTDETAILS_STARTED,
     };
 }
 
@@ -137,13 +136,6 @@ function checkAllListDetailSuccessful(checked: boolean, listid: number) {
     };
 }
 
-function checkAllListDetailFailure(error: any) {
-    return {
-        type: CHECK_ALL_LISTDETAILS_FAILURE,
-        payload: error,
-    };
-}
-
 export function putBulkListDetails(listDetails: ListDetail[]) {
     const request = apiHelper.apiCall(
         'PUT',
@@ -151,15 +143,16 @@ export function putBulkListDetails(listDetails: ListDetail[]) {
         listDetails,
       );
 
-    return (dispatch : Function) => {
-        dispatch(getListDetailsStarted());
+    return (dispatch: Function) => {
+        dispatch(startPut());
         request
-        .then((response : ListDetail[]) =>
-          dispatch(putBulkListDetailsSuccessful(response)),
-        )
-        .catch((error : any) => {
-            console.log(error);
-            dispatch(getListDetailsFailure(error));
+        .then((response: ListDetail[]) => {
+            dispatch(putBulkListDetailsSuccessful(response));
+            dispatch(stopPut());
+        })
+        .catch((error: any) => {
+            dispatch(addError(error));
+            dispatch(stopPut());
         });
     };
 }
@@ -178,15 +171,16 @@ export function deletetBulkListDetails(listDetails: ListDetail[]) {
         listDetails,
       );
 
-    return (dispatch : Function) => {
-        dispatch(getListDetailsStarted());
+    return (dispatch: Function) => {
+        dispatch(startDelete());
         request
-        .then((response : any) =>
-          dispatch(deleteBulkListDetailsSuccessful(listDetails)),
-        )
-        .catch((error : any) => {
-            console.log(error);
-            dispatch(getListDetailsFailure(error));
+        .then((response: any) => {
+            dispatch(deleteBulkListDetailsSuccessful(listDetails));
+            dispatch(stopDelete());
+        })
+        .catch((error: any) => {
+            dispatch(addError(error));
+            dispatch(stopDelete());
         });
     };
 }
@@ -194,33 +188,6 @@ export function deletetBulkListDetails(listDetails: ListDetail[]) {
 function deleteBulkListDetailsSuccessful(response: ListDetail[]) {
     return {
         type: DELETE_BULK_LISTDETAILS_SUCCESSFUL,
-        payload: response,
-    };
-}
-
-export function postBulkListDetails(listDetails: NewListDetail[]) {
-    const request = apiHelper.apiCall(
-        'POST',
-        'Listitems/bulk',
-        listDetails,
-      );
-
-    return (dispatch : Function) => {
-        dispatch(getListDetailsStarted());
-        request
-        .then((response : ListDetail[]) =>
-          dispatch(postBulkListDetailsSuccessful(response)),
-        )
-        .catch((error : any) => {
-            console.log(error);
-            dispatch(getListDetailsFailure(error));
-        });
-    };
-}
-
-function postBulkListDetailsSuccessful(response: ListDetail[]) {
-    return {
-        type: POST_BULK_LISTDETAILS_SUCCESSFUL,
         payload: response,
     };
 }

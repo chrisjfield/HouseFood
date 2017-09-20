@@ -1,16 +1,16 @@
-import history from '../../history';
-
 import { 
     List,
     NewList, 
 } from '../../interfaces/listInterfaces';
 import apiHelper from '../../helpers/apiHelper';
 
-export const GET_LISTS_STARTED = 'GET_LISTS_STARTED';
+import { 
+    startGet, stopGet, startPost, stopPost,
+    startPut, stopPut,
+} from '../app/appLoadingActions';
+import { addError } from '../app/appErrorActions';
+
 export const GET_LISTS_SUCCESSFUL = 'GET_LISTS_SUCCESSFUL';
-export const GET_LISTS_FAILURE = 'GET_LISTS_FAILURE';
-export const COMPLETE_LISTS_STARTED = 'COMPLETE_LISTS_STARTED';
-export const COMPLETE_LISTS_FAILURE = 'COMPLETE_LISTS_FAILURE';
 export const POST_LIST_SUCCESSFUL = 'POST_LIST_SUCCESSFUL';
 export const PUT_LIST_SUCCESSFUL = 'PUT_LIST_SUCCESSFUL';
 
@@ -20,22 +20,17 @@ export function getLists() {
         'lists',
       );
     
-    return (dispatch : Function) => {
-        dispatch(getListsStarted());
+    return (dispatch: Function) => {
+        dispatch(startGet());
         request
-        .then((response : List[]) =>
-          dispatch(getListsSuccessful(response)),
-        )
-        .catch((error : any) => {
-            console.log(error);
-            dispatch(getListsFailure(error));
+        .then((response: List[]) => {
+            dispatch(getListsSuccessful(response));
+            dispatch(stopGet());
+        })
+        .catch((error: any) => {
+            dispatch(addError(error));
+            dispatch(stopGet());
         });
-    };
-}
-
-function getListsStarted() {
-    return {
-        type: GET_LISTS_STARTED,
     };
 }
 
@@ -46,10 +41,33 @@ function getListsSuccessful(response: List[]) {
     };
 }
 
-function getListsFailure(error: any) {
+export function saveList(meal: NewList) {
+    const request = apiHelper.apiCall(
+        'POST',
+        'lists',
+        meal,
+      );
+    
+    return (dispatch: Function) => {
+        dispatch(startPost());
+        return request
+        .then((response: List) => {
+            dispatch(saveListSuccessful(response));
+            dispatch(stopPost());
+            return response;
+        })
+        .catch((error: any) => {
+            dispatch(addError(error));
+            dispatch(stopPost());
+            throw(error);
+        });
+    };
+}
+
+function saveListSuccessful(response: List) {
     return {
-        type: GET_LISTS_FAILURE,
-        payload: error,
+        type: POST_LIST_SUCCESSFUL,
+        payload: response,
     };
 }
 
@@ -65,65 +83,17 @@ export function completeList(list : List) {
         updatedList,
       ); 
     
-    return (dispatch : Function) => {
-        dispatch(completeListsStarted());
+    return (dispatch: Function) => {
+        dispatch(startPut());
         request
-        .then((response : List) => {
-            dispatch(completetListsSuccessful(response));
+        .then((response: List) => {
+            dispatch(editListSuccessful(response));
+            dispatch(stopPut());
         })
-        .catch((error : any) => {
-            console.log(error);
-            dispatch(completeListsFailure(error));
+        .catch((error: any) => {
+            dispatch(addError(error));
+            dispatch(stopPut());
         });
-    };
-}
-
-function completeListsStarted() {
-    return {
-        type: COMPLETE_LISTS_STARTED,
-    };
-}
-
-function completetListsSuccessful(response: List) {
-    return {
-        type: PUT_LIST_SUCCESSFUL,
-        payload: response,
-    };
-}
-
-function completeListsFailure(error: any) {
-    return {
-        type: COMPLETE_LISTS_FAILURE,
-        payload: error,
-    };
-}
-
-export function saveList(meal: NewList) {
-    const request = apiHelper.apiCall(
-        'POST',
-        'lists',
-        meal,
-      );
-    
-    return (dispatch : Function) => {
-        dispatch(getListsStarted());
-        request
-        .then((response : List) => {
-            const url: string = '/List/Edit/' + String(response.listid);
-            dispatch(saveListSuccessful(response)),
-            history.push(url);
-        })
-        .catch((error : any) => {
-            console.log(error);
-            dispatch(getListsFailure(error));
-        });
-    };
-}
-
-function saveListSuccessful(response: List) {
-    return {
-        type: POST_LIST_SUCCESSFUL,
-        payload: response,
     };
 }
 
@@ -135,15 +105,16 @@ export function editList(list: List) {
         list,
       );
     
-    return (dispatch : Function) => {
-        dispatch(getListsStarted());
+    return (dispatch: Function) => {
+        dispatch(startPut());
         request
-        .then((response : List) => 
-            dispatch(editListSuccessful(response)),
-        )
-        .catch((error : any) => {
-            console.log(error);
-            dispatch(getListsFailure(error));
+        .then((response: List) => {
+            dispatch(editListSuccessful(response));
+            dispatch(stopPut());
+        })
+        .catch((error: any) => {
+            dispatch(addError(error));
+            dispatch(stopPut());
         });
     };
 }
