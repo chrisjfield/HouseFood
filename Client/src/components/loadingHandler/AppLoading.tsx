@@ -2,11 +2,12 @@ import * as React from 'react';
 
 import CircularProgress from 'material-ui/CircularProgress';
 
+import styles from '../../styles';
+
 function AppLoading() {
     return (
         <div>
-            <br/>
-            <CircularProgress size={80} thickness={5}/>
+            <CircularProgress size={80} thickness={5} style={styles.loading}/>
         </div>
     );
 }

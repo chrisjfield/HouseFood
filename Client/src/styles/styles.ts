@@ -8,6 +8,10 @@ const styles: styleState = {
         display: 'inline-flex',
         marginRight: '4px',
     },
+    loading: {
+        marginLeft: 'calc(50% - 40px)',
+        paddingTop: '5%',
+    },
 };
 
 export default styles;
