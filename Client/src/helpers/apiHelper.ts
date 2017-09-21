@@ -19,8 +19,12 @@ class APIHelper {
             mode: 'cors',
             body: body ? JSON.stringify(body) : undefined,
         })
-            .then((response: any) => APIHelper.checkStatus(response))
-            .catch((error: any) => {throw(error);});
+        .then((response: any) => {
+            return APIHelper.checkStatus(response);
+        })
+        .catch((error: any) => {
+            throw(error);
+        });
     }
   
     static checkStatus(response: any) {

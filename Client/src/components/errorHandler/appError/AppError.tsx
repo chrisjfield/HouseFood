@@ -4,6 +4,7 @@ import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
 import { removeError } from '../../../actions/app/appErrorActions';
+import { red800 } from 'material-ui/styles/colors';
 
 import Snackbar from 'material-ui/Snackbar';
 
@@ -33,12 +34,13 @@ class AppError extends React.Component<AppErrorProps, AppErrorState> {
         const errorMessage: string = this.state.errorMessage;
         const error: JSX.Element = (
             <Snackbar
-                open={!errorMessage}
+                open={errorMessage ? true : false}
                 message={errorMessage}
                 autoHideDuration={4000}
                 onRequestClose={this.handleClose}
                 bodyStyle={{ 
                     textAlign: 'center', 
+                    backgroundColor: red800,
                 }}
             />
         );

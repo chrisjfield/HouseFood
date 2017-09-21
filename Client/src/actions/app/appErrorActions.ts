@@ -1,7 +1,8 @@
 export const ADD_ERROR = 'ADD_ERROR';
 export const REMOVE_ERROR = 'REMOVE_ERROR';
 
-export function addError(errorText: string) {
+export function addError(error: any) {
+    const errorText: String = error.message ? error.message : 'An error occurred';
     return {
         type: ADD_ERROR,
         payload: errorText,
