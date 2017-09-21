@@ -6,6 +6,7 @@ import {
   blueGrey700,
   blueGrey800,
   blueGrey900,
+  red800,
 } from 'material-ui/styles/colors';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
@@ -33,6 +34,9 @@ const theme: __MaterialUI.Styles.MuiTheme = getMuiTheme({
     },
     textField: {
         backgroundColor: grey700,
+    },
+    snackbar: {
+        backgroundColor: red800,
     },
 });
 

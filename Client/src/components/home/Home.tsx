@@ -1,48 +1,28 @@
 import * as React from 'react';
 
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
 import Moment from 'react-moment';
+import * as moment from 'moment';
+
+import AppLoading from '../loadingHandler';
 
 import { Day } from '../../interfaces/dayInterfaces';
 import { Person } from '../../interfaces/personInterfaces';
 import { Meal } from '../../interfaces/mealInterfaces';
+import { HomeProps } from '../../interfaces/appInterfaces';
+import { AppStore } from '../../interfaces/stateInterfaces';
+
 import { getMeals } from '../../actions/meals/mealActions';
 import { getDays } from '../../actions/days/dayActions';
 import { getPeople } from '../../actions/people/peopleActions';
 
-import {
-    Card, 
-    CardText,
-} from 'material-ui/Card';
+import { Card, CardText } from 'material-ui/Card';
 import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
 
-interface HomeProps {
-    days: Day[];
-    people: Person[];
-    meals: Meal[];
-    loading: boolean;
-    error: boolean;
-    updating: boolean;
-    dispatch: Dispatch<{}>;
-    history: any;
-}
+import styles from '../../styles';
 
-interface HomeState {
-}
-
-const styles = {
-    chips: {
-        display: 'inline-flex',
-        marginRight: '4px',
-    },
-};
-
-class Home extends React.Component<HomeProps, HomeState> {
-    constructor(props: any) {
-        super();
-    }
+class Home extends React.Component<HomeProps> {
 
     componentWillMount() {
         this.props.dispatch(getDays());
@@ -50,74 +30,81 @@ class Home extends React.Component<HomeProps, HomeState> {
         this.props.dispatch(getMeals());
     }
 
-    getMonday() {
-        const currentDate: Date = new Date();
-        const currentDay: number = currentDate.getDay();
-        const diff: number = currentDate.getDate() - currentDay + (currentDay === 0 ? -6 :1); // adjust when day is sunday
-        const finaldate: Date = new Date(currentDate.setDate(diff));
-        return finaldate;
-    }
-
-    addDays(date: Date, days: number) {
-        const newDate = new Date(date);
-        newDate.setDate(newDate.getDate() + days);
-        return newDate;
-    }
-
-    getPerson(person: Person) {
+    generateWeek() {
+        const dateArray: Date[] = [];
+        for (let i = 0; i < 7; i += 1) {
+            dateArray.push(moment(new Date()).startOf('isoWeek').isoWeekday(i).toDate());
+        } 
         return (
-            <Chip key={person.personid} style={styles.chips}>
-                <Avatar size={32}>{person.person.charAt(0).toUpperCase()}</Avatar>
-                {person.person}
-            </Chip>
+            <div>
+                <br/>
+                {dateArray.map((date: Date) => this.getCard(date))}
+            </div>
         );
     }
 
     getCard(rowDate: Date) {
-        const day: Day = this.props.days.find((day: Day) => {
-            const mapDate = new Date(day.date);
-            return rowDate.toDateString() === mapDate.toDateString();
-        });
+        const day: Day = this.props.days.find((day: Day) => rowDate.toDateString() === new Date(day.date).toDateString());
         const meal: string = day ? this.props.meals.find((meal: Meal) => meal.mealid === day.mealid).name : null;
-        const people: Person[] = this.props.people.filter((people: Person) => {
-            const personDate = new Date(people.date);
-            return rowDate.toDateString() === personDate.toDateString();
-        });
+        const people: Person[] = this.props.people.filter((people: Person) => 
+            rowDate.toDateString() === new Date(people.date).toDateString(),
+        );
+        let noMealMessage: string;
+        if (!meal) {
+            noMealMessage = 'No meal planned';
+        } else if (!people.length) {
+            noMealMessage = 'No one in';
+        }
+
         return (
-            <Card key={rowDate.getDay().toString()}>
+            <Card key={moment(rowDate).day().toString()}>
                 <CardText>
-                    <label>{<Moment format="dddd - Do MMMM" date={rowDate}/>}</label><br/>
-                    <label>Meal: </label>{meal}<br/>
-                    <label>People: </label>{people.map((person: Person) => this.getPerson(person))}
+                    <h3>{<Moment format="dddd - Do MMMM" date={rowDate}/>}</h3>
+                    {noMealMessage ? noMealMessage : this.getCardText(people, meal)}
                 </CardText>
             </Card>
         );
     }
 
-    generateWeek() {
-        const modaysDate: Date = this.getMonday();
-        const dateArray: Date[] = [modaysDate];
-        for (let i = 1; i < 7; i += 1) {
-            dateArray.push(this.addDays(modaysDate, i));
-        } 
-        return dateArray.map((date: Date) => this.getCard(date));
+    getCardText(people: Person[], meal: string) {
+        const mealText: string = people.length > 1 ? 'are in for ' : 'is in for ';
+
+        return (
+            <div>
+                {people.map((person: Person) => this.getPerson(person))}
+                {mealText}
+                <b>{meal}</b>
+            </div>
+        );
+    }
+
+    getPerson(person: Person) {
+        return (
+            <Chip key={person.personid} style={styles.chip}>
+                <Avatar>{person.person.charAt(0).toUpperCase()}</Avatar>
+                {person.person}
+            </Chip>
+        );
     }
 
     render() {
         return (
             <div>
-                <br/>
-                {(this.props.days && this.props.people && this.props.meals) ? this.generateWeek() : null}
+                {!this.props.loading && this.props.days && this.props.people && this.props.meals 
+                    ? this.generateWeek() 
+                    : <AppLoading/>
+                }
             </div>
         );
     }
 }
 
-const mapStateToProps = (store : any, props : any) => {
+const mapStateToProps = (store: AppStore) => {
     return {
         meals: store.mealReducer.meals,
         days: store.dayReducer.days,
         people: store.personReducer.people,
+        loading: store.appReducer.getting > 0 ? true : false,
     };
 };
   

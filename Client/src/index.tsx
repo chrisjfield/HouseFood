@@ -14,7 +14,7 @@ import App from './components/app';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import './css/themes.css';
+import './styles/css/themes.css';
 
 load({
     google: {

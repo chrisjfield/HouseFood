@@ -9,7 +9,7 @@ import { Dispatch } from 'redux';
 
 import BigCalendar from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import '../../css/app.css';
+import '../../styles/css/app.css';
 BigCalendar.momentLocalizer(moment);
 
 import { 

@@ -1,70 +1,46 @@
 import * as React from 'react';
 
-import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
+import { AppStore } from '../../../interfaces/stateInterfaces';
+import { AppErrorProps } from '../../../interfaces/appInterfaces';
+
 import { removeError } from '../../../actions/app/appErrorActions';
-import { red800 } from 'material-ui/styles/colors';
+
+import styles from '../../../styles';
 
 import Snackbar from 'material-ui/Snackbar';
 
-interface AppErrorProps {
-    dispatch: Dispatch<{}>;
-}
-
-interface AppErrorState {
-    errorMessage: string;
-}
-
-class AppError extends React.Component<AppErrorProps, AppErrorState> {
-    constructor(props: any) {
-        super();
-        this.state = {
-            errorMessage: undefined,
-        };
-    }
-
-    componentWillReceiveProps(nextProps: any) {
-        this.setState({ 
-            errorMessage: nextProps.errorMessage, 
-        });
-    }
+class AppError extends React.Component<AppErrorProps> {
 
     buildErrors = () => {
-        const errorMessage: string = this.state.errorMessage;
+        const errorMessage: string = this.props.errorMessage;
         const error: JSX.Element = (
             <Snackbar
                 open={errorMessage ? true : false}
                 message={errorMessage}
                 autoHideDuration={4000}
                 onRequestClose={this.handleClose}
-                bodyStyle={{ 
-                    textAlign: 'center', 
-                    backgroundColor: red800,
-                }}
+                bodyStyle={styles.snackbarBody}
             />
         );
-
         return error;
     }
 
     handleClose = () => {
-        this.setState({ 
-            errorMessage: undefined, 
-        });
         this.props.dispatch(removeError());
     }
 
     render() {
         return (
             <div>
-                {this.state && this.state.errorMessage ? this.buildErrors() : null}
+                {this.props.errorMessage ? this.buildErrors() : null}
             </div>
         );
     }
 }
 
-const mapStateToProps = (store : any, props : any) => {
+const mapStateToProps = (store: AppStore) => {
     return {
         errorMessage: store.appReducer.errorMessage,
     };

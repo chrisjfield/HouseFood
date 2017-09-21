@@ -10,17 +10,7 @@ import Planner from 'material-ui/svg-icons/action/event';
 import Meal from 'material-ui/svg-icons/maps/restaurant';
 import List from 'material-ui/svg-icons/action/add-shopping-cart';
 
-function getLink(path: string, tooltipText: string, icon: JSX.Element) {
-    return (
-        <Link to={path}>
-            <IconButton tooltip={tooltipText}>
-                {icon}
-            </IconButton>
-        </Link>
-    );
-}
-
-function Header() {
+function getHeader() {
     return (
         <Toolbar>
             <ToolbarGroup>
@@ -33,6 +23,24 @@ function Header() {
                 {getLink('/List/Header', 'Shopping lists', <List/>)}
             </ToolbarGroup>
         </Toolbar>
+    );
+}
+
+function getLink(path: string, tooltipText: string, icon: JSX.Element) {
+    return (
+        <Link to={path}>
+            <IconButton tooltip={tooltipText}>
+                {icon}
+            </IconButton>
+        </Link>
+    );
+}
+
+function Header() {
+    return (
+        <div>
+            {getHeader()}
+        </div>
     );
 }
 

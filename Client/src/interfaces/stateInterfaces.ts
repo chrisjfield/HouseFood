@@ -6,7 +6,7 @@ import { Person } from './personInterfaces';
 import { Meal } from './mealInterfaces';
 import { MealDetail } from './mealDetailInterfaces';
 
-export interface AppState {
+export interface AppStore {
     appReducer: appReducerState;
     dayReducer: dayReducerState; 
     ingredientReducer: ingredientReducerState;
