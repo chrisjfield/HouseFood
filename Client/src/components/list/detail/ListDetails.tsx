@@ -1,54 +1,28 @@
 import * as React from 'react';
 
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
+
+import AppLoading from '../../loadingHandler';
 
 import { List } from '../../../interfaces/listInterfaces';
-import { ListDetail } from '../../../interfaces/listDetailInterfaces';
+import { ListDetail, ListDetailsProps, ListDetailsState } from '../../../interfaces/listDetailInterfaces';
 import { Ingredient } from '../../../interfaces/ingredientInterfaces';
+import { AppStore } from '../../../interfaces/stateInterfaces';
 
-import { 
-    getLists,
-    completeList, 
-} from '../../../actions/lists/listActions';
-import { 
-    getListDetails,
-    checkListDetail,
-    checkAllListDetail,
-} from '../../../actions/listDetail/listDetailActions';
+import { getLists, completeList } from '../../../actions/lists/listActions';
+import { getListDetails, checkListDetail, checkAllListDetail } from '../../../actions/listDetail/listDetailActions';
 import { getIngredients } from '../../../actions/ingredient/ingredientActions';
 
 import {
-    Table,
-    TableBody,
-    TableHeader,
-    TableHeaderColumn,
-    TableRow,
-    TableRowColumn,
+    Table, TableBody, TableHeader,
+    TableHeaderColumn, TableRow, TableRowColumn,
   } from 'material-ui/Table';
 import Checkbox from 'material-ui/Checkbox';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import CircularProgress from 'material-ui/CircularProgress';
 
-interface ListDetailsProps {
-    lists: List[];
-    listDetails: ListDetail[];
-    ingredients: Ingredient[];
-    updating: boolean;
-    dispatch: Dispatch<{}>;
-    history: any;
-    match: any;
-}
-
-interface ListDetailsState {
-    filterdList: List;
-    filterdListDetails: ListDetail[];
-    listid: number;
-    allChecked: boolean;
-    listComplete: boolean;
-    alreadyAllChecked: boolean;
-    completeDialogOpen: boolean;
-}
+import styles from '../../../styles';
 
 class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
     constructor(props: any) {
@@ -78,31 +52,98 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
             : []; 
         const filterdList: List = nextProps.lists 
             ? nextProps.lists.find((list: List) => list.listid === listid) 
-            : undefined; 
+            : undefined;
         const previousListDetails = this.props.listDetails 
             ? this.props.listDetails.filter((listDetail: ListDetail) => listDetail.listid === listid) 
             : []; 
-            
+        const allChecked =  filterdListDetails.every((listDetail: ListDetail) => listDetail.complete === true);
+        const alreadyAllChecked = previousListDetails.every((listDetail: ListDetail) => listDetail.complete === true);
+        const listComplete = filterdList ? filterdList.complete : true;
+        const completeDialogOpen = (allChecked && !listComplete && !alreadyAllChecked) ? true : this.state.completeDialogOpen;
+
         this.setState({
             listid,
             filterdListDetails, 
             filterdList,   
-            listComplete: filterdList ? filterdList.complete : true,
-            allChecked: filterdListDetails.every((listDetail: ListDetail) => listDetail.complete === true),   
-            alreadyAllChecked: previousListDetails.every((listDetail: ListDetail) => listDetail.complete === true),
-            completeDialogOpen: true,
+            allChecked,   
+            alreadyAllChecked,
+            completeDialogOpen,
+            listComplete,
         });
     }
 
-    getTableRows() {
-        return this.state.filterdListDetails
-            .map((listDetail: ListDetail) => this.createTableRows(listDetail)); 
-
+    getListDetails = () => {
+        return (
+            <div>
+                <br/>
+                {!this.state.listComplete ? this.getCompleteList() : null}
+                <br/>
+                {this.createTable()}
+            </div>
+        );
     }
 
-    createTableRows(listDetail: ListDetail) {
+    getCompleteList = () => {
+        return (
+            <FlatButton
+                label="Edit List"
+                primary={true}
+                onClick={this.editList}
+            />
+        );
+    }
+
+    editList = () => {
+        const url: string = '/List/Edit/' + String(this.state.listid);
+        this.props.history.push(url);
+    }
+
+    createTable = () => {
+        return (
+            <div>
+                <Table>
+                    {this.createTableHeader()}
+                    <TableBody stripedRows={true} showRowHover={true} displayRowCheckbox={false}>
+                        {this.getTableRows()}
+                    </TableBody>
+                </Table>
+                {(this.state.allChecked && !this.state.listComplete && !this.state.alreadyAllChecked) ? this.isCompleted() : null}
+                {this.isCompleted()}
+            </div>
+        );
+    }
+
+    createTableHeader = () => {
+        return (
+            <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                <TableRow>
+                    <TableHeaderColumn>
+                        <Checkbox 
+                            checked={this.state.allChecked} 
+                            onCheck={(event, isInputChecked) => this.handleCheckAll(isInputChecked)}
+                            disabled={this.state.listComplete}
+                        />
+                    </TableHeaderColumn>
+                    <TableHeaderColumn style={styles.columnHeadings}>Item</TableHeaderColumn>
+                    <TableHeaderColumn style={styles.columnHeadings}>Quantity</TableHeaderColumn>
+                </TableRow>
+            </TableHeader>
+        );
+    }
+
+    handleCheckAll = (isInputChecked: boolean) => {
+        this.props.dispatch(checkAllListDetail(isInputChecked, this.state.listid)); 
+    }
+
+    getTableRows = () => {
+        return this.state.filterdListDetails
+            .map((listDetail: ListDetail) => this.createTableRows(listDetail)); 
+    }
+
+    createTableRows = (listDetail: ListDetail) => {
         const ingredient: Ingredient = this.props.ingredients
             .find((ingredient: Ingredient) => ingredient.ingredientid === listDetail.ingredientid);
+
         return (
             ingredient
             ?   (
@@ -116,33 +157,18 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
                     </TableRowColumn>
                     <TableRowColumn>{ingredient.name}</TableRowColumn>
                     <TableRowColumn>{listDetail.amount} {ingredient.units}</TableRowColumn>
-                    <TableRowColumn></TableRowColumn>
                 </TableRow>
             )
-            : null
-            
+            : null 
         );
     }
 
-    handleCheck(isInputChecked: boolean, listDetail: ListDetail) {
+    handleCheck = (isInputChecked: boolean, listDetail: ListDetail) => {
         this.props.dispatch(checkListDetail(listDetail));
     }
 
-    handleCompleteDialogClose = () => {
-        this.setState({ 
-            completeDialogOpen: false,
-        });
-    }
-
-    handleCompleteDialogComplete = () => {
-        this.props.dispatch(completeList(this.state.filterdList));
-        this.setState({ 
-            completeDialogOpen: false,
-        });
-    }
-
-    isCompleted() {
-        const actions = [
+    isCompleted = () => {
+        const actions: JSX.Element[] = [
             <FlatButton
               label="Cancel"
               primary={true}
@@ -155,11 +181,13 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
               onClick={this.handleCompleteDialogComplete}
             />,
         ];
+        const updating: JSX.Element[] = [<CircularProgress size={30} thickness={2}/>];
+
         return (
             <Dialog
                 title="Complete List"
-                actions={actions}
-                modal={false}
+                actions={this.props.updating ? updating : actions}
+                modal={true}
                 open={this.state.completeDialogOpen}
                 onRequestClose={this.handleCompleteDialogClose}
             >
@@ -170,79 +198,44 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
         );
     }
 
-    handleCheckAll(isInputChecked: boolean) {
-        this.props.dispatch(checkAllListDetail(isInputChecked, this.state.listid)); 
+    handleCompleteDialogClose = () => {
+        this.setState({ 
+            completeDialogOpen: false,
+        });
     }
 
-    createTableHeader() {
-        return (
-            <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                <TableRow>
-                    <TableHeaderColumn>
-                        <Checkbox 
-                            checked={this.state.allChecked} 
-                            onCheck={(event, isInputChecked) => this.handleCheckAll(isInputChecked)}
-                            disabled={this.state.listComplete}
-                        />
-                    </TableHeaderColumn>
-                    <TableHeaderColumn>Item</TableHeaderColumn>
-                    <TableHeaderColumn>Quantity</TableHeaderColumn>
-                    <TableHeaderColumn></TableHeaderColumn>
-                </TableRow>
-            </TableHeader>
-        );
+    handleCompleteDialogComplete = () => {
+        this.props.dispatch(completeList(this.state.filterdList))
+        .then((response: List) => {
+            this.setState({ 
+                completeDialogOpen: false,
+            });
+        })
+        .catch((error: any) => {
+            console.log(error);
+        });
     }
-    
-    createTable() {
-        return (
-            <div>
-                <Table>
-                    {this.createTableHeader()}
-                    <TableBody 
-                        stripedRows={true} 
-                        showRowHover={true} 
-                        displayRowCheckbox={false}
-                    >
-                        {this.getTableRows()}
-                    </TableBody>
-                </Table>
-                {(this.state.allChecked && !this.state.listComplete && !this.state.alreadyAllChecked) ? this.isCompleted() : null}
-            </div>
-        );
-    }
-
-    editList = () => {
-        const url: string = '/List/Edit/' + String(this.state.listid);
-        this.props.history.push(url);
-    }
-
+  
     render() {
         return (
             <div>
-                <br/>
-                {this.state && !this.state.listComplete 
-                ? (
-                    <FlatButton
-                        label="Edit List"
-                        primary={true}
-                        onClick={this.state.listid ? this.editList : undefined}
-                    />)
-                : null
+                {!this.props.loading && this.state && this.state.filterdListDetails 
+                && this.state.filterdListDetails && this.state.listid 
+                    ? this.getListDetails() 
+                    : <AppLoading/>
                 }
-                <br/>
-                {(this.state && this.state.filterdListDetails && this.props.ingredients)
-                ? this.createTable()
-                : null}
             </div>
         );
     }
 }
 
-const mapStateToProps = (store : any, props : any) => {
+const mapStateToProps = (store: AppStore) => {
     return {
         lists: store.listReducer.lists,
         listDetails: store.listDetailReducer.listDetails,
         ingredients: store.ingredientReducer.ingredients,
+        loading: store.appReducer.getting > 0 ? true : false,
+        updating: store.appReducer.putting > 0 ? true : false,
     };
 };
   

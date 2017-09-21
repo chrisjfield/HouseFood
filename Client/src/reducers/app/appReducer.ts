@@ -58,7 +58,7 @@ function appReducer(state: appReducerState = {
     case STOP_PUT:
         return {
             ...state,
-            posting: state.putting > 0 ? state.putting - 1 : 0,
+            putting: state.putting > 0 ? state.putting - 1 : 0,
         };
     case START_DELETE:
         return {

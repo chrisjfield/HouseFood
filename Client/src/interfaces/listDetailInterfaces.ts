@@ -1,3 +1,8 @@
+import { Dispatch } from 'redux';
+
+import { List } from './listInterfaces';
+import { Ingredient } from './ingredientInterfaces';
+
 export interface ListDetail {
     listitemid: number;
     listid: number;
@@ -17,4 +22,25 @@ export interface NewListItem {
     ingredient: string;
     amount: number;
     unit: string;
+}
+
+export interface ListDetailsProps {
+    lists: List[];
+    listDetails: ListDetail[];
+    ingredients: Ingredient[];
+    updating: boolean;
+    loading: boolean;
+    dispatch: Dispatch<{}>;
+    history: any;
+    match: any;
+}
+
+export interface ListDetailsState {
+    filterdList: List;
+    filterdListDetails: ListDetail[];
+    listid: number;
+    allChecked: boolean;
+    listComplete: boolean;
+    alreadyAllChecked: boolean;
+    completeDialogOpen: boolean;
 }

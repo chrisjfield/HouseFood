@@ -85,14 +85,16 @@ export function completeList(list : List) {
     
     return (dispatch: Function) => {
         dispatch(startPut());
-        request
+        return request
         .then((response: List) => {
             dispatch(editListSuccessful(response));
             dispatch(stopPut());
+            return response;
         })
         .catch((error: any) => {
             dispatch(addError(error));
             dispatch(stopPut());
+            throw error;
         });
     };
 }

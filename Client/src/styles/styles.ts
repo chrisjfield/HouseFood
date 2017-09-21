@@ -1,6 +1,4 @@
-import { styleState } from '../interfaces/styleInterfaces';
-
-const styles: styleState = {
+const styles: { [name: string]: React.CSSProperties } = {
     snackbarBody: {
         textAlign: 'center',
     },
@@ -11,6 +9,10 @@ const styles: styleState = {
     loading: {
         marginLeft: 'calc(50% - 40px)',
         paddingTop: '5%',
+    },
+    columnHeadings: {
+        fontSize: '18px',
+        textDecoration: 'underline',
     },
 };
 
