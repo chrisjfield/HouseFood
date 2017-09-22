@@ -48,7 +48,7 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
     componentWillReceiveProps(nextProps: ListDetailsProps) {
         const listid: number =  Number(nextProps.match.params.listid);
         const filterdListDetails = nextProps.listDetails 
-            ? nextProps.listDetails.filter((listDetail: ListDetail) => listDetail.listid === listid) 
+            ? nextProps.listDetails.filter((listDetail: ListDetail) => listDetail.listid === listid)
             : []; 
         const filterdList: List = nextProps.lists 
             ? nextProps.lists.find((list: List) => list.listid === listid) 
@@ -75,9 +75,8 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
     getListDetails = () => {
         return (
             <div>
-                <br/>
                 {!this.state.listComplete ? this.getCompleteList() : null}
-                <br/>
+                <h2 style={styles.editHeading}>{this.state.filterdList.name}</h2>
                 {this.createTable()}
             </div>
         );
@@ -85,11 +84,7 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
 
     getCompleteList = () => {
         return (
-            <FlatButton
-                label="Edit List"
-                primary={true}
-                onClick={this.editList}
-            />
+            <FlatButton label="Edit List" primary={true} onClick={this.editList} />
         );
     }
 
@@ -219,8 +214,8 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
     render() {
         return (
             <div>
-                {!this.props.loading && this.state && this.state.filterdListDetails 
-                && this.state.filterdListDetails && this.state.listid 
+                {(!this.props.loading && this.state && this.state.filterdListDetails 
+                  && this.state.filterdListDetails && this.state.listid) 
                     ? this.getListDetails() 
                     : <AppLoading/>
                 }

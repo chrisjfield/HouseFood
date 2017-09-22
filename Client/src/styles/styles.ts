@@ -14,6 +14,10 @@ const styles: { [name: string]: React.CSSProperties } = {
         fontSize: '18px',
         textDecoration: 'underline',
     },
+    editHeading: {
+        display: 'inline-block',
+        marginLeft: '35%',
+    },
 };
 
 export default styles;

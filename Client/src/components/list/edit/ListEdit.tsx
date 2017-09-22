@@ -1,73 +1,45 @@
 import * as React from 'react';
 
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
 
-import { 
-    ListDetail, 
-    NewListItem,
-    NewListDetail, 
-} from '../../../interfaces/listDetailInterfaces';
-import { 
-    Ingredient,
-    NewIngredient, 
-} from '../../../interfaces/ingredientInterfaces';
+import AppLoading from '../../loadingHandler';
+import { NotFound404 } from '../../errorHandler';
 
-import { 
-    getListDetails,
-    deletetBulkListDetails,
-    putBulkListDetails, 
-    postBulkListDetails,
-} from '../../../actions/listDetail/listDetailActions';
+import textHelper from '../../../helpers/textHelper';
 
-import { 
-    getIngredients,
-    postBulkIngredients, 
-} from '../../../actions/ingredient/ingredientActions';
+import { ListDetail, NewListItem, NewListDetail, ListEditProps, ListEditState } from '../../../interfaces/listDetailInterfaces';
+import { List } from '../../../interfaces/listInterfaces';
+import { Ingredient, NewIngredient } from '../../../interfaces/ingredientInterfaces';
+import { AppStore } from '../../../interfaces/stateInterfaces';
+
+import { getListDetails, updateList } from '../../../actions/listDetail/listDetailActions';
+import { getLists } from '../../../actions/lists/listActions';
+import { getIngredients, postBulkIngredients } from '../../../actions/ingredient/ingredientActions';
 
 import {
-    Table,
-    TableBody,
-    TableHeader,
-    TableHeaderColumn,
-    TableRow,
-    TableRowColumn,
-  } from 'material-ui/Table';
+    Table, TableBody, TableHeader,
+    TableHeaderColumn, TableRow, TableRowColumn,
+} from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import Delete from 'material-ui/svg-icons/action/delete';
 import IconButton from 'material-ui/IconButton';
 import AutoComplete from 'material-ui/AutoComplete';
+import CircularProgress from 'material-ui/CircularProgress';
 
-interface ListEditProps {
-    listDetails: ListDetail[];
-    ingredients: Ingredient[];
-    updating: boolean;
-    dispatch: Dispatch<{}>;
-    history: any;
-    match: any;
-}
-
-interface ListEditState {
-    filterdListDetails: ListDetail[];
-    updatedListDetails: ListDetail[];
-    deletedListDetails: ListDetail[];
-    newListDetails: NewListItem[];
-    listid: number;
-    newDetailKey: number;
-    ingredientList: string[];
-    lastRowKey: string;
-}
+import styles from '../../../styles';
 
 class ListEdit extends React.Component<ListEditProps, ListEditState> {
     constructor(props: any) {
         super();
 
         this.state = {
+            listid: undefined,
+            filterdList: undefined,
             filterdListDetails: [],
             updatedListDetails: [],
             deletedListDetails: [],
-            listid: undefined,
+            ingredientList: [],
             newListDetails: [{
                 uniqueKey: 'new1',
                 ingredient: '',
@@ -75,18 +47,21 @@ class ListEdit extends React.Component<ListEditProps, ListEditState> {
                 unit: '',
             }],
             newDetailKey: 2,
-            ingredientList: [],
             lastRowKey: 'new1',
         };
     }
 
     componentWillMount() {
         this.props.dispatch(getListDetails());
+        this.props.dispatch(getLists());
         this.props.dispatch(getIngredients());
     }
 
     componentWillReceiveProps(nextProps: ListEditProps) {
         const listid: number =  Number(nextProps.match.params.listid);
+        const filterdList: List = nextProps.lists 
+            ? nextProps.lists.find((list: List) => list.listid === listid) 
+            : undefined; 
         const filterdListDetails: ListDetail[] = nextProps.listDetails 
             ? nextProps.listDetails.filter((listDetail: ListDetail) => listDetail.listid === listid) 
             : []; 
@@ -94,154 +69,165 @@ class ListEdit extends React.Component<ListEditProps, ListEditState> {
             ? this.state.updatedListDetails
             : [...filterdListDetails];
         const ingredientList = nextProps.ingredients 
-            ? [...new Set<string>(nextProps.ingredients.map((ingredient: Ingredient) => ingredient.name.toLowerCase()))]
-            : []; 
+            ? [...new Set<string>(nextProps.ingredients.map((ingredient: Ingredient) => textHelper.toTitleCase(ingredient.name)))]
+            : [];
 
         this.setState({
             listid,
+            filterdList,
             filterdListDetails, 
             updatedListDetails,
             ingredientList,
         });
     }
 
-    getNewTableRows = () => {
-        return this.state.newListDetails
-            .map((newListItem: NewListItem) => this.createNewTableRows(newListItem)); 
+    getListEdit = () => {
+        return (
+            this.state.filterdList ? this.getTable() : <NotFound404/>
+        );
     }
 
-    getBlankRow = (updatedListDetails: NewListItem[]) => {
-        const lastRow: NewListItem = updatedListDetails.slice(-1).pop();
-        let newListDetails: NewListItem[] = [...updatedListDetails];
-        let lastRowKey: string = this.state.lastRowKey;
-        let newDetailKey: number = this.state.newDetailKey;
+    getTable = () => {
+        return (
+            <div>
+                {this.props.updating 
+                    ?  (<div><CircularProgress size={30} thickness={2}/>
+                            <h2 style={styles.editHeading}>{this.state.filterdList.name}</h2>
+                        </div>)
+                    :  (<div>
+                            <FlatButton label="Save" primary={true} onClick={this.saveList}/>
+                            <FlatButton label="Cancel" primary={true} onClick={this.cancelEdit}/>
+                            <h2 style={styles.editHeading}>{this.state.filterdList.name}</h2>
+                        </div>)
+                }
+                <br/>
+                {this.createTable()}
+            </div>
+        );
+    }
 
-        if (lastRow.amount && lastRow.ingredient && lastRow.unit) {
-            const newRow: NewListItem = {
-                uniqueKey: 'new' + String(this.state.newDetailKey),
-                ingredient: '',
-                amount: 0,
-                unit: '',
-            };
+    saveList = () => {
+        const url: string = '/List/Detail/' + String(this.state.listid);
+        const newItems: NewListItem[] = this.state.newListDetails
+            .filter((listDetail: NewListItem) => listDetail.uniqueKey !== this.state.lastRowKey);
+        const newIngredients: NewIngredient[] = newItems
+            .filter((newListDetail: NewListItem) => this.state.ingredientList.indexOf(newListDetail.ingredient) === -1)
+            .map((newListDetail: NewListItem) => {
+                return {
+                    name: newListDetail.ingredient,
+                    units: newListDetail.unit,
+                };
+            });
 
-            newListDetails = [...newListDetails, newRow];
-            lastRowKey = 'new' + String(this.state.newDetailKey);
-            newDetailKey = this.state.newDetailKey + 1;
+        if (this.validateList(newItems, this.state.updatedListDetails)) {
+            this.props.dispatch(postBulkIngredients(newIngredients))
+                .then((reponse: Ingredient[]) => {
+                    const fullIngredients: Ingredient[] = [...this.props.ingredients, ...reponse];
+                    const newListDetail: NewListDetail[] = newItems
+                    .map((newListItem: NewListItem) => {
+                        const newIngredient: Ingredient = fullIngredients
+                            .find((ingredients: Ingredient) => 
+                                textHelper.toTitleCase(ingredients.name) === textHelper.toTitleCase(newListItem.ingredient));
+                        return {
+                            listid: this.state.listid, 
+                            ingredientid: newIngredient.ingredientid,
+                            amount: newListItem.amount,
+                        };
+                    });
+                    
+                    this.props.dispatch(updateList(newListDetail, this.state.deletedListDetails, this.state.updatedListDetails))
+                        .then(() => this.props.history.push(url))
+                        .catch((error: any) => {
+                            throw error;
+                        });
+                })
+                .catch((error: any) => {
+                    console.log(error);
+                });
+        }
+    }
+
+    validateList = (newItems: NewListItem[], updatedItems: ListDetail[]) => {
+        const invalidExistingItem: ListDetail = updatedItems
+            .find((listDetail: ListDetail) => this.validateAmount(listDetail.amount) ? true : false);
+        const invalidNewItem: NewListItem = newItems
+            .find((listDetail: NewListItem) => {
+                return (this.validateAmount(listDetail.amount) 
+                        || this.validateIngredientName(listDetail.ingredient) 
+                        || this.validateIngredientUnit(listDetail.unit)) 
+                    ? true 
+                    : false;
+            });
+        
+        const isValid: boolean = (!invalidExistingItem && ! invalidNewItem) ? true : false;
+
+        return isValid;
+    }
+
+    validateAmount = (amount: number) => {
+        let validationMessage: string = null;
+        if (!amount) {
+            validationMessage = 'Please set a quantity';
+        } else if (amount < 0) {
+            validationMessage = 'Amount must be positive';
+        } else if (amount > 1000000) {
+            validationMessage = 'Amount must be less than 1 million';
         }
 
-        this.setState({
-            newListDetails,
-            lastRowKey,
-            newDetailKey,
-        });
+        return validationMessage;
     }
 
-    handleRemoveNew = (removedNewListDetail: string) => {
-        this.setState({
-            newListDetails: [...this.state.newListDetails
-                .filter((newListDetail: NewListItem) => newListDetail.uniqueKey !== removedNewListDetail)],
-        });
+    validateIngredientName = (name: string) => {
+        let validationMessage: string = null;
+        if (!name) {
+            validationMessage = 'Please choose an ingredient';
+        } else if (name.length > 200) {
+            validationMessage = 'Maximum name legth is 200 characters';
+        }
+
+        return validationMessage;
     }
 
-    editNewItemQuantity = (uniqueKey: string, newValue: string) => {
-        let newListDetails: NewListItem[] = JSON.parse(JSON.stringify(this.state.newListDetails));
-        newListDetails = [...newListDetails
-            .map((newListDetail: NewListItem) => { 
-                return newListDetail.uniqueKey === uniqueKey 
-                    ? 
-                    { ...newListDetail, 
-                        amount: Number(newValue), 
-                    }
-                    : newListDetail;
-            })],
-        this.getBlankRow(newListDetails);
+    validateIngredientUnit = (unit: string) => {
+        let validationMessage: string = null;
+        if (!unit) {
+            validationMessage = 'Please set a unit';
+        } else if (unit.length > 10) {
+            validationMessage = 'Maximum unit legth is 10 characters';
+        }
+        
+        return validationMessage;
     }
 
-    editNewItemUnit = (uniqueKey: string, newValue: string) => {
-        let newListDetails: NewListItem[] = JSON.parse(JSON.stringify(this.state.newListDetails));
-        newListDetails = [...newListDetails
-            .map((newListDetail: NewListItem) => { 
-                return newListDetail.uniqueKey === uniqueKey 
-                    ?
-                    { ...newListDetail, 
-                        unit: newValue ,
-                    }
-                    : newListDetail;
-            })],
-
-        this.getBlankRow(newListDetails);
+    cancelEdit = () => {
+        const url: string = '/List/Detail/' + String(this.state.listid);
+        this.props.history.push(url);
     }
 
-    editNewItemIngredient = (uniqueKey: string, newValue: string) => {
-        const existingIngredient: Ingredient = this.props.ingredients
-            .find((ingredient: Ingredient) => ingredient.name.toLowerCase() === newValue.toLowerCase());
-
-        let newListDetails: NewListItem[] = JSON.parse(JSON.stringify(this.state.newListDetails));
-        newListDetails = [...newListDetails
-            .map((newListDetail: NewListItem) => { 
-                return newListDetail.uniqueKey === uniqueKey 
-                    ?   
-                    { ...newListDetail, 
-                        ingredient: newValue, 
-                        unit: existingIngredient ? existingIngredient.units : newListDetail.unit, 
-                    }
-                    : newListDetail;
-            })],
-
-        this.getBlankRow(newListDetails);
-    }
-
-    createNewTableRows(newListDetail: NewListItem) {
-        const existingIngredient: Ingredient = this.props.ingredients
-            .find((ingredient: Ingredient) => ingredient.name.toLowerCase() === newListDetail.ingredient.toLowerCase());
+    createTable() {
         return (
-            <TableRow key={newListDetail.uniqueKey}>
-                <TableRowColumn>
-                    {newListDetail.uniqueKey !== this.state.lastRowKey
-                        ?   (<IconButton 
-                                tooltip="Remove Item" 
-                                onClick={() => this.handleRemoveNew(newListDetail.uniqueKey)}
-                            >
-                                <Delete/>
-                            </IconButton>)
-                        :null
-                    }
-                </TableRowColumn>
-                <TableRowColumn>
-                    <AutoComplete
-                        hintText="Ingredient"
-                        maxSearchResults={5}
-                        dataSource={this.state.ingredientList}
-                        searchText={newListDetail.ingredient}
-                        onUpdateInput={(searchText, dataSource) => this.editNewItemIngredient(newListDetail.uniqueKey, searchText)}
-                        errorText={(!newListDetail.ingredient  && newListDetail.uniqueKey !== this.state.lastRowKey) 
-                            ? 'Please set a unit' 
-                            : null}
-                    />
-                </TableRowColumn>
-                <TableRowColumn>
-                    <TextField
-                        value={newListDetail.amount}
-                        hintText="Quantity"
-                        errorText={(!newListDetail.amount && newListDetail.uniqueKey !== this.state.lastRowKey) 
-                            ? 'Please set a quantity' 
-                            : null}
-                        onChange={(event: object, newValue: string) => this.editNewItemQuantity(newListDetail.uniqueKey, newValue)}
-                        type="number"
-                    />
-                </TableRowColumn>
-                <TableRowColumn>
-                    <TextField
-                        value={newListDetail.unit}
-                        disabled={existingIngredient ? true : false}
-                        hintText="Units"
-                        errorText={(!newListDetail.unit && newListDetail.uniqueKey !== this.state.lastRowKey) 
-                            ? 'Please set a unit' 
-                            : null}
-                        onChange={(event: object, newValue: string) => this.editNewItemUnit(newListDetail.uniqueKey, newValue)}
-                    />
-                </TableRowColumn>
-            </TableRow>
+            <div>
+                <Table>
+                    {this.createTableHeader()}
+                    <TableBody stripedRows={true} showRowHover={true} displayRowCheckbox={false}>
+                        {this.getExistingTableRows()}
+                        {this.getNewTableRows()}
+                    </TableBody>
+                </Table>
+            </div>
+        );
+    }
+
+    createTableHeader() {
+        return (
+            <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                <TableRow>
+                    <TableHeaderColumn></TableHeaderColumn>
+                    <TableHeaderColumn style={styles.columnHeadings}>Item</TableHeaderColumn>
+                    <TableHeaderColumn style={styles.columnHeadings}>Quantity</TableHeaderColumn>
+                    <TableHeaderColumn style={styles.columnHeadings}>Units</TableHeaderColumn>
+                </TableRow>
+            </TableHeader>
         );
     }
 
@@ -253,13 +239,11 @@ class ListEdit extends React.Component<ListEditProps, ListEditState> {
     createExistingTableRows(listDetail: ListDetail) {
         const ingredient: Ingredient = this.props.ingredients
             .find((ingredient: Ingredient) => ingredient.ingredientid === listDetail.ingredientid);
+
         return (
             <TableRow key={listDetail.listitemid}>
                 <TableRowColumn>
-                    <IconButton 
-                        tooltip="Remove Item" 
-                        onClick={() => this.handleDelete(listDetail)}
-                    >
+                    <IconButton tooltip="Remove Item" onClick={() => this.handleDelete(listDetail)}>
                         <Delete/>
                     </IconButton> 
                 </TableRowColumn>
@@ -268,7 +252,7 @@ class ListEdit extends React.Component<ListEditProps, ListEditState> {
                     <TextField
                         defaultValue={listDetail.amount}
                         hintText="Quantity"
-                        errorText={!listDetail.amount ? 'Please set a quantity' : null}
+                        errorText={this.validateAmount(listDetail.amount)}
                         onChange={(event: object, newValue: string) => this.editExistingItemQuantity(listDetail.listitemid, newValue)}
                         type="number"
                     />
@@ -298,105 +282,164 @@ class ListEdit extends React.Component<ListEditProps, ListEditState> {
         });
     }
 
-    createTableHeader() {
-        return (
-            <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                <TableRow>
-                    <TableHeaderColumn></TableHeaderColumn>
-                    <TableHeaderColumn>Item</TableHeaderColumn>
-                    <TableHeaderColumn>Quantity</TableHeaderColumn>
-                    <TableHeaderColumn>Units</TableHeaderColumn>
-                </TableRow>
-            </TableHeader>
-        );
-    }
-    
-    createTable() {
-        return (
-            <div>
-                <Table>
-                    {this.createTableHeader()}
-                    <TableBody 
-                        stripedRows={true} 
-                        showRowHover={true} 
-                        displayRowCheckbox={false}
-                    >
-                        {this.getExistingTableRows()}
-                        {this.getNewTableRows()}
-                    </TableBody>
-                </Table>
-            </div>
-        );
+    getNewTableRows = () => {
+        return this.state.newListDetails
+            .map((newListItem: NewListItem) => this.createNewTableRows(newListItem)); 
     }
 
-    saveList = () => {
-        const invalidExistingItem: ListDetail = this.state.updatedListDetails
-            .find((listDetail: ListDetail) => !listDetail.amount);
-        const newItems: NewListItem[] = this.state.newListDetails
-            .filter((listDetail: NewListItem) => listDetail.uniqueKey !== this.state.lastRowKey);
-        const invalidNewItem: NewListItem = newItems
-            .find((listDetail: NewListItem) => !listDetail.ingredient || !listDetail.amount || !listDetail.unit);
-
-        const newIngredients: NewIngredient[] = newItems
-            .filter((newListDetail: NewListItem) => this.state.ingredientList.indexOf(newListDetail.ingredient) === -1)
-            .map((newListDetail: NewListItem) => {
-                return {
-                    name: newListDetail.ingredient,
-                    units: newListDetail.unit,
-                };
-            });
-
-        const url: string = '/List/Detail/' + String(this.state.listid);
+    createNewTableRows(newListDetail: NewListItem) {
+        const existingIngredient: Ingredient = this.props.ingredients
+            .find((ingredient: Ingredient) => textHelper.toTitleCase(ingredient.name) === textHelper.toTitleCase(newListDetail.ingredient));
         
-        if (!invalidExistingItem && !invalidNewItem) {
-            this.props.dispatch(postBulkIngredients(newIngredients))
-                .then((reponse: Ingredient[]) => {
-                    const fullIngredients: Ingredient[] = [...this.props.ingredients, ...reponse];
+        return (
+            <TableRow key={newListDetail.uniqueKey}>
+                <TableRowColumn>
+                    {newListDetail.uniqueKey !== this.state.lastRowKey
+                        ? (<IconButton  tooltip="Remove Item" onClick={() => this.handleRemoveNew(newListDetail.uniqueKey)}>
+                                <Delete/>
+                            </IconButton>)
+                        :null
+                    }
+                </TableRowColumn>
+                <TableRowColumn>
+                    <AutoComplete
+                        hintText="Ingredient"
+                        maxSearchResults={5}
+                        dataSource={this.state.ingredientList}
+                        searchText={newListDetail.ingredient}
+                        onUpdateInput={(searchText, dataSource) => this.editNewItemIngredient(newListDetail.uniqueKey, searchText)}
+                        errorText={newListDetail.uniqueKey !== this.state.lastRowKey 
+                            ? this.validateIngredientName(newListDetail.ingredient)
+                            : null}
+                    />
+                </TableRowColumn>
+                <TableRowColumn>
+                    <TextField
+                        value={newListDetail.amount}
+                        hintText="Quantity"
+                        errorText={newListDetail.uniqueKey !== this.state.lastRowKey 
+                            ? this.validateAmount(newListDetail.amount)
+                            : null}
+                        onChange={(event: object, newValue: string) => this.editNewItemQuantity(newListDetail.uniqueKey, newValue)}
+                        type="number"
+                    />
+                </TableRowColumn>
+                <TableRowColumn>
+                    <TextField
+                        value={newListDetail.unit}
+                        disabled={existingIngredient ? true : false}
+                        hintText="Units"
+                        errorText={newListDetail.uniqueKey !== this.state.lastRowKey 
+                            ? this.validateIngredientUnit(newListDetail.unit)
+                            : null}
+                        onChange={(event: object, newValue: string) => this.editNewItemUnit(newListDetail.uniqueKey, newValue)}
+                    />
+                </TableRowColumn>
+            </TableRow>
+        );
+    }
 
-                    const newListDetail: NewListDetail[] = newItems
-                    .map((newListItem: NewListItem) => {
-                        const newIngredient: Ingredient = fullIngredients
-                            .find((ingredients: Ingredient) => ingredients.name.toLowerCase() === newListItem.ingredient.toLowerCase());
-                        return {
-                            listid: this.state.listid, 
-                            ingredientid: newIngredient.ingredientid,
-                            amount: newListItem.amount,
-                        };
-                    });
-                    
-                    this.props.dispatch(postBulkListDetails(newListDetail));
-                    this.props.dispatch(deletetBulkListDetails(this.state.deletedListDetails));
-                    this.props.dispatch(putBulkListDetails(this.state.updatedListDetails));
-                    this.props.history.push(url);
-                })
-                .catch((error: any) => {
-                    console.log(error);
-                });
+    handleRemoveNew = (removedNewListDetail: string) => {
+        this.setState({
+            newListDetails: [...this.state.newListDetails
+                .filter((newListDetail: NewListItem) => newListDetail.uniqueKey !== removedNewListDetail)],
+        });
+    }
+
+    editNewItemIngredient = (uniqueKey: string, newValue: string) => {
+        const existingIngredient: Ingredient = this.props.ingredients
+            .find((ingredient: Ingredient) => textHelper.toTitleCase(ingredient.name) === textHelper.toTitleCase(newValue));
+        let newListDetails: NewListItem[] = JSON.parse(JSON.stringify(this.state.newListDetails));
+
+        newListDetails = [...newListDetails
+            .map((newListDetail: NewListItem) => { 
+                return newListDetail.uniqueKey === uniqueKey 
+                    ?   
+                    { ...newListDetail, 
+                        ingredient: textHelper.toTitleCase(newValue), 
+                        unit: existingIngredient ? existingIngredient.units : newListDetail.unit, 
+                    }
+                    : newListDetail;
+            })],
+
+        this.getBlankRow(newListDetails);
+    }
+
+    getBlankRow = (updatedListDetails: NewListItem[]) => {
+        const lastRow: NewListItem = updatedListDetails.slice(-1).pop();
+        let newListDetails: NewListItem[] = [...updatedListDetails];
+        let lastRowKey: string = this.state.lastRowKey;
+        let newDetailKey: number = this.state.newDetailKey;
+
+        if (lastRow.amount && lastRow.ingredient && lastRow.unit) {
+            const newRow: NewListItem = {
+                uniqueKey: 'new' + String(this.state.newDetailKey),
+                ingredient: '',
+                amount: 0,
+                unit: '',
+            };
+
+            newListDetails = [...newListDetails, newRow];
+            lastRowKey = 'new' + String(this.state.newDetailKey);
+            newDetailKey = this.state.newDetailKey + 1;
         }
+
+        this.setState({
+            newListDetails,
+            lastRowKey,
+            newDetailKey,
+        });
+    }
+
+    editNewItemQuantity = (uniqueKey: string, newValue: string) => {
+        let newListDetails: NewListItem[] = JSON.parse(JSON.stringify(this.state.newListDetails));
+        newListDetails = [...newListDetails
+            .map((newListDetail: NewListItem) => { 
+                return newListDetail.uniqueKey === uniqueKey 
+                    ? 
+                    { ...newListDetail, 
+                        amount: Number(newValue), 
+                    }
+                    : newListDetail;
+            })],
+        this.getBlankRow(newListDetails);
+    }
+
+    editNewItemUnit = (uniqueKey: string, newValue: string) => {
+        let newListDetails: NewListItem[] = JSON.parse(JSON.stringify(this.state.newListDetails));
+        newListDetails = [...newListDetails
+            .map((newListDetail: NewListItem) => { 
+                return newListDetail.uniqueKey === uniqueKey 
+                    ?
+                    { ...newListDetail, 
+                        unit: newValue,
+                    }
+                    : newListDetail;
+            })],
+
+        this.getBlankRow(newListDetails);
     }
 
     render() {
         return (
             <div>
-                <br/>
-                <FlatButton
-                    label="Save"
-                    primary={true}
-                    onClick={this.state.listid ? this.saveList : undefined}
-                />
-                <br/>
-                {(this.state && this.state.listid && this.state.updatedListDetails && this.props.ingredients)
-                ? this.createTable()
-                : null}
+                {(!this.props.loading && this.state && this.state.listid 
+                  && this.state.updatedListDetails && this.props.ingredients) 
+                    ? this.getListEdit() 
+                    : <AppLoading/>
+                }
             </div>
         );
     }
 }
 
-const mapStateToProps = (store : any, props : any) => {
+const mapStateToProps = (store: AppStore) => {
     return {
         listDetails: store.listDetailReducer.listDetails,
+        lists: store.listReducer.lists,
         ingredients: store.ingredientReducer.ingredients,
+        loading: store.appReducer.getting > 0 ? true : false,
+        updating: (store.appReducer.posting > 0 || store.appReducer.putting > 0 || store.appReducer.deleting > 0) ? true : false,
     };
 };
   

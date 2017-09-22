@@ -44,3 +44,26 @@ export interface ListDetailsState {
     alreadyAllChecked: boolean;
     completeDialogOpen: boolean;
 }
+
+export interface ListEditProps {
+    lists: List[];
+    listDetails: ListDetail[];
+    ingredients: Ingredient[];
+    updating: boolean;
+    loading: boolean;
+    dispatch: Dispatch<{}>;
+    history: any;
+    match: any;
+}
+
+export interface ListEditState {
+    filterdList: List;
+    filterdListDetails: ListDetail[];
+    updatedListDetails: ListDetail[];
+    deletedListDetails: ListDetail[];
+    newListDetails: NewListItem[];
+    listid: number;
+    newDetailKey: number;
+    ingredientList: string[];
+    lastRowKey: string;
+}

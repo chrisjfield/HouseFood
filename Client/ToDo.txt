@@ -1,13 +1,13 @@
-loading handling (need getting, updating, posting and deleting on all reducers. check all are 0 before loading, otherwise progress)
 publish using surge
 cors issue with puts and deletes
 refactor all the things (validation)
 refactor API - neaten and handle errors better
-Bootstrap/UI
-
-test
+Bootstrap/UI - need to make header static, need room to see autocomplete fields when page is full.
 
 v2:
 Login/ multi tennacy
 clever pull back of data (not just all - see what it does pull {profiler})
 update to react16 for component will catch - add catch page for JS error
+add shopping list api call to order items by anme and quantity (api needs to join).
+default items section - ablity too add
+recipie (plus cooking time etc)

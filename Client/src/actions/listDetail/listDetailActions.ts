@@ -53,14 +53,16 @@ export function postBulkListDetails(listDetails: NewListDetail[]) {
 
     return (dispatch: Function) => {
         dispatch(startPost());
-        request
+        return request
         .then((response: ListDetail[]) => {
             dispatch(postBulkListDetailsSuccessful(response));
             dispatch(stopPost());
+            return response;
         })
         .catch((error: any) => {
             dispatch(addError(error));
             dispatch(stopPost());
+            throw error;
         });
     };
 }
@@ -145,14 +147,16 @@ export function putBulkListDetails(listDetails: ListDetail[]) {
 
     return (dispatch: Function) => {
         dispatch(startPut());
-        request
+        return request
         .then((response: ListDetail[]) => {
             dispatch(putBulkListDetailsSuccessful(response));
             dispatch(stopPut());
+            return response;
         })
         .catch((error: any) => {
             dispatch(addError(error));
             dispatch(stopPut());
+            throw error;
         });
     };
 }
@@ -173,14 +177,16 @@ export function deletetBulkListDetails(listDetails: ListDetail[]) {
 
     return (dispatch: Function) => {
         dispatch(startDelete());
-        request
+        return request
         .then((response: any) => {
             dispatch(deleteBulkListDetailsSuccessful(listDetails));
             dispatch(stopDelete());
+            return response;
         })
         .catch((error: any) => {
             dispatch(addError(error));
             dispatch(stopDelete());
+            throw error;
         });
     };
 }
@@ -189,5 +195,15 @@ function deleteBulkListDetailsSuccessful(response: ListDetail[]) {
     return {
         type: DELETE_BULK_LISTDETAILS_SUCCESSFUL,
         payload: response,
+    };
+}
+
+export function updateList(newListDetail: NewListDetail[], deletedListDetail: ListDetail[], updatedListDetail: ListDetail[]) {
+    return (dispatch: Function) => {
+        return Promise.all([
+            dispatch(postBulkListDetails(newListDetail)),
+            dispatch(deletetBulkListDetails(deletedListDetail)),
+            dispatch(putBulkListDetails(updatedListDetail)),
+        ]);
     };
 }
