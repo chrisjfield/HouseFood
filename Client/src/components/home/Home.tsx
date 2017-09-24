@@ -33,7 +33,7 @@ class Home extends React.Component<HomeProps> {
     generateWeek() {
         const dateArray: Date[] = [];
         for (let i = 0; i < 7; i += 1) {
-            dateArray.push(moment(new Date()).startOf('isoWeek').isoWeekday(i).toDate());
+            dateArray.push(moment(new Date()).startOf('week').add(i, 'day').toDate());
         } 
         return (
             <div>

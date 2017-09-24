@@ -18,6 +18,10 @@ const styles: { [name: string]: React.CSSProperties } = {
         display: 'inline-block',
         marginLeft: '35%',
     },
+    toggle: {
+        maxWidth: 250,
+        padding: '4px',
+    },
 };
 
 export default styles;

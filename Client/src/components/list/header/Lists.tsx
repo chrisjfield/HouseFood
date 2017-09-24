@@ -1,31 +1,19 @@
 import * as React from 'react';
 
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
 import Moment from 'react-moment';
 import * as moment from 'moment';
 
 import history from '../../../history';
+import { AppStore } from '../../../interfaces/stateInterfaces';
+import AppLoading from '../../loadingHandler';
+import textHelper from '../../../helpers/textHelper';
 
-import { 
-    List, 
-    NewList,
-    GenerateListDetail,
-} from '../../../interfaces/listInterfaces';
-import { 
-    getLists,
-    completeList,
-    editList,
-    saveList, 
-} from '../../../actions/lists/listActions';
+import { List, GenerateListDetail, ListsProps, ListsState } from '../../../interfaces/listInterfaces';
+import { getLists, completeList, editList, saveList } from '../../../actions/lists/listActions';
 import { generateList } from '../../../actions/planner/plannerActions';
 
-import {
-    Card, 
-    CardActions,  
-    CardText,
-    CardTitle,
-} from 'material-ui/Card';
+import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card';
 import IconButton from 'material-ui/IconButton';
 import ActionDone from 'material-ui/svg-icons/action/done';
 import ActionView from 'material-ui/svg-icons/action/visibility';
@@ -35,38 +23,9 @@ import Toggle from 'material-ui/Toggle';
 import Edit from 'material-ui/svg-icons/editor/mode-edit';
 import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
+import CircularProgress from 'material-ui/CircularProgress';
 
-interface ListsProps {
-    lists: List[];
-    loading: boolean;
-    error: boolean;
-    updating: boolean;
-    dispatch: Dispatch<{}>;
-    history: any;
-}
-
-interface ListsState {
-    activeList: List;
-    completeDialogOpen: boolean;
-    showComplete: boolean;
-    newListDialogOpen: boolean;
-    newList: NewList;
-    editListDialogOpen: boolean;
-    listEditing: List;
-    nameErrorText: string;
-    generateListDialogOpen: boolean;
-    generateListDetail: GenerateListDetail;
-    generateListDialogNameValidation: string;
-    generateListDialogStartValidation: string;
-    generateListDialogEndValidation: string;
-}
-
-const styles = {
-    toggle: {
-        maxWidth: 250,
-        padding: '4px',
-    },
-};
+import styles from '../../../styles';
 
 class Lists extends React.Component<ListsProps, ListsState> {
     constructor(props: any) {
@@ -92,225 +51,28 @@ class Lists extends React.Component<ListsProps, ListsState> {
     componentWillMount() {
         this.props.dispatch(getLists());
     }
- 
-    handleCompleteDialogOpen = (list : List) => {
-        this.setState({ 
-            completeDialogOpen: true, 
-            activeList : list,
-        });
-    }
 
-    handleDialogClose = () => {
-        this.setState({ 
-            completeDialogOpen: false,
-            activeList : undefined, 
-            newListDialogOpen: false,            
-            editListDialogOpen: false,
-            listEditing: undefined,
-            generateListDialogOpen: false,
-            generateListDetail: undefined,
-        });
-    }
-
-    handleCompleteDialogComplete = () => {
-        this.props.dispatch(completeList(this.state.activeList));
-        this.setState({ 
-            completeDialogOpen: false,
-            activeList : undefined, 
-        });
-    }
-
-    handleViewDetails = (listId: number) => {
-        const url: string = '/List/Detail/' + String(listId);
-        this.props.history.push(url);
-    }
-
-    createlist = (list: List) => {
-        const completed = list.complete ? 'Complete' : 'Active';
-        const actions = [
-            <FlatButton
-              label="Cancel"
-              primary={true}
-              onClick={this.handleDialogClose}
-            />,
-            <FlatButton
-              label="Complete"
-              primary={true}
-              keyboardFocused={true}
-              onClick={this.handleCompleteDialogComplete}
-            />,
-        ];
-        
-        return (
-            <Card key={list.listid}>
-                <CardTitle title={list.name + ' - ' + completed}/>} 
-                <CardText>
-                    <label>Created Date: </label><Moment format="DD/MM/YYYY" date={list.datecreated}/><br/>
-                    <label>Completed Date: </label>
-                    {list.datecompleted ? <Moment format="DD/MM/YYYY" date={list.datecompleted}/> : undefined}
-                </CardText>
-                <CardActions>
-                    <IconButton 
-                        tooltip="View Details" 
-                        onClick={() => this.handleViewDetails(list.listid)}
-                    >
-                        <ActionView/>
-                    </IconButton>
-                    <IconButton 
-                        tooltip="Edit" 
-                        disabled={list.complete}
-                        onClick={() => this.handleEdit(list.listid)}
-                    >
-                        <Edit/>
-                    </IconButton> 
-                    <IconButton 
-                        tooltip="Complete" 
-                        disabled={list.complete}
-                        onClick={() => this.handleCompleteDialogOpen(list)}
-                    >
-                        <ActionDone/>
-                    </IconButton>
-                    <Dialog
-                        title="Complete List"
-                        actions={actions}
-                        modal={true}
-                        open={this.state.completeDialogOpen}
-                        onRequestClose={this.handleDialogClose}
-                    >
-                        Continuing will mark {this.state.activeList ? this.state.activeList.name : ''} as completed.<br/>
-                        After this the list may only be viewed and not edited. 
-                    </Dialog>
-                </CardActions>
-            </Card>
-        );
-    }
-
-    openNewListDialog = () => {
-        this.setState({
-            newListDialogOpen: true,
-            newList: {
-                name: null,
-                datecreated: new Date(),
-                complete: false,
-            },
-        });
-    }
-
-    handleEdit = (listid: number) => {
-        this.setState({
-            editListDialogOpen: true,
-            listEditing: this.props.lists.find((List: List) => List.listid === listid),
-        });
-    }
-
-    getNewListDialog = () => {
+    getShoppingLists () {
         return (
             <div>
-                <Dialog
-                    title="Create List"
-                    open={this.state.newListDialogOpen}
-                    onRequestClose={this.handleDialogClose}
-                >
-                    <form onSubmit={this.handleSaveNewList}>
-                        <TextField
-                            hintText="List Name"
-                            errorText={this.state.nameErrorText}
-                            onChange={(event: object, newValue: string) => this.editNewName(newValue)}
-                        />
-                        <FlatButton type="submit" label="Add" />
-                        <FlatButton
-                            label="Cancel"
-                            primary={true}
-                            onClick={this.handleDialogClose}
-                        />
-                    </form>
-                </Dialog>
+                <br/>
+                <div style={styles.toggle}>
+                    <Toggle 
+                        label="Show Completed"
+                        labelPosition="right"
+                        toggled={this.state.showComplete} 
+                        onToggle={(event, isInputChecked) => this.setToggle(isInputChecked)}
+                    />
+                </div>
+                <FlatButton label="Add New List" primary={true} onClick={this.openNewListDialog}/>
+                <FlatButton label="Generate List" primary={true} onClick={this.openGenerateListDialog}/>
+                {this.state.generateListDialogOpen ? this.getgenerateListDialog() : null}
+                {this.state.editListDialogOpen ? this.getEditListDialog() : null}
+                {this.state.newListDialogOpen ? this.getNewListDialog() : null}
+                {this.state.completeDialogOpen ? this.getCompleteListDialog() : null}
+                {this.createLists()}
             </div>
         );
-    }
-
-    editNewName = (newValue: string) => {
-        this.setState({ 
-            newList: { 
-                ...this.state.newList, 
-                name: (newValue !== '') ? newValue : undefined,
-            }, 
-            nameErrorText: (newValue === '') ? 'Please enter a List name' : undefined, 
-        });
-    }
-
-    handleSaveNewList = (event: any) => {
-        event.preventDefault();
-        if (!this.state.newList.name) {
-            this.setState({ 
-                nameErrorText: (!this.state.newList.name) ? 'Please enter a List name' : undefined, 
-            });
-        } else {
-            this.props.dispatch(saveList(this.state.newList))
-            .then((response: List) => {
-                const url: string = '/List/Edit/' + String(response.listid);
-                history.push(url);
-            })
-            .catch((error: any) => {
-                console.log(error);
-            });
-        }
-    }
-
-    getEditListDialog = () => {
-        return (
-            <div>
-                <Dialog
-                    title="Edit List"
-                    open={this.state.editListDialogOpen}
-                    onRequestClose={this.handleDialogClose}
-                >
-                    <form onSubmit={this.handleSaveEditedList}>
-                        <TextField
-                            hintText="List Name"
-                            defaultValue={this.state.listEditing.name}
-                            errorText={this.state.nameErrorText}
-                            onChange={(event: object, newValue: string) => this.editEditedName(newValue)}
-                        />
-                        <FlatButton type="submit" label="Save" />
-                        <FlatButton
-                            label="Cancel"
-                            primary={true}
-                            onClick={this.handleDialogClose}
-                        />
-                    </form>
-                </Dialog>
-            </div>
-        );        
-    }
-
-    editEditedName = (newValue: string) => {
-        this.setState({ 
-            listEditing: { 
-                ...this.state.listEditing, 
-                name: newValue,
-            }, 
-            nameErrorText: newValue ? undefined : 'Please enter a List name', 
-        });
-    }
-
-    handleSaveEditedList = (event: any) => {
-        event.preventDefault();
-        if (!this.state.listEditing.name) {
-            this.setState({ 
-                nameErrorText: !this.state.listEditing.name ? 'Please enter a List name' : undefined, 
-            });
-        } else {
-            this.props.dispatch(editList(this.state.listEditing));
-            this.handleDialogClose();
-        }
-    }
-
-    createLists = () => {
-        return this.props.lists ? this.props.lists
-            .filter((list: List) => this.state.showComplete || list.complete === false)
-            .sort((a,b) => {return (a.datecreated < b.datecreated) ? 1 : ((b.datecreated < a.datecreated) ? -1 : 0);})
-            .map(this.createlist) : undefined;
     }
 
     setToggle(isInputChecked: boolean) {
@@ -319,8 +81,31 @@ class Lists extends React.Component<ListsProps, ListsState> {
         });
     }
 
+    openNewListDialog = () => {
+        this.setState({
+            newListDialogOpen: true,
+            newList: {
+                name: '',
+                datecreated: new Date(),
+                complete: false,
+            },
+        });
+    }
+
+    openGenerateListDialog = () => {
+        const date: Date = new Date();
+        this.setState({
+            generateListDialogOpen: true,
+            generateListDetail: {
+                startDate: date,
+                endDate: moment(date).add(1, 'week').toDate(),
+                listName: '',
+            },
+        });
+    }
+
     getgenerateListDialog () {
-        const actions = [
+        const actions: JSX.Element[] = [
             <FlatButton
               label="Cancel"
               primary={true}
@@ -333,12 +118,13 @@ class Lists extends React.Component<ListsProps, ListsState> {
               onClick={this.handleGenerateList}
             />,
         ];
+        const updating: JSX.Element[] = [<CircularProgress size={30} thickness={2}/>];
 
         return (
             <div>
                 <Dialog
                     title="Generate List"
-                    actions={actions}
+                    actions={this.props.updating ? updating : actions}
                     open={this.state.generateListDialogOpen}
                     onRequestClose={this.handleDialogClose}
                 >
@@ -348,7 +134,7 @@ class Lists extends React.Component<ListsProps, ListsState> {
                     </div>
                     <TextField
                         hintText="List Name"
-                        defaultValue={this.state.generateListDetail.listName}
+                        value={this.state.generateListDetail.listName}
                         onChange={this.handleChangeListName}
                         errorText={this.state.generateListDialogNameValidation}
                     />
@@ -379,15 +165,26 @@ class Lists extends React.Component<ListsProps, ListsState> {
         );
     }
 
+    handleDialogClose = () => {
+        this.setState({ 
+            completeDialogOpen: false,
+            activeList : undefined, 
+            newListDialogOpen: false,            
+            editListDialogOpen: false,
+            listEditing: undefined,
+            generateListDialogOpen: false,
+            generateListDetail: undefined,
+            generateListDialogNameValidation: undefined,
+            generateListDialogStartValidation: undefined,
+            generateListDialogEndValidation: undefined,
+            nameErrorText: undefined,
+        });
+    }
+
     handleGenerateList = () => {
         const newList: GenerateListDetail = this.state.generateListDetail;
-        if (!newList.endDate || !newList.listName || !newList.startDate) {
-            this.setState({
-                generateListDialogNameValidation: !newList.listName ? 'Please choose a list name' : undefined,
-                generateListDialogStartValidation: !newList.startDate ? 'Please choose a start date' : undefined,
-                generateListDialogEndValidation: !newList.endDate ? 'Please choose an end date' : undefined,
-            });
-        } else {
+        
+        if (this.validateList(newList)) {
             this.props.dispatch(generateList(newList))
             .then((response: List) => {
                 const url: string = '/List/Detail/' + String(response[0].listid);
@@ -399,90 +196,279 @@ class Lists extends React.Component<ListsProps, ListsState> {
         }
     }
 
+    validateList = (newList: GenerateListDetail) => {     
+        const isValid: boolean = (!this.validateListName(newList.listName) && !this.validateListStart(newList.startDate)
+                                  && !this.validateListEnd(newList.endDate)) ? true : false;
+
+        return isValid;
+    }
+
+    validateListName = (name: string) => {
+        let validationMessage: string = undefined;
+        if (!name) {
+            validationMessage = 'Please choose a name for the list.';
+        } else if (name.length > 200) {
+            validationMessage = 'Maximum name legth is 200 characters';
+        }
+        this.setState({ 
+            generateListDialogNameValidation: validationMessage, 
+            nameErrorText: validationMessage,
+        });
+
+        return validationMessage;
+    }
+
+    validateListStart = (start: Date) => {
+        let validationMessage: string = undefined;
+        if (!start) {
+            validationMessage = 'Please choose a start date.';
+        }
+        this.setState({ generateListDialogStartValidation: validationMessage });
+
+        return validationMessage;
+    }
+
+    validateListEnd = (end: Date) => {
+        let validationMessage: string = undefined;
+        if (!end) {
+            validationMessage = 'Please choose an end date.';
+        }
+        this.setState({ generateListDialogEndValidation: validationMessage });
+
+        return validationMessage;
+    }
+
+    handleChangeListName = (event: object, newValue: string) => {
+        console.log(textHelper.toTitleCase(newValue));
+        this.setState({
+            generateListDetail: { ...this.state.generateListDetail, listName: textHelper.toTitleCase(newValue) },
+        });
+        this.validateListName(newValue);
+    }
+
+    handleChangeStartDate = (event: object, date: Date) => {
+        this.setState({
+            generateListDetail: { ...this.state.generateListDetail, startDate: date },
+        });
+        this.validateListStart(date);
+    }
+
     disableDatesPastEnd = (date: Date) => {
         return date > this.state.generateListDetail.endDate;
+    }
+
+    handleChangeEndDate = (event: object, date: Date) => {
+        this.setState({
+            generateListDetail: { ...this.state.generateListDetail, endDate: date },
+        });
+        this.validateListEnd(date);
     }
 
     disableDatesBeforeStart = (date: Date) => {
         return date < this.state.generateListDetail.startDate;
     }
 
-    handleChangeListName = (event: object, newValue: string) => {
-        this.setState({
-            generateListDetail: { ...this.state.generateListDetail, listName: newValue },
-            generateListDialogNameValidation: !newValue ? 'Please choose a list name' : undefined,
+    getEditListDialog = () => {
+        const actions: JSX.Element[] = [
+            <FlatButton key="save" type="submit" label="Save" />,
+            <FlatButton key="cancel" label="Cancel" primary={true} onClick={this.handleDialogClose}/>,
+        ];
+        const updating: JSX.Element[] = [<CircularProgress size={30} thickness={2}/>];
+
+        return (
+            <div>
+                <Dialog
+                    title="Edit List"
+                    open={this.state.editListDialogOpen}
+                    onRequestClose={this.handleDialogClose}
+                >
+                    <form onSubmit={this.handleSaveEditedList}>
+                        <TextField
+                            hintText="List Name"
+                            value={this.state.listEditing.name}
+                            errorText={this.state.nameErrorText}
+                            onChange={(event: object, newValue: string) => this.editEditedName(newValue)}
+                        />
+                        {this.props.updating ? updating : actions}
+                    </form>
+                </Dialog>
+            </div>
+        );        
+    }
+
+    handleSaveEditedList = (event: any) => {
+        event.preventDefault();
+        if (!this.validateListName(this.state.listEditing.name)) {
+            this.props.dispatch(editList(this.state.listEditing))
+            .then((response: List) => {
+                this.handleDialogClose();
+            })
+            .catch((error: any) => {
+                console.log(error);
+            });
+        }
+    }
+
+    editEditedName = (newValue: string) => {
+        this.setState({ 
+            listEditing: { ...this.state.listEditing, name: textHelper.toTitleCase(newValue) }, 
+        });
+        this.validateListName(newValue);
+    }
+
+    getNewListDialog = () => {
+        const actions: JSX.Element[] = [
+            <FlatButton key="add" type="submit" label="Add" />,
+            <FlatButton key="cancel" label="Cancel" primary={true} onClick={this.handleDialogClose}/>,
+        ];
+        const updating: JSX.Element[] = [<CircularProgress size={30} thickness={2}/>];
+
+        return (
+            <div>
+                <Dialog
+                    title="Create List"
+                    open={this.state.newListDialogOpen}
+                    onRequestClose={this.handleDialogClose}
+                >
+                    <form onSubmit={this.handleSaveNewList}>
+                        <TextField
+                            hintText="List Name"
+                            errorText={this.state.nameErrorText}
+                            onChange={(event: object, newValue: string) => this.editNewName(newValue)}
+                            value={this.state.newList.name}
+                        />
+                        {this.props.updating ? updating : actions}
+                    </form>
+                </Dialog>
+            </div>
+        );
+    }
+
+    handleSaveNewList = (event: any) => {
+        event.preventDefault();
+        if (!this.validateListName(this.state.newList.name)) {
+            this.props.dispatch(saveList(this.state.newList))
+            .then((response: List) => {
+                const url: string = '/List/Edit/' + String(response.listid);
+                history.push(url);
+            })
+            .catch((error: any) => {
+                console.log(error);
+            });
+        }
+    }
+
+    editNewName = (newValue: string) => {
+        this.setState({ 
+            newList: { ...this.state.newList, name: textHelper.toTitleCase(newValue) }, 
+        });
+        this.validateListName(newValue);
+    }
+
+    getCompleteListDialog = () => {
+        const actions = [
+            <FlatButton key="cancel" label="Cancel" primary={true} onClick={this.handleDialogClose}/>,
+            <FlatButton key="complete" label="Complete" primary={true} keyboardFocused={true} onClick={this.handleCompleteDialogComplete}/>,
+        ];
+        const updating: JSX.Element[] = [<CircularProgress size={30} thickness={2}/>];
+
+        return (
+            <div>
+                <Dialog
+                    title="Complete List"
+                    actions={this.props.updating ? updating : actions}
+                    open={this.state.completeDialogOpen}
+                    onRequestClose={this.handleDialogClose}
+                >
+                    Continuing will mark {this.state.activeList ? this.state.activeList.name : ''} as completed.<br/>
+                    After this the list may only be viewed and not edited. 
+                </Dialog>
+            </div>
+        );
+    }
+
+    handleCompleteDialogComplete = () => {
+        this.props.dispatch(completeList(this.state.activeList))
+        .then((response: List) => {
+            this.setState({ 
+                completeDialogOpen: false,
+                activeList : undefined, 
+            });
+        })
+        .catch((error: any) => {
+            console.log(error);
         });
     }
 
-    handleChangeStartDate = (event: object, date: Date) => {
-        this.setState({
-            generateListDetail: { ...this.state.generateListDetail, startDate: date },
-            generateListDialogStartValidation: !date ? 'Please choose a start date' : undefined,
-        });
+    createLists = () => {
+        return this.props.lists
+            .filter((list: List) => this.state.showComplete || list.complete === false)
+            .sort((a,b) => {return (a.datecreated < b.datecreated) ? 1 : ((b.datecreated < a.datecreated) ? -1 : 0);})
+            .map(this.createlist);
     }
-    
-    handleChangeEndDate = (event: object, date: Date) => {
+
+    createlist = (list: List) => {
+        const completed = list.complete ? 'Complete' : 'Active';
+
+        return (
+            <Card key={list.listid}>
+                <CardTitle title={list.name + ' - ' + completed}/>} 
+                <CardText>
+                    <label>Created Date: </label><Moment format="DD/MM/YYYY" date={list.datecreated}/><br/>
+                    <label>Completed Date: </label>
+                    {list.datecompleted ? <Moment format="DD/MM/YYYY" date={list.datecompleted}/> : undefined}
+                </CardText>
+                <CardActions>
+                    <IconButton tooltip="View Details" onClick={() => this.handleViewDetails(list.listid)}>
+                        <ActionView/>
+                    </IconButton>
+                    <IconButton tooltip="Edit" disabled={list.complete} onClick={() => this.handleEdit(list.listid)}>
+                        <Edit/>
+                    </IconButton> 
+                    <IconButton tooltip="Complete" disabled={list.complete} onClick={() => this.handleCompleteDialogOpen(list)}>
+                        <ActionDone/>
+                    </IconButton>
+                </CardActions>
+            </Card>
+        );
+    }
+
+    handleViewDetails = (listId: number) => {
+        const url: string = '/List/Detail/' + String(listId);
+        this.props.history.push(url);
+    }
+
+    handleEdit = (listid: number) => {
         this.setState({
-            generateListDetail: { ...this.state.generateListDetail, endDate: date },
-            generateListDialogEndValidation: !date ? 'Please choose an end date' : undefined,
+            editListDialogOpen: true,
+            listEditing: this.props.lists.find((List: List) => List.listid === listid),
         });
     }
 
-    openGenerateListDialog = () => {
-        const date: Date = new Date();
-        this.setState({
-            generateListDialogOpen: true,
-            generateListDetail: {
-                startDate: date,
-                endDate: moment(date).add(1, 'week').toDate(),
-                listName: null,
-            },
+    handleCompleteDialogOpen = (list : List) => {
+        this.setState({ 
+            completeDialogOpen: true, 
+            activeList : list,
         });
     }
 
     render() {
         return (
             <div>
-                <br/>
-                <div style={styles.toggle}>
-                <Toggle 
-                    label="Show Completed"
-                    labelPosition="right"
-                    toggled={this.state.showComplete} 
-                    onToggle={(event, isInputChecked) => this.setToggle(isInputChecked)}
-                />
-                <FlatButton
-                    label="Add New List"
-                    primary={true}
-                    onClick={this.openNewListDialog}
-                />
-                <FlatButton
-                    label="Generate List"
-                    primary={true}
-                    onClick={this.openGenerateListDialog}
-                />
-                {(this.state && this.state.generateListDialogOpen && this.state.generateListDetail)
-                    ? this.getgenerateListDialog()
-                    : null}
-                {(this.state && this.state.editListDialogOpen && this.state.listEditing)
-                    ? this.getEditListDialog()
-                    : null}
-                {(this.state && this.state.newListDialogOpen)
-                    ? this.getNewListDialog()
-                    : null}
-                </div>
-                {this.createLists()}
+                {(!this.props.loading && this.state && this.props.lists) 
+                    ? this.getShoppingLists() 
+                    : <AppLoading/>
+                }
             </div>
         );
     }
 }
 
-const mapStateToProps = (store : any, props : any) => {
+const mapStateToProps = (store: AppStore) => {
     return {
         lists: store.listReducer.lists,
-        loading: store.listReducer.loading,
-        error: store.listReducer.error,
-        updating: store.listReducer.updating,
+        loading: store.appReducer.getting > 0 ? true : false,
+        updating: (store.appReducer.posting > 0 || store.appReducer.putting > 0 || store.appReducer.deleting > 0) ? true : false,
     };
 };
   
