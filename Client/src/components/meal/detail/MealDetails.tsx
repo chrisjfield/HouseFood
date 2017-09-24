@@ -1,49 +1,40 @@
 import * as React from 'react';
 
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
 
-import { MealDetail } from '../../../interfaces/mealDetailInterfaces';
+import AppLoading from '../../loadingHandler';
+import { NotFound404 } from '../../errorHandler';
+
+import { Meal } from '../../../interfaces/mealInterfaces';
+import { MealDetail, MealDetailsProps, MealDetailsState } from '../../../interfaces/mealDetailInterfaces';
 import { Ingredient } from '../../../interfaces/ingredientInterfaces';
+import { AppStore } from '../../../interfaces/stateInterfaces';
 
+import { getMeals } from '../../../actions/meals/mealActions';
 import { getMealDetails } from '../../../actions/mealDetails/mealDetailActions';
 import { getIngredients } from '../../../actions/ingredient/ingredientActions';
 
 import {
-    Table,
-    TableBody,
-    TableHeader,
-    TableHeaderColumn,
-    TableRow,
-    TableRowColumn,
-  } from 'material-ui/Table';
+    Table, TableBody, TableHeader,
+    TableHeaderColumn, TableRow, TableRowColumn,
+} from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
 
-interface MealDetailsProps {
-    mealDetails: MealDetail[];
-    ingredients: Ingredient[];
-    updating: boolean;
-    dispatch: Dispatch<{}>;
-    history: any;
-    match: any;
-}
-
-interface MealDetailsState {
-    filterdMealDetails: MealDetail[];
-    mealid: number;
-}
+import styles from '../../../styles';
 
 class MealDetails extends React.Component<MealDetailsProps, MealDetailsState> {
     constructor(props: any) {
         super();
 
         this.state = {
+            filterdMeal: undefined,
             filterdMealDetails: [],
             mealid: undefined,
         };
     }
 
     componentWillMount() {
+        this.props.dispatch(getMeals());
         this.props.dispatch(getMealDetails());
         this.props.dispatch(getIngredients());
     }
@@ -53,60 +44,30 @@ class MealDetails extends React.Component<MealDetailsProps, MealDetailsState> {
         const filterdMealDetails = nextProps.mealDetails 
             ? nextProps.mealDetails.filter((mealDetail: MealDetail) => mealDetail.mealid === mealid) 
             : []; 
+        const filterdMeal: Meal = nextProps.meals 
+            ? nextProps.meals.find((meal: Meal) => meal.mealid === mealid) 
+            : undefined;
            
         this.setState({
             mealid,
             filterdMealDetails, 
+            filterdMeal,
         });
     }
 
-    getTableRows() {
-        return this.state.filterdMealDetails
-            .map((mealDetail: MealDetail) => this.createTableRows(mealDetail)); 
-
-    }
-
-    createTableRows(mealDetail: MealDetail) {
-        const ingredient: Ingredient = this.props.ingredients
-            .find((ingredient: Ingredient) => ingredient.ingredientid === mealDetail.ingredientid);
+    checkListDetailIsValid = () => {
         return (
-            ingredient
-            ?   (
-                <TableRow key={mealDetail.mealingredientid}>
-                    <TableRowColumn>{ingredient.name}</TableRowColumn>
-                    <TableRowColumn>{mealDetail.amount} {ingredient.units}</TableRowColumn>
-                    <TableRowColumn></TableRowColumn>
-                </TableRow>
-            )
-            : null
+            this.state.filterdMeal ? this.getMealDetails() : <NotFound404/>
         );
     }
 
-    createTableHeader() {
-        return (
-            <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                <TableRow>
-                    <TableHeaderColumn>Item</TableHeaderColumn>
-                    <TableHeaderColumn>Quantity</TableHeaderColumn>
-                    <TableHeaderColumn></TableHeaderColumn>
-                </TableRow>
-            </TableHeader>
-        );
-    }
-    
-    createTable() {
+    getMealDetails = () => {
         return (
             <div>
-                <Table>
-                    {this.createTableHeader()}
-                    <TableBody 
-                        stripedRows={true} 
-                        showRowHover={true} 
-                        displayRowCheckbox={false}
-                    >
-                        {this.getTableRows()}
-                    </TableBody>
-                </Table>
+                <br/>
+                <FlatButton label="Edit Meal" primary={true} onClick={this.editMeal}/>
+                <h2 style={styles.editHeading}>{this.state.filterdMeal.name}</h2>
+                {this.createTable()}
             </div>
         );
     }
@@ -116,28 +77,71 @@ class MealDetails extends React.Component<MealDetailsProps, MealDetailsState> {
         this.props.history.push(url);
     }
 
+    createTable() {
+        return (
+            <div>
+                <Table>
+                    {this.createTableHeader()}
+                    <TableBody stripedRows={true} showRowHover={true} displayRowCheckbox={false}>
+                        {this.getTableRows()}
+                    </TableBody>
+                </Table>
+            </div>
+        );
+    }
+
+    createTableHeader() {
+        return (
+            <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                <TableRow>
+                    <TableHeaderColumn style={styles.columnHeadings}>Item</TableHeaderColumn>
+                    <TableHeaderColumn style={styles.columnHeadings}>Quantity</TableHeaderColumn>
+                </TableRow>
+            </TableHeader>
+        );
+    }
+
+    getTableRows() {
+        return this.state.filterdMealDetails
+            .map((mealDetail: MealDetail) => this.createTableRows(mealDetail)); 
+    }
+
+    createTableRows(mealDetail: MealDetail) {
+        const ingredient: Ingredient = this.props.ingredients
+            .find((ingredient: Ingredient) => ingredient.ingredientid === mealDetail.ingredientid);
+
+        return (
+            ingredient
+            ?   (
+                <TableRow key={mealDetail.mealingredientid}>
+                    <TableRowColumn>{ingredient.name}</TableRowColumn>
+                    <TableRowColumn>{mealDetail.amount} {ingredient.units}</TableRowColumn>
+                </TableRow>
+            )
+            : null
+        );
+    }
+
     render() {
         return (
             <div>
-                <br/>
-                <FlatButton
-                    label="Edit Meal"
-                    primary={true}
-                    onClick={this.state.mealid ? this.editMeal : undefined}
-                />
-                <br/>
-                {(this.state && this.state.filterdMealDetails && this.props.ingredients)
-                ? this.createTable()
-                : null}
+                {(!this.props.loading && this.props.ingredients && this.state 
+                    && this.state.filterdMealDetails && this.state.mealid) 
+                    ? this.checkListDetailIsValid() 
+                    : <AppLoading/>
+                }
             </div>
         );
     }
 }
 
-const mapStateToProps = (store : any, props : any) => {
+const mapStateToProps = (store: AppStore) => {
     return {
+        meals: store.mealReducer.meals,
         mealDetails: store.mealDetailReducer.mealDetails,
         ingredients: store.ingredientReducer.ingredients,
+        loading: store.appReducer.getting > 0 ? true : false,
+        updating: store.appReducer.putting > 0 ? true : false,
     };
 };
   

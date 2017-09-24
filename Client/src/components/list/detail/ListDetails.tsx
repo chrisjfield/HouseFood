@@ -3,6 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import AppLoading from '../../loadingHandler';
+import { NotFound404 } from '../../errorHandler';
 
 import { List } from '../../../interfaces/listInterfaces';
 import { ListDetail, ListDetailsProps, ListDetailsState } from '../../../interfaces/listDetailInterfaces';
@@ -70,6 +71,12 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
             completeDialogOpen,
             listComplete,
         });
+    }
+
+    checkListDetailIsValid = () => {
+        return (
+            this.state.filterdList ? this.getListDetails() : <NotFound404/>
+        );
     }
 
     getListDetails = () => {
@@ -216,7 +223,7 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
             <div>
                 {(!this.props.loading && this.state && this.state.filterdListDetails 
                   && this.state.filterdListDetails && this.state.listid) 
-                    ? this.getListDetails() 
+                    ? this.checkListDetailIsValid() 
                     : <AppLoading/>
                 }
             </div>
