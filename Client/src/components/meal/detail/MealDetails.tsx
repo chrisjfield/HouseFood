@@ -55,7 +55,7 @@ class MealDetails extends React.Component<MealDetailsProps, MealDetailsState> {
         });
     }
 
-    checkListDetailIsValid = () => {
+    checkMealDetailIsValid = () => {
         return (
             this.state.filterdMeal ? this.getMealDetails() : <NotFound404/>
         );
@@ -127,7 +127,7 @@ class MealDetails extends React.Component<MealDetailsProps, MealDetailsState> {
             <div>
                 {(!this.props.loading && this.props.ingredients && this.state 
                     && this.state.filterdMealDetails && this.state.mealid) 
-                    ? this.checkListDetailIsValid() 
+                    ? this.checkMealDetailIsValid() 
                     : <AppLoading/>
                 }
             </div>

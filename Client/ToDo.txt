@@ -1,13 +1,20 @@
-publish using surge
-cors issue with puts and deletes
+v0.2:
 refactor all the things (validation)
-refactor API - neaten and handle errors better
+
+v0.3:
+cors issue with puts and deletes
+publish using surge
+
+v1:
 Bootstrap/UI - need to make header static, need room to see autocomplete fields when page is full.
 
 v2:
+refactor API - neaten and handle errors better
+add shopping list api call to order items by name and quantity (api needs to join).
 Login/ multi tennacy
-clever pull back of data (not just all - see what it does pull {profiler})
 update to react16 for component will catch - add catch page for JS error
-add shopping list api call to order items by anme and quantity (api needs to join).
+
+v3:
+clever pull back of data (not just all - see what it does pull {profiler/graphql})
 default items section - ablity too add
 recipie (plus cooking time etc)
