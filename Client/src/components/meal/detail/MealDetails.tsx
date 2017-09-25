@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { connect } from 'react-redux';
 
-import AppLoading from '../../loadingHandler';
+import { AppLoading } from '../../loadingHandler';
 import { NotFound404 } from '../../errorHandler';
 
 import { Meal } from '../../../interfaces/mealInterfaces';

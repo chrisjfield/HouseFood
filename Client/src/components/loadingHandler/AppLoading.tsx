@@ -4,7 +4,7 @@ import CircularProgress from 'material-ui/CircularProgress';
 
 import styles from '../../styles';
 
-function AppLoading() {
+export function AppLoading() {
     return (
         <div>
             <CircularProgress size={80} thickness={5} style={styles.loading}/>
@@ -12,4 +12,10 @@ function AppLoading() {
     );
 }
 
-export default AppLoading;
+export function AppUpdating() {
+    return (
+        <div>
+            <CircularProgress size={30} thickness={2}/>
+        </div>
+    );
+}

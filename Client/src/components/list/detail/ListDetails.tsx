@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { connect } from 'react-redux';
 
-import AppLoading from '../../loadingHandler';
+import { AppLoading, AppUpdating } from '../../loadingHandler';
 import { NotFound404 } from '../../errorHandler';
 
 import { List } from '../../../interfaces/listInterfaces';
@@ -21,7 +21,6 @@ import {
 import Checkbox from 'material-ui/Checkbox';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import CircularProgress from 'material-ui/CircularProgress';
 
 import styles from '../../../styles';
 
@@ -183,12 +182,11 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
               onClick={this.handleCompleteDialogComplete}
             />,
         ];
-        const updating: JSX.Element[] = [<CircularProgress size={30} thickness={2}/>];
 
         return (
             <Dialog
                 title="Complete List"
-                actions={this.props.updating ? updating : actions}
+                actions={this.props.updating ? [<AppUpdating/>] : actions}
                 modal={true}
                 open={this.state.completeDialogOpen}
                 onRequestClose={this.handleCompleteDialogClose}

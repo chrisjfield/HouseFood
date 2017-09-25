@@ -6,7 +6,7 @@ import * as moment from 'moment';
 
 import history from '../../../history';
 import { AppStore } from '../../../interfaces/stateInterfaces';
-import AppLoading from '../../loadingHandler';
+import { AppLoading, AppUpdating } from '../../loadingHandler';
 import textHelper from '../../../helpers/textHelper';
 
 import { List, GenerateListDetail, ListsProps, ListsState } from '../../../interfaces/listInterfaces';
@@ -23,7 +23,6 @@ import Toggle from 'material-ui/Toggle';
 import Edit from 'material-ui/svg-icons/editor/mode-edit';
 import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
-import CircularProgress from 'material-ui/CircularProgress';
 
 import styles from '../../../styles';
 
@@ -118,13 +117,12 @@ class Lists extends React.Component<ListsProps, ListsState> {
               onClick={this.handleGenerateList}
             />,
         ];
-        const updating: JSX.Element[] = [<CircularProgress size={30} thickness={2}/>];
 
         return (
             <div>
                 <Dialog
                     title="Generate List"
-                    actions={this.props.updating ? updating : actions}
+                    actions={this.props.updating ? [<AppUpdating/>] : actions}
                     open={this.state.generateListDialogOpen}
                     onRequestClose={this.handleDialogClose}
                 >
@@ -273,7 +271,6 @@ class Lists extends React.Component<ListsProps, ListsState> {
             <FlatButton key="save" type="submit" label="Save" />,
             <FlatButton key="cancel" label="Cancel" primary={true} onClick={this.handleDialogClose}/>,
         ];
-        const updating: JSX.Element[] = [<CircularProgress size={30} thickness={2}/>];
 
         return (
             <div>
@@ -289,7 +286,7 @@ class Lists extends React.Component<ListsProps, ListsState> {
                             errorText={this.state.nameErrorText}
                             onChange={(event: object, newValue: string) => this.editEditedName(newValue)}
                         />
-                        {this.props.updating ? updating : actions}
+                        {this.props.updating ? [<AppUpdating/>] : actions}
                     </form>
                 </Dialog>
             </div>
@@ -321,7 +318,6 @@ class Lists extends React.Component<ListsProps, ListsState> {
             <FlatButton key="add" type="submit" label="Add" />,
             <FlatButton key="cancel" label="Cancel" primary={true} onClick={this.handleDialogClose}/>,
         ];
-        const updating: JSX.Element[] = [<CircularProgress size={30} thickness={2}/>];
 
         return (
             <div>
@@ -337,7 +333,7 @@ class Lists extends React.Component<ListsProps, ListsState> {
                             onChange={(event: object, newValue: string) => this.editNewName(newValue)}
                             value={this.state.newList.name}
                         />
-                        {this.props.updating ? updating : actions}
+                        {this.props.updating ? [<AppUpdating/>] : actions}
                     </form>
                 </Dialog>
             </div>
@@ -370,13 +366,12 @@ class Lists extends React.Component<ListsProps, ListsState> {
             <FlatButton key="cancel" label="Cancel" primary={true} onClick={this.handleDialogClose}/>,
             <FlatButton key="complete" label="Complete" primary={true} keyboardFocused={true} onClick={this.handleCompleteDialogComplete}/>,
         ];
-        const updating: JSX.Element[] = [<CircularProgress size={30} thickness={2}/>];
 
         return (
             <div>
                 <Dialog
                     title="Complete List"
-                    actions={this.props.updating ? updating : actions}
+                    actions={this.props.updating ? [<AppUpdating/>] : actions}
                     open={this.state.completeDialogOpen}
                     onRequestClose={this.handleDialogClose}
                 >

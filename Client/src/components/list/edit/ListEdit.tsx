@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { connect } from 'react-redux';
 
-import AppLoading from '../../loadingHandler';
+import { AppLoading, AppUpdating } from '../../loadingHandler';
 import { NotFound404 } from '../../errorHandler';
 
 import textHelper from '../../../helpers/textHelper';
@@ -25,7 +25,6 @@ import TextField from 'material-ui/TextField';
 import Delete from 'material-ui/svg-icons/action/delete';
 import IconButton from 'material-ui/IconButton';
 import AutoComplete from 'material-ui/AutoComplete';
-import CircularProgress from 'material-ui/CircularProgress';
 
 import styles from '../../../styles';
 
@@ -91,7 +90,8 @@ class ListEdit extends React.Component<ListEditProps, ListEditState> {
         return (
             <div>
                 {this.props.updating 
-                    ?  (<div><CircularProgress size={30} thickness={2}/>
+                    ?  (<div>
+                            <AppUpdating/>
                             <h2 style={styles.editHeading}>{this.state.filterdList.name}</h2>
                         </div>)
                     :  (<div>

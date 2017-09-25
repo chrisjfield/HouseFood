@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Moment from 'react-moment';
 import * as moment from 'moment';
 
-import AppLoading from '../loadingHandler';
+import { AppLoading } from '../loadingHandler';
 
 import { Day } from '../../interfaces/dayInterfaces';
 import { Person } from '../../interfaces/personInterfaces';

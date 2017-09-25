@@ -1,2 +1,2 @@
-import AppLoading from './AppLoading';
-export default AppLoading;
+import { AppLoading, AppUpdating } from './AppLoading';
+export { AppLoading, AppUpdating };
