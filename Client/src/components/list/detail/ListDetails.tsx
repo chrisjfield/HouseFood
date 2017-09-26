@@ -133,7 +133,9 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
     }
 
     handleCheckAll = (isInputChecked: boolean) => {
-        this.props.dispatch(checkAllListDetail(isInputChecked, this.state.listid)); 
+        if (this.state.filterdListDetails.length > 0) {
+            this.props.dispatch(checkAllListDetail(isInputChecked, this.state.listid)); 
+        }
     }
 
     getTableRows = () => {

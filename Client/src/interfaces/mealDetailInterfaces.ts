@@ -39,3 +39,26 @@ export interface MealDetailsState {
     filterdMealDetails: MealDetail[];
     mealid: number;
 }
+
+export interface MealEditProps {
+    meals: Meal[];
+    mealDetails: MealDetail[];
+    ingredients: Ingredient[];
+    updating: boolean;
+    loading: boolean;
+    dispatch: Dispatch<{}>;
+    history: any;
+    match: any;
+}
+
+export interface MealEditState {
+    filterdMeal: Meal;
+    filterdMealDetails: MealDetail[];
+    updatedMealDetails: MealDetail[];
+    deletedMealDetails: MealDetail[];
+    newMealDetails: NewMealItem[];
+    mealid: number;
+    newDetailKey: number;
+    ingredientList: string[];
+    lastRowKey: string;
+}

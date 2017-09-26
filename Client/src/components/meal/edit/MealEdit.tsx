@@ -1,73 +1,44 @@
 import * as React from 'react';
 
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
 
-import { 
-    MealDetail, 
-    NewMealItem,
-    NewMealDetail, 
-} from '../../../interfaces/mealDetailInterfaces';
-import { 
-    Ingredient,
-    NewIngredient, 
-} from '../../../interfaces/ingredientInterfaces';
+import { AppLoading, AppUpdating } from '../../loadingHandler';
+import { NotFound404 } from '../../errorHandler';
 
-import { 
-    getMealDetails,
-    deleteBulkMealDetails,
-    putBulkMealDetails, 
-    postBulkMealDetails,
-} from '../../../actions/mealDetails/mealDetailActions';
+import textHelper from '../../../helpers/textHelper';
 
-import { 
-    getIngredients,
-    postBulkIngredients, 
-} from '../../../actions/ingredient/ingredientActions';
+import { MealDetail, NewMealItem, NewMealDetail, MealEditProps, MealEditState } from '../../../interfaces/mealDetailInterfaces';
+import { Meal } from '../../../interfaces/mealInterfaces';
+import { Ingredient, NewIngredient } from '../../../interfaces/ingredientInterfaces';
+import { AppStore } from '../../../interfaces/stateInterfaces';
+
+import { getMealDetails, updateMeal } from '../../../actions/mealDetails/mealDetailActions';
+import { getMeals } from '../../../actions/meals/mealActions';
+import { getIngredients, postBulkIngredients } from '../../../actions/ingredient/ingredientActions';
 
 import {
-    Table,
-    TableBody,
-    TableHeader,
-    TableHeaderColumn,
-    TableRow,
-    TableRowColumn,
-  } from 'material-ui/Table';
+    Table, TableBody, TableHeader,
+    TableHeaderColumn, TableRow, TableRowColumn,
+} from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import Delete from 'material-ui/svg-icons/action/delete';
 import IconButton from 'material-ui/IconButton';
 import AutoComplete from 'material-ui/AutoComplete';
 
-interface MealEditProps {
-    mealDetails: MealDetail[];
-    ingredients: Ingredient[];
-    updating: boolean;
-    dispatch: Dispatch<{}>;
-    history: any;
-    match: any;
-}
-
-interface MealEditState {
-    filterdMealDetails: MealDetail[];
-    updatedMealDetails: MealDetail[];
-    deletedMealDetails: MealDetail[];
-    newMealDetails: NewMealItem[];
-    mealid: number;
-    newDetailKey: number;
-    ingredientList: string[];
-    lastRowKey: string;
-}
+import styles from '../../../styles';
 
 class MealEdit extends React.Component<MealEditProps, MealEditState> {
     constructor(props: any) {
         super();
 
         this.state = {
+            mealid: undefined,
+            filterdMeal: undefined,
             filterdMealDetails: [],
             updatedMealDetails: [],
             deletedMealDetails: [],
-            mealid: undefined,
+            ingredientList: [],
             newMealDetails: [{
                 uniqueKey: 'new1',
                 ingredient: '',
@@ -75,18 +46,21 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
                 unit: '',
             }],
             newDetailKey: 2,
-            ingredientList: [],
             lastRowKey: 'new1',
         };
     }
 
     componentWillMount() {
         this.props.dispatch(getMealDetails());
+        this.props.dispatch(getMeals());
         this.props.dispatch(getIngredients());
     }
 
     componentWillReceiveProps(nextProps: MealEditProps) {
         const mealid: number =  Number(nextProps.match.params.mealid);
+        const filterdMeal: Meal = nextProps.meals 
+        ? nextProps.meals.find((meal: Meal) => meal.mealid === mealid) 
+        : undefined; 
         const filterdMealDetails: MealDetail[] = nextProps.mealDetails 
             ? nextProps.mealDetails.filter((mealDetail: MealDetail) => mealDetail.mealid === mealid) 
             : []; 
@@ -94,20 +68,301 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
             ? this.state.updatedMealDetails
             : [...filterdMealDetails];
         const ingredientList = nextProps.ingredients 
-            ? [...new Set<string>(nextProps.ingredients.map((ingredient: Ingredient) => ingredient.name.toLowerCase()))]
+            ? [...new Set<string>(nextProps.ingredients.map((ingredient: Ingredient) => textHelper.toTitleCase(ingredient.name)))]
             : []; 
 
         this.setState({
             mealid,
+            filterdMeal,
             filterdMealDetails, 
             updatedMealDetails,
             ingredientList,
         });
     }
 
+    getMealEdit = () => {
+        return (
+            this.state.filterdMeal ? this.getTable() : <NotFound404/>
+        );
+    }
+
+    getTable = () => {
+        return (
+            <div>
+                {this.props.updating 
+                    ?  (<div>
+                            <AppUpdating/>
+                            <h2 style={styles.editHeading}>{this.state.filterdMeal.name}</h2>
+                        </div>)
+                    :  (<div>
+                            <FlatButton label="Save" primary={true} onClick={this.saveMeal}/>
+                            <FlatButton label="Cancel" primary={true} onClick={this.cancelEdit}/>
+                            <h2 style={styles.editHeading}>{this.state.filterdMeal.name}</h2>
+                        </div>)
+                }
+                <br/>
+                {this.createTable()}
+            </div>
+        );
+    }
+
+    saveMeal = () => {
+        const url: string = '/Meal/Detail/' + String(this.state.mealid);
+        const newItems: NewMealItem[] = this.state.newMealDetails
+        .filter((mealDetail: NewMealItem) => mealDetail.uniqueKey !== this.state.lastRowKey);
+        const newIngredients: NewIngredient[] = newItems
+            .filter((newMealDetail: NewMealItem) => this.state.ingredientList.indexOf(newMealDetail.ingredient) === -1)
+            .map((newMealDetail: NewMealItem) => {
+                return {
+                    name: newMealDetail.ingredient,
+                    units: newMealDetail.unit,
+                };
+            });
+
+        if (this.validateMeal(newItems, this.state.updatedMealDetails)) {
+            this.props.dispatch(postBulkIngredients(newIngredients))
+                .then((reponse: Ingredient[]) => {
+                    const fullIngredients: Ingredient[] = [...this.props.ingredients, ...reponse];
+                    const newMealDetail: NewMealDetail[] = newItems
+                    .map((newMealItem: NewMealItem) => {
+                        const newIngredient: Ingredient = fullIngredients
+                            .find((ingredients: Ingredient) => 
+                                textHelper.toTitleCase(ingredients.name) === textHelper.toTitleCase(newMealItem.ingredient));
+                        return {
+                            mealid: this.state.mealid, 
+                            ingredientid: newIngredient.ingredientid,
+                            amount: newMealItem.amount,
+                        };
+                    });
+
+                    this.props.dispatch(updateMeal(newMealDetail, this.state.deletedMealDetails, this.state.updatedMealDetails))
+                        .then(() => this.props.history.push(url))
+                        .catch((error: any) => {
+                            throw error;
+                        });
+                })
+                .catch((error: any) => {
+                    console.log(error);
+                });
+        }
+    }
+
+    validateMeal = (newItems: NewMealItem[], updatedItems: MealDetail[]) => {
+        const invalidExistingItem: MealDetail = this.state.updatedMealDetails
+            .find((mealDetail: MealDetail) => this.validateAmount(mealDetail.amount) ? true : false);
+        const invalidNewItem: NewMealItem = newItems
+            .find((mealDetail: NewMealItem) => {
+                return (this.validateAmount(mealDetail.amount) 
+                        || this.validateIngredientName(mealDetail.ingredient) 
+                        || this.validateIngredientUnit(mealDetail.unit)) 
+                    ? true 
+                    : false;
+            });
+        
+        const isValid: boolean = (!invalidExistingItem && ! invalidNewItem) ? true : false;
+
+        return isValid;
+    }
+
+    validateAmount = (amount: number) => {
+        let validationMessage: string = null;
+        if (!amount) {
+            validationMessage = 'Please set a quantity';
+        } else if (amount < 0) {
+            validationMessage = 'Amount must be positive';
+        } else if (amount > 1000000) {
+            validationMessage = 'Amount must be less than 1 million';
+        }
+
+        return validationMessage;
+    }
+
+    validateIngredientName = (name: string) => {
+        let validationMessage: string = null;
+        if (!name) {
+            validationMessage = 'Please choose an ingredient';
+        } else if (name.length > 200) {
+            validationMessage = 'Maximum name legth is 200 characters';
+        }
+
+        return validationMessage;
+    }
+
+    validateIngredientUnit = (unit: string) => {
+        let validationMessage: string = null;
+        if (!unit) {
+            validationMessage = 'Please set a unit';
+        } else if (unit.length > 10) {
+            validationMessage = 'Maximum unit legth is 10 characters';
+        }
+        
+        return validationMessage;
+    }
+
+    cancelEdit = () => {
+        const url: string = '/Meal/Detail/' + String(this.state.mealid);
+        this.props.history.push(url);
+    }
+
+    createTable() {
+        return (
+            <div>
+                <Table>
+                    {this.createTableHeader()}
+                    <TableBody stripedRows={true} showRowHover={true} displayRowCheckbox={false}>
+                        {this.getExistingTableRows()}
+                        {this.getNewTableRows()}
+                    </TableBody>
+                </Table>
+            </div>
+        );
+    }
+
+    createTableHeader() {
+        return (
+            <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                <TableRow>
+                    <TableHeaderColumn></TableHeaderColumn>
+                    <TableHeaderColumn style={styles.columnHeadings}>Item</TableHeaderColumn>
+                    <TableHeaderColumn style={styles.columnHeadings}>Quantity</TableHeaderColumn>
+                    <TableHeaderColumn style={styles.columnHeadings}>Units</TableHeaderColumn>
+                </TableRow>
+            </TableHeader>
+        );
+    }
+
+    getExistingTableRows() {
+        return this.state.updatedMealDetails
+            .map((mealDetail: MealDetail) => this.createExistingTableRows(mealDetail)); 
+    }
+
+    createExistingTableRows(mealDetail: MealDetail) {
+        const ingredient: Ingredient = this.props.ingredients
+            .find((ingredient: Ingredient) => ingredient.ingredientid === mealDetail.ingredientid);
+
+        return (
+            <TableRow key={mealDetail.mealingredientid}>
+                <TableRowColumn>
+                    <IconButton tooltip="Remove Item" onClick={() => this.handleDelete(mealDetail)}>
+                        <Delete/>
+                    </IconButton> 
+                </TableRowColumn>
+                <TableRowColumn>{ingredient.name}</TableRowColumn>
+                <TableRowColumn>
+                    <TextField
+                        defaultValue={mealDetail.amount}
+                        hintText="Quantity"
+                        errorText={this.validateAmount(mealDetail.amount)}
+                        onChange={(event: object, newValue: string) => this.editExistingItemQuantity(mealDetail.mealingredientid, newValue)}
+                        type="number"
+                    />
+                </TableRowColumn>
+                <TableRowColumn>{ingredient.units}</TableRowColumn>
+            </TableRow>
+        );
+    }
+
+    handleDelete = (removedMealDetail: MealDetail) => {
+        this.setState({
+            updatedMealDetails: [...this.state.updatedMealDetails
+                .filter((mealDetail: MealDetail) => mealDetail.mealingredientid !== removedMealDetail.mealingredientid)],
+            deletedMealDetails: [...this.state.deletedMealDetails, removedMealDetail],
+        });
+    }
+
+    editExistingItemQuantity = (mealingredientid: number, newValue: string) => {
+        this.setState({
+            updatedMealDetails: [...this.state.updatedMealDetails
+                .map((mealDetail: MealDetail) => { 
+                    return mealDetail.mealingredientid === mealingredientid 
+                    ? { ...mealDetail, amount: Number(newValue) }
+                    : mealDetail;
+                },
+            )],
+        });
+    }
+
     getNewTableRows = () => {
         return this.state.newMealDetails
             .map((newMealItem: NewMealItem) => this.createNewTableRows(newMealItem)); 
+    }
+
+    createNewTableRows(newMealDetail: NewMealItem) {
+        const existingIngredient: Ingredient = this.props.ingredients
+            .find((ingredient: Ingredient) => textHelper.toTitleCase(ingredient.name) === textHelper.toTitleCase(newMealDetail.ingredient));
+
+        return (
+            <TableRow key={newMealDetail.uniqueKey}>
+                <TableRowColumn>
+                    {newMealDetail.uniqueKey !== this.state.lastRowKey
+                        ?   (<IconButton tooltip="Remove Item" onClick={() => this.handleRemoveNew(newMealDetail.uniqueKey)}>
+                                <Delete/>
+                            </IconButton>)
+                        :null
+                    }
+                </TableRowColumn>
+                <TableRowColumn>
+                    <AutoComplete
+                        hintText="Ingredient"
+                        maxSearchResults={5}
+                        dataSource={this.state.ingredientList}
+                        searchText={newMealDetail.ingredient}
+                        onUpdateInput={(searchText, dataSource) => this.editNewItemIngredient(newMealDetail.uniqueKey, searchText)}
+                        errorText={newMealDetail.uniqueKey !== this.state.lastRowKey 
+                            ? this.validateIngredientName(newMealDetail.ingredient)
+                            : null}
+                    />
+                </TableRowColumn>
+                <TableRowColumn>
+                    <TextField
+                        value={newMealDetail.amount}
+                        hintText="Quantity"
+                        errorText={newMealDetail.uniqueKey !== this.state.lastRowKey 
+                            ? this.validateAmount(newMealDetail.amount)
+                            : null}
+                        onChange={(event: object, newValue: string) => this.editNewItemQuantity(newMealDetail.uniqueKey, newValue)}
+                        type="number"
+                    />
+                </TableRowColumn>
+                <TableRowColumn>
+                    <TextField
+                        value={newMealDetail.unit}
+                        disabled={existingIngredient ? true : false}
+                        hintText="Units"
+                        errorText={newMealDetail.uniqueKey !== this.state.lastRowKey 
+                            ? this.validateIngredientUnit(newMealDetail.unit)
+                            : null}
+                        onChange={(event: object, newValue: string) => this.editNewItemUnit(newMealDetail.uniqueKey, newValue)}
+                    />
+                </TableRowColumn>
+            </TableRow>
+        );
+    }
+
+    handleRemoveNew = (removedNewMealDetail: string) => {
+        this.setState({
+            newMealDetails: [...this.state.newMealDetails
+                .filter((newMealDetail: NewMealItem) => newMealDetail.uniqueKey !== removedNewMealDetail)],
+        });
+    }
+
+    editNewItemIngredient = (uniqueKey: string, newValue: string) => {
+        const existingIngredient: Ingredient = this.props.ingredients
+            .find((ingredient: Ingredient) => textHelper.toTitleCase(ingredient.name) === textHelper.toTitleCase(newValue));
+        let newMealDetails: NewMealItem[] = JSON.parse(JSON.stringify(this.state.newMealDetails));
+
+        newMealDetails = [...newMealDetails
+            .map((newMealDetail: NewMealItem) => { 
+                return newMealDetail.uniqueKey === uniqueKey 
+                    ?   
+                    { ...newMealDetail, 
+                        ingredient: textHelper.toTitleCase(newValue), 
+                        unit: existingIngredient ? existingIngredient.units : newMealDetail.unit, 
+                    }
+                    : newMealDetail;
+            })],
+
+        this.getBlankRow(newMealDetails);
     }
 
     getBlankRow = (updatedMealDetails: NewMealItem[]) => {
@@ -133,13 +388,6 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
             newMealDetails,
             lastRowKey,
             newDetailKey,
-        });
-    }
-
-    handleRemoveNew = (removedNewMealDetail: string) => {
-        this.setState({
-            newMealDetails: [...this.state.newMealDetails
-                .filter((newMealDetail: NewMealItem) => newMealDetail.uniqueKey !== removedNewMealDetail)],
         });
     }
 
@@ -172,231 +420,26 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
         this.getBlankRow(newMealDetails);
     }
 
-    editNewItemIngredient = (uniqueKey: string, newValue: string) => {
-        const existingIngredient: Ingredient = this.props.ingredients
-            .find((ingredient: Ingredient) => ingredient.name.toLowerCase() === newValue.toLowerCase());
-
-        let newMealDetails: NewMealItem[] = JSON.parse(JSON.stringify(this.state.newMealDetails));
-        newMealDetails = [...newMealDetails
-            .map((newMealDetail: NewMealItem) => { 
-                return newMealDetail.uniqueKey === uniqueKey 
-                    ?   
-                    { ...newMealDetail, 
-                        ingredient: newValue, 
-                        unit: existingIngredient ? existingIngredient.units : newMealDetail.unit, 
-                    }
-                    : newMealDetail;
-            })],
-
-        this.getBlankRow(newMealDetails);
-    }
-
-    createNewTableRows(newMealDetail: NewMealItem) {
-        const existingIngredient: Ingredient = this.props.ingredients
-            .find((ingredient: Ingredient) => ingredient.name.toLowerCase() === newMealDetail.ingredient.toLowerCase());
-        return (
-            <TableRow key={newMealDetail.uniqueKey}>
-                <TableRowColumn>
-                    {newMealDetail.uniqueKey !== this.state.lastRowKey
-                        ?   (<IconButton 
-                                tooltip="Remove Item" 
-                                onClick={() => this.handleRemoveNew(newMealDetail.uniqueKey)}
-                            >
-                                <Delete/>
-                            </IconButton>)
-                        :null
-                    }
-                </TableRowColumn>
-                <TableRowColumn>
-                    <AutoComplete
-                        hintText="Ingredient"
-                        maxSearchResults={5}
-                        dataSource={this.state.ingredientList}
-                        searchText={newMealDetail.ingredient}
-                        onUpdateInput={(searchText, dataSource) => this.editNewItemIngredient(newMealDetail.uniqueKey, searchText)}
-                        errorText={(!newMealDetail.ingredient  && newMealDetail.uniqueKey !== this.state.lastRowKey) 
-                            ? 'Please set a unit' 
-                            : null}
-                    />
-                </TableRowColumn>
-                <TableRowColumn>
-                    <TextField
-                        value={newMealDetail.amount}
-                        hintText="Quantity"
-                        errorText={(!newMealDetail.amount && newMealDetail.uniqueKey !== this.state.lastRowKey) 
-                            ? 'Please set a quantity' 
-                            : null}
-                        onChange={(event: object, newValue: string) => this.editNewItemQuantity(newMealDetail.uniqueKey, newValue)}
-                        type="number"
-                    />
-                </TableRowColumn>
-                <TableRowColumn>
-                    <TextField
-                        value={newMealDetail.unit}
-                        disabled={existingIngredient ? true : false}
-                        hintText="Units"
-                        errorText={(!newMealDetail.unit && newMealDetail.uniqueKey !== this.state.lastRowKey) 
-                            ? 'Please set a unit' 
-                            : null}
-                        onChange={(event: object, newValue: string) => this.editNewItemUnit(newMealDetail.uniqueKey, newValue)}
-                    />
-                </TableRowColumn>
-            </TableRow>
-        );
-    }
-
-    getExistingTableRows() {
-        return this.state.updatedMealDetails
-            .map((mealDetail: MealDetail) => this.createExistingTableRows(mealDetail)); 
-    }
-
-    createExistingTableRows(mealDetail: MealDetail) {
-        const ingredient: Ingredient = this.props.ingredients
-            .find((ingredient: Ingredient) => ingredient.ingredientid === mealDetail.ingredientid);
-        return (
-            <TableRow key={mealDetail.mealingredientid}>
-                <TableRowColumn>
-                    <IconButton 
-                        tooltip="Remove Item" 
-                        onClick={() => this.handleDelete(mealDetail)}
-                    >
-                        <Delete/>
-                    </IconButton> 
-                </TableRowColumn>
-                <TableRowColumn>{ingredient.name}</TableRowColumn>
-                <TableRowColumn>
-                    <TextField
-                        defaultValue={mealDetail.amount}
-                        hintText="Quantity"
-                        errorText={!mealDetail.amount ? 'Please set a quantity' : null}
-                        onChange={(event: object, newValue: string) => this.editExistingItemQuantity(mealDetail.mealingredientid, newValue)}
-                        type="number"
-                    />
-                </TableRowColumn>
-                <TableRowColumn>{ingredient.units}</TableRowColumn>
-            </TableRow>
-        );
-    }
-
-    handleDelete = (removedMealDetail: MealDetail) => {
-        this.setState({
-            updatedMealDetails: [...this.state.updatedMealDetails
-                .filter((mealDetail: MealDetail) => mealDetail.mealingredientid !== removedMealDetail.mealingredientid)],
-            deletedMealDetails: [...this.state.deletedMealDetails, removedMealDetail],
-        });
-    }
-
-    editExistingItemQuantity = (mealingredientid: number, newValue: string) => {
-        this.setState({
-            updatedMealDetails: [...this.state.updatedMealDetails
-                .map((mealDetail: MealDetail) => { 
-                    return mealDetail.mealingredientid === mealingredientid 
-                    ? { ...mealDetail, amount: Number(newValue) }
-                    : mealDetail;
-                },
-            )],
-        });
-    }
-
-    createTableHeader() {
-        return (
-            <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                <TableRow>
-                    <TableHeaderColumn></TableHeaderColumn>
-                    <TableHeaderColumn>Item</TableHeaderColumn>
-                    <TableHeaderColumn>Quantity</TableHeaderColumn>
-                    <TableHeaderColumn>Units</TableHeaderColumn>
-                </TableRow>
-            </TableHeader>
-        );
-    }
-    
-    createTable() {
-        return (
-            <div>
-                <Table>
-                    {this.createTableHeader()}
-                    <TableBody 
-                        stripedRows={true} 
-                        showRowHover={true} 
-                        displayRowCheckbox={false}
-                    >
-                        {this.getExistingTableRows()}
-                        {this.getNewTableRows()}
-                    </TableBody>
-                </Table>
-            </div>
-        );
-    }
-
-    saveMeal = () => {
-        const invalidExistingItem: MealDetail = this.state.updatedMealDetails
-            .find((mealDetail: MealDetail) => !mealDetail.amount);
-        const newItems: NewMealItem[] = this.state.newMealDetails
-            .filter((mealDetail: NewMealItem) => mealDetail.uniqueKey !== this.state.lastRowKey);
-        const invalidNewItem: NewMealItem = newItems
-            .find((mealDetail: NewMealItem) => !mealDetail.ingredient || !mealDetail.amount || !mealDetail.unit);
-
-        const newIngredients: NewIngredient[] = newItems
-            .filter((newMealDetail: NewMealItem) => this.state.ingredientList.indexOf(newMealDetail.ingredient) === -1)
-            .map((newMealDetail: NewMealItem) => {
-                return {
-                    name: newMealDetail.ingredient,
-                    units: newMealDetail.unit,
-                };
-            });
-
-        const url: string = '/Meal/Detail/' + String(this.state.mealid);
-
-        if (!invalidExistingItem && !invalidNewItem) {
-            this.props.dispatch(postBulkIngredients(newIngredients))
-                .then((reponse: Ingredient[]) => {
-                    const fullIngredients: Ingredient[] = [...this.props.ingredients, ...reponse];
-
-                    const newMealDetail: NewMealDetail[] = newItems
-                    .map((newMealItem: NewMealItem) => {
-                        const newIngredient: Ingredient = fullIngredients
-                            .find((ingredients: Ingredient) => ingredients.name.toLowerCase() === newMealItem.ingredient.toLowerCase());
-                        return {
-                            mealid: this.state.mealid, 
-                            ingredientid: newIngredient.ingredientid,
-                            amount: newMealItem.amount,
-                        };
-                    });
-
-                    this.props.dispatch(postBulkMealDetails(newMealDetail));
-                    this.props.dispatch(deleteBulkMealDetails(this.state.deletedMealDetails));
-                    this.props.dispatch(putBulkMealDetails(this.state.updatedMealDetails));
-                    this.props.history.push(url);
-                })
-                .catch((error: any) => {
-                    console.log(error);
-                });
-        }
-    }
-
     render() {
         return (
             <div>
-                <br/>
-                <FlatButton
-                    label="Save"
-                    primary={true}
-                    onClick={this.state.mealid ? this.saveMeal : undefined}
-                />
-                <br/>
-                {(this.state && this.state.mealid && this.state.updatedMealDetails && this.props.ingredients)
-                ? this.createTable()
-                : null}
+                {(!this.props.loading && this.state && this.state.mealid 
+                    && this.state.updatedMealDetails && this.props.ingredients) 
+                    ? this.getMealEdit() 
+                    : <AppLoading/>
+                }
             </div>
         );
     }
 }
 
-const mapStateToProps = (store : any, props : any) => {
+const mapStateToProps = (store: AppStore) => {
     return {
         mealDetails: store.mealDetailReducer.mealDetails,
+        meals: store.mealReducer.meals,
         ingredients: store.ingredientReducer.ingredients,
+        loading: store.appReducer.getting > 0 ? true : false,
+        updating: (store.appReducer.posting > 0 || store.appReducer.putting > 0 || store.appReducer.deleting > 0) ? true : false,
     };
 };
   

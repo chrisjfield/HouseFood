@@ -168,7 +168,7 @@ function putBulkListDetailsSuccessful(response: ListDetail[]) {
     };
 }
 
-export function deletetBulkListDetails(listDetails: ListDetail[]) {
+export function deleteBulkListDetails(listDetails: ListDetail[]) {
     const request = apiHelper.apiCall(
         'DELETE',
         'Listitems/bulk',
@@ -202,7 +202,7 @@ export function updateList(newListDetail: NewListDetail[], deletedListDetail: Li
     return (dispatch: Function) => {
         return Promise.all([
             dispatch(postBulkListDetails(newListDetail)),
-            dispatch(deletetBulkListDetails(deletedListDetail)),
+            dispatch(deleteBulkListDetails(deletedListDetail)),
             dispatch(putBulkListDetails(updatedListDetail)),
         ]);
     };

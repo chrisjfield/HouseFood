@@ -51,14 +51,16 @@ export function postBulkMealDetails(mealDetails: NewMealDetail[]) {
 
     return (dispatch : Function) => {
         dispatch(startPost());
-        request
+        return request
         .then((response: MealDetail[]) => {
             dispatch(postBulkMealDetailsSuccessful(response));
             dispatch(stopPost());
+            return response;
         })
         .catch((error: any) => {
             dispatch(addError(error));
             dispatch(stopPost());
+            throw error;
         });
     };
 }
@@ -79,14 +81,16 @@ export function putBulkMealDetails(mealDetails: MealDetail[]) {
 
     return (dispatch : Function) => {
         dispatch(startPut());
-        request
+        return request
         .then((response: MealDetail[]) => {
             dispatch(putBulkMealDetailsSuccessful(response));
             dispatch(stopPut());
+            return response;
         })
         .catch((error: any) => {
             dispatch(addError(error));
             dispatch(stopPut());
+            throw error;
         });
     };
 }
@@ -107,14 +111,16 @@ export function deleteBulkMealDetails(mealDetails: MealDetail[]) {
 
     return (dispatch : Function) => {
         dispatch(startDelete());
-        request
+        return request
         .then((response: MealDetail[]) => {
             dispatch(deleteBulkMealDetailsSuccessful(response));
             dispatch(stopDelete());
+            return response;
         })
         .catch((error: any) => {
             dispatch(addError(error));
             dispatch(stopDelete());
+            throw error;
         });
     };
 }
@@ -123,5 +129,15 @@ function deleteBulkMealDetailsSuccessful(response: MealDetail[]) {
     return {
         type: DELETE_BULK_MEALDETAILS_SUCCESSFUL,
         payload: response,
+    };
+}
+
+export function updateMeal(newMealDetail: NewMealDetail[], deletedMealDetail: MealDetail[], updatedMealDetail: MealDetail[]) {
+    return (dispatch: Function) => {
+        return Promise.all([
+            dispatch(postBulkMealDetails(newMealDetail)),
+            dispatch(deleteBulkMealDetails(deletedMealDetail)),
+            dispatch(putBulkMealDetails(updatedMealDetail)),
+        ]);
     };
 }
