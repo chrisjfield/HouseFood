@@ -4,6 +4,7 @@ refactor all the things (validation)
 v0.3:
 cors issue with puts and deletes
 publish using surge
+load test
 
 v1:
 Bootstrap/UI - need to make header static, need room to see autocomplete fields when page is full.

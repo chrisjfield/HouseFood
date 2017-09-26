@@ -55,6 +55,9 @@ const styles = {
         width: '60%',
         marginLeft: '20%',
     },
+    mealNames: {
+        display: 'inline-block',
+    },
 };
 
 class Meals extends React.Component<MealsProps, MealsState> {
@@ -95,10 +98,12 @@ class Meals extends React.Component<MealsProps, MealsState> {
                 <IconButton tooltip="Edit">
                     <Edit onClick={() => this.handleEdit(meal.mealid)}/>
                 </IconButton>  
-                <ListItem 
-                    primaryText={meal.name} 
-                    onClick={() => this.handleViewDetails(meal.mealid)}
-                />
+                <div style={styles.mealNames}>
+                    <ListItem 
+                        primaryText={meal.name} 
+                        onClick={() => this.handleViewDetails(meal.mealid)}
+                    />
+                </div>
             </div>
         );
     }
