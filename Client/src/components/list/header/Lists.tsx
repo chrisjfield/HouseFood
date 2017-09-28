@@ -105,17 +105,8 @@ class Lists extends React.Component<ListsProps, ListsState> {
 
     getgenerateListDialog () {
         const actions: JSX.Element[] = [
-            <FlatButton
-              label="Cancel"
-              primary={true}
-              onClick={this.handleDialogClose}
-            />,
-            <FlatButton
-              label="Generate List"
-              primary={true}
-              keyboardFocused={true}
-              onClick={this.handleGenerateList}
-            />,
+            <FlatButton label="Cancel" primary={true} onClick={this.handleDialogClose}/>,
+            <FlatButton label="Generate List" primary={true} keyboardFocused={true} onClick={this.handleGenerateList}/>,
         ];
 
         return (

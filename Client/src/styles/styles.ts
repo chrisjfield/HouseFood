@@ -22,6 +22,13 @@ const styles: { [name: string]: React.CSSProperties } = {
         maxWidth: 250,
         padding: '4px',
     },
+    search: {
+        width: '60%',
+        marginLeft: '20%',
+    },
+    mealNames: {
+        display: 'inline-block',
+    },
 };
 
 export default styles;
