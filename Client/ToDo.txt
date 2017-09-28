@@ -1,6 +1,3 @@
-v0.2:
-refactor all the things (validation)
-
 v0.3:
 cors issue with puts and deletes
 publish using surge

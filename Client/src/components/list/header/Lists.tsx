@@ -228,7 +228,6 @@ class Lists extends React.Component<ListsProps, ListsState> {
     }
 
     handleChangeListName = (event: object, newValue: string) => {
-        console.log(textHelper.toTitleCase(newValue));
         this.setState({
             generateListDetail: { ...this.state.generateListDetail, listName: textHelper.toTitleCase(newValue) },
         });

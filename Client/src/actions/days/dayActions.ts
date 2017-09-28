@@ -78,15 +78,17 @@ export function addDay(newDay: NewDay, newPeople: NewPerson[]) {
     
     return (dispatch : Function) => {
         dispatch(startPost());
-        request
+        return request
         .then((response: Day[]) => {
             dispatch(postDateSuccessful(response));
             dispatch(addPeople(newPeople, newDay.date));
             dispatch(stopPost());
+            return response;
         })
         .catch((error: any) => {
             dispatch(addError(error));
             dispatch(stopPost());
+            throw error;
         });
     };
 }
@@ -108,14 +110,16 @@ export function updateDay(dayDate: string, day: NewDay) {
     
     return (dispatch : Function) => {
         dispatch(startPut());
-        request
+        return request
         .then((response: Day) => {
             dispatch(updateDaySuccessful(response));
             dispatch(stopPut());
+            return response;
         })
         .catch((error: any) => {
             dispatch(addError(error));
             dispatch(stopPut());
+            throw error;
         });
     };
 }

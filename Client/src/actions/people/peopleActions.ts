@@ -48,15 +48,17 @@ export function addPeople(newPeople: NewPerson[], newDate: string) {
 
     return (dispatch: Function) => {
         dispatch(startPost());
-        request
+        return request
         .then((response: Person[]) => {
             dispatch(postPeopleSuccessful(response));
             dispatch(getDay(newDate));
             dispatch(stopPost());
+            return response;
         })
         .catch((error: any) => {
             dispatch(addError(error));
             dispatch(stopPost());
+            throw error;
         });
     };
 }
@@ -77,22 +79,24 @@ export function removePeople(removedPeople: Person[], newDate: string) {
 
     return (dispatch: Function) => {
         dispatch(startDelete());
-        request
+        return request
         .then((response: any) => {
-            dispatch(removePeopleSuccessful(response));
+            dispatch(removePeopleSuccessful(removedPeople));
             dispatch(getDay(newDate));
             dispatch(stopDelete());
+            return response;
         })
         .catch((error: any) => {
             dispatch(addError(error));
             dispatch(stopDelete());
+            throw error;
         });
     };
 }
 
-function removePeopleSuccessful(response: Person[]) {
+function removePeopleSuccessful(removedPeople: Person[]) {
     return {
         type: DELETE_PEOPLE_SUCCESSFUL,
-        payload: response,
+        payload: removedPeople,
     };
 }

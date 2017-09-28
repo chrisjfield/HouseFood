@@ -29,6 +29,13 @@ const styles: { [name: string]: React.CSSProperties } = {
     mealNames: {
         display: 'inline-block',
     },
+    calendarContainer: {
+        height: '85vh',
+    },
+    chips: {
+        display: 'inline-flex',
+        marginRight: '4px',
+    },
 };
 
 export default styles;
