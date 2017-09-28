@@ -1,10 +1,13 @@
 v0.3:
+add clean live db to repo
+publish API dev and live
 cors issue with puts and deletes
 publish using surge
 load test
 
 v1:
 Bootstrap/UI - need to make header static, need room to see autocomplete fields when page is full.
+re work max lengths on fields and factor out validation.
 
 v2:
 refactor API - neaten and handle errors better
