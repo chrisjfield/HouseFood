@@ -192,7 +192,7 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
         let validationMessage: string = null;
         if (!unit) {
             validationMessage = 'Please set a unit';
-        } else if (unit.length > 10) {
+        } else if (unit.length > 20) {
             validationMessage = 'Maximum unit legth is 10 characters';
         }
         
