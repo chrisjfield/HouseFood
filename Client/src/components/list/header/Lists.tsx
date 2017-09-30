@@ -268,7 +268,8 @@ class Lists extends React.Component<ListsProps, ListsState> {
                 >
                     <form onSubmit={this.handleSaveEditedList}>
                         <TextField
-                            hintText="List Name"
+                            hintText="Weekly Shop"
+                            floatingLabelText="List Name"
                             value={this.state.listEditing.name}
                             errorText={this.state.nameErrorText}
                             onChange={(event: object, newValue: string) => this.editEditedName(newValue)}
@@ -315,7 +316,8 @@ class Lists extends React.Component<ListsProps, ListsState> {
                 >
                     <form onSubmit={this.handleSaveNewList}>
                         <TextField
-                            hintText="List Name"
+                            hintText="Weekly Shop"
+                            floatingLabelText="List Name"
                             errorText={this.state.nameErrorText}
                             onChange={(event: object, newValue: string) => this.editNewName(newValue)}
                             value={this.state.newList.name}

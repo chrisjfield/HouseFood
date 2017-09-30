@@ -338,7 +338,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                         <br/>
                     </div>
                     <TextField
-                        hintText="List Name"
+                        hintText="Weekly Shop"
                         floatingLabelText="List Name"
                         value={this.state.generateListDialogListName}
                         onChange={this.handleChangeListName}
@@ -348,7 +348,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                         <br/>
                     </div>
                     <DatePicker 
-                        hintText="Start Date"
+                        hintText="2017/01/01"
                         floatingLabelText="Start Date"
                         autoOk={true} 
                         defaultDate={this.state.generateListDialogStart}
@@ -360,7 +360,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                         <br/>
                     </div>
                     <DatePicker 
-                        hintText="End Date"
+                        hintText="2017/01/07"
                         floatingLabelText="End Date"
                         autoOk={true} 
                         defaultDate={this.state.generateListDialogEnd}

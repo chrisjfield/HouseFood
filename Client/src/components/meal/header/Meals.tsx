@@ -96,7 +96,7 @@ class Meals extends React.Component<MealsProps, MealsState> {
                     <form onSubmit={this.handleSaveNewMeal}>
                         <div>
                         <TextField
-                            hintText="Meal Name"
+                            hintText="Roast Chicken"
                             floatingLabelText="Meal Name"
                             value={this.state.newMeal.name}
                             onChange={(event: object, newValue: string) => this.editNewName(newValue)}
@@ -193,7 +193,7 @@ class Meals extends React.Component<MealsProps, MealsState> {
                     <form onSubmit={this.handleSaveEditedMeal}>
                         <div>
                         <TextField
-                            hintText="Meal Name"
+                            hintText="Roast Chicken"
                             floatingLabelText="Meal Name"
                             value={this.state.mealEditing.name}
                             onChange={(event: object, newValue: string) => this.editEditedName(newValue)}
