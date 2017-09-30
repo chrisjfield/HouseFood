@@ -6,6 +6,7 @@ import { AppLoading, AppUpdating } from '../../loadingHandler';
 import { NotFound404 } from '../../errorHandler';
 
 import textHelper from '../../../helpers/textHelper';
+import validationHelper from '../../../helpers/validationHelper';
 
 import { ListDetail, NewListItem, NewListDetail, ListEditProps, ListEditState } from '../../../interfaces/listDetailInterfaces';
 import { List } from '../../../interfaces/listInterfaces';
@@ -149,12 +150,12 @@ class ListEdit extends React.Component<ListEditProps, ListEditState> {
 
     validateList = (newItems: NewListItem[], updatedItems: ListDetail[]) => {
         const invalidExistingItem: ListDetail = updatedItems
-            .find((listDetail: ListDetail) => this.validateAmount(listDetail.amount) ? true : false);
+            .find((listDetail: ListDetail) => validationHelper.validateIngredientAmount(listDetail.amount) ? true : false);
         const invalidNewItem: NewListItem = newItems
             .find((listDetail: NewListItem) => {
-                return (this.validateAmount(listDetail.amount) 
-                        || this.validateIngredientName(listDetail.ingredient) 
-                        || this.validateIngredientUnit(listDetail.unit)) 
+                return (validationHelper.validateIngredientAmount(listDetail.amount) 
+                        || validationHelper.validateIngredientName(listDetail.ingredient) 
+                        || validationHelper.validateIngredientUnit(listDetail.unit)) 
                     ? true 
                     : false;
             });
@@ -162,41 +163,6 @@ class ListEdit extends React.Component<ListEditProps, ListEditState> {
         const isValid: boolean = (!invalidExistingItem && ! invalidNewItem) ? true : false;
 
         return isValid;
-    }
-
-    validateAmount = (amount: number) => {
-        let validationMessage: string = null;
-        if (!amount) {
-            validationMessage = 'Please set a quantity';
-        } else if (amount < 0) {
-            validationMessage = 'Amount must be positive';
-        } else if (amount > 1000000) {
-            validationMessage = 'Amount must be less than 1 million';
-        }
-
-        return validationMessage;
-    }
-
-    validateIngredientName = (name: string) => {
-        let validationMessage: string = null;
-        if (!name) {
-            validationMessage = 'Please choose an ingredient';
-        } else if (name.length > 200) {
-            validationMessage = 'Maximum name legth is 200 characters';
-        }
-
-        return validationMessage;
-    }
-
-    validateIngredientUnit = (unit: string) => {
-        let validationMessage: string = null;
-        if (!unit) {
-            validationMessage = 'Please set a unit';
-        } else if (unit.length > 20) {
-            validationMessage = 'Maximum unit legth is 10 characters';
-        }
-        
-        return validationMessage;
     }
 
     cancelEdit = () => {
@@ -252,7 +218,7 @@ class ListEdit extends React.Component<ListEditProps, ListEditState> {
                     <TextField
                         defaultValue={listDetail.amount}
                         hintText="Quantity"
-                        errorText={this.validateAmount(listDetail.amount)}
+                        errorText={validationHelper.validateIngredientAmount(listDetail.amount)}
                         onChange={(event: object, newValue: string) => this.editExistingItemQuantity(listDetail.listitemid, newValue)}
                         type="number"
                     />
@@ -309,7 +275,7 @@ class ListEdit extends React.Component<ListEditProps, ListEditState> {
                         searchText={newListDetail.ingredient}
                         onUpdateInput={(searchText, dataSource) => this.editNewItemIngredient(newListDetail.uniqueKey, searchText)}
                         errorText={newListDetail.uniqueKey !== this.state.lastRowKey 
-                            ? this.validateIngredientName(newListDetail.ingredient)
+                            ? validationHelper.validateIngredientName(newListDetail.ingredient)
                             : null}
                     />
                 </TableRowColumn>
@@ -318,7 +284,7 @@ class ListEdit extends React.Component<ListEditProps, ListEditState> {
                         value={newListDetail.amount}
                         hintText="Quantity"
                         errorText={newListDetail.uniqueKey !== this.state.lastRowKey 
-                            ? this.validateAmount(newListDetail.amount)
+                            ? validationHelper.validateIngredientAmount(newListDetail.amount)
                             : null}
                         onChange={(event: object, newValue: string) => this.editNewItemQuantity(newListDetail.uniqueKey, newValue)}
                         type="number"
@@ -330,7 +296,7 @@ class ListEdit extends React.Component<ListEditProps, ListEditState> {
                         disabled={existingIngredient ? true : false}
                         hintText="Units"
                         errorText={newListDetail.uniqueKey !== this.state.lastRowKey 
-                            ? this.validateIngredientUnit(newListDetail.unit)
+                            ? validationHelper.validateIngredientUnit(newListDetail.unit)
                             : null}
                         onChange={(event: object, newValue: string) => this.editNewItemUnit(newListDetail.uniqueKey, newValue)}
                     />

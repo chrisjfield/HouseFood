@@ -10,6 +10,7 @@ import history from '../../history';
 import { AppLoading, AppUpdating } from '../loadingHandler';
 
 import textHelper from '../../helpers/textHelper';
+import validationHelper from '../../helpers/validationHelper';
 
 import { AppStore } from '../../interfaces/stateInterfaces';
 import { Person, NewPerson } from '../../interfaces/personInterfaces';
@@ -209,12 +210,8 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
     }
 
     validateMeal = (mealName: string, mealid: number) => {
-        let validationMessage: string = undefined;
-        if (!mealName) {
-            validationMessage = 'Please choose a meal.';
-        } else if (!mealid) {
-            validationMessage = 'Meal is invalid - please select a valid meal.';
-        }
+        const validationMessage: string = validationHelper.validateMeal(mealName, mealid);
+
         this.setState({ saveValidationMessage: validationMessage });
 
         return validationMessage;
@@ -392,32 +389,24 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
     }
 
     validateListName = (name: string) => {
-        let validationMessage: string = undefined;
-        if (!name) {
-            validationMessage = 'Please choose a name for the list.';
-        } else if (name.length > 200) {
-            validationMessage = 'Maximum name legth is 200 characters';
-        }
+        const validationMessage: string = validationHelper.validateListName(name);
+
         this.setState({ generateListDialogValidationMessage: validationMessage });
 
         return validationMessage;
     }
 
     validateListStart = (start: Date) => {
-        let validationMessage: string = undefined;
-        if (!start) {
-            validationMessage = 'Please choose a start date.';
-        }
+        const validationMessage: string = validationHelper.validateListStart(start);
+
         this.setState({ generateListDialogStartValidation: validationMessage });
 
         return validationMessage;
     }
 
     validateListEnd = (end: Date) => {
-        let validationMessage: string = undefined;
-        if (!end) {
-            validationMessage = 'Please choose an end date.';
-        }
+        const validationMessage: string = validationHelper.validateListEnd(end);
+
         this.setState({ generateListDialogEndValidation: validationMessage });
 
         return validationMessage;

@@ -6,6 +6,7 @@ import history from '../../../history';
 import { AppLoading, AppUpdating } from '../../loadingHandler';
 
 import textHelper from '../../../helpers/textHelper';
+import validationHelper from '../../../helpers/validationHelper';
 
 import { Meal, NewMeal, MealsProps, MealsState } from '../../../interfaces/mealInterfaces';
 import { AppStore } from '../../../interfaces/stateInterfaces';
@@ -140,12 +141,8 @@ class Meals extends React.Component<MealsProps, MealsState> {
     }
 
     validateMealName = (name: string) => {
-        let validationMessage: string = undefined;
-        if (!name) {
-            validationMessage = 'Please choose a name for the meal.';
-        } else if (name.length > 200) {
-            validationMessage = 'Maximum name legth is 200 characters';
-        }
+        const validationMessage: string = validationHelper.validateMealName(name);
+
         this.setState({ 
             nameErrorText: validationMessage,
         });
@@ -154,12 +151,8 @@ class Meals extends React.Component<MealsProps, MealsState> {
     }
 
     validateMealCategory = (category: string) => {
-        let validationMessage: string = undefined;
-        if (!category) {
-            validationMessage = 'Please choose a category for the meal.';
-        } else if (category.length > 200) {
-            validationMessage = 'Maximum category legth is 20 characters';
-        }
+        const validationMessage: string = validationHelper.validateMealCategory(category);
+        
         this.setState({ 
             categoryErrorText: validationMessage,
         });

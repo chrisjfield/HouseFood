@@ -7,7 +7,9 @@ import * as moment from 'moment';
 import history from '../../../history';
 import { AppStore } from '../../../interfaces/stateInterfaces';
 import { AppLoading, AppUpdating } from '../../loadingHandler';
+
 import textHelper from '../../../helpers/textHelper';
+import validationHelper from '../../../helpers/validationHelper';
 
 import { List, GenerateListDetail, ListsProps, ListsState } from '../../../interfaces/listInterfaces';
 import { getLists, completeList, editList, saveList } from '../../../actions/lists/listActions';
@@ -193,12 +195,8 @@ class Lists extends React.Component<ListsProps, ListsState> {
     }
 
     validateListName = (name: string) => {
-        let validationMessage: string = undefined;
-        if (!name) {
-            validationMessage = 'Please choose a name for the list.';
-        } else if (name.length > 200) {
-            validationMessage = 'Maximum name legth is 200 characters';
-        }
+        const validationMessage: string = validationHelper.validateListName(name);
+
         this.setState({ 
             generateListDialogNameValidation: validationMessage, 
             nameErrorText: validationMessage,
@@ -208,20 +206,16 @@ class Lists extends React.Component<ListsProps, ListsState> {
     }
 
     validateListStart = (start: Date) => {
-        let validationMessage: string = undefined;
-        if (!start) {
-            validationMessage = 'Please choose a start date.';
-        }
+        const validationMessage: string = validationHelper.validateListStart(start);
+
         this.setState({ generateListDialogStartValidation: validationMessage });
 
         return validationMessage;
     }
 
     validateListEnd = (end: Date) => {
-        let validationMessage: string = undefined;
-        if (!end) {
-            validationMessage = 'Please choose an end date.';
-        }
+        const validationMessage: string = validationHelper.validateListEnd(end);
+
         this.setState({ generateListDialogEndValidation: validationMessage });
 
         return validationMessage;

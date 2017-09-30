@@ -6,6 +6,7 @@ import { AppLoading, AppUpdating } from '../../loadingHandler';
 import { NotFound404 } from '../../errorHandler';
 
 import textHelper from '../../../helpers/textHelper';
+import validationHelper from '../../../helpers/validationHelper';
 
 import { MealDetail, NewMealItem, NewMealDetail, MealEditProps, MealEditState } from '../../../interfaces/mealDetailInterfaces';
 import { Meal } from '../../../interfaces/mealInterfaces';
@@ -149,12 +150,12 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
 
     validateMeal = (newItems: NewMealItem[], updatedItems: MealDetail[]) => {
         const invalidExistingItem: MealDetail = this.state.updatedMealDetails
-            .find((mealDetail: MealDetail) => this.validateAmount(mealDetail.amount) ? true : false);
+            .find((mealDetail: MealDetail) => validationHelper.validateIngredientAmount(mealDetail.amount) ? true : false);
         const invalidNewItem: NewMealItem = newItems
             .find((mealDetail: NewMealItem) => {
-                return (this.validateAmount(mealDetail.amount) 
-                        || this.validateIngredientName(mealDetail.ingredient) 
-                        || this.validateIngredientUnit(mealDetail.unit)) 
+                return (validationHelper.validateIngredientAmount(mealDetail.amount) 
+                        || validationHelper.validateIngredientName(mealDetail.ingredient) 
+                        || validationHelper.validateIngredientUnit(mealDetail.unit)) 
                     ? true 
                     : false;
             });
@@ -162,41 +163,6 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
         const isValid: boolean = (!invalidExistingItem && ! invalidNewItem) ? true : false;
 
         return isValid;
-    }
-
-    validateAmount = (amount: number) => {
-        let validationMessage: string = null;
-        if (!amount) {
-            validationMessage = 'Please set a quantity';
-        } else if (amount < 0) {
-            validationMessage = 'Amount must be positive';
-        } else if (amount > 1000000) {
-            validationMessage = 'Amount must be less than 1 million';
-        }
-
-        return validationMessage;
-    }
-
-    validateIngredientName = (name: string) => {
-        let validationMessage: string = null;
-        if (!name) {
-            validationMessage = 'Please choose an ingredient';
-        } else if (name.length > 200) {
-            validationMessage = 'Maximum name legth is 200 characters';
-        }
-
-        return validationMessage;
-    }
-
-    validateIngredientUnit = (unit: string) => {
-        let validationMessage: string = null;
-        if (!unit) {
-            validationMessage = 'Please set a unit';
-        } else if (unit.length > 20) {
-            validationMessage = 'Maximum unit legth is 10 characters';
-        }
-        
-        return validationMessage;
     }
 
     cancelEdit = () => {
@@ -252,7 +218,7 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
                     <TextField
                         defaultValue={mealDetail.amount}
                         hintText="Quantity"
-                        errorText={this.validateAmount(mealDetail.amount)}
+                        errorText={validationHelper.validateIngredientAmount(mealDetail.amount)}
                         onChange={(event: object, newValue: string) => this.editExistingItemQuantity(mealDetail.mealingredientid, newValue)}
                         type="number"
                     />
@@ -309,7 +275,7 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
                         searchText={newMealDetail.ingredient}
                         onUpdateInput={(searchText, dataSource) => this.editNewItemIngredient(newMealDetail.uniqueKey, searchText)}
                         errorText={newMealDetail.uniqueKey !== this.state.lastRowKey 
-                            ? this.validateIngredientName(newMealDetail.ingredient)
+                            ? validationHelper.validateIngredientName(newMealDetail.ingredient)
                             : null}
                     />
                 </TableRowColumn>
@@ -318,7 +284,7 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
                         value={newMealDetail.amount}
                         hintText="Quantity"
                         errorText={newMealDetail.uniqueKey !== this.state.lastRowKey 
-                            ? this.validateAmount(newMealDetail.amount)
+                            ? validationHelper.validateIngredientAmount(newMealDetail.amount)
                             : null}
                         onChange={(event: object, newValue: string) => this.editNewItemQuantity(newMealDetail.uniqueKey, newValue)}
                         type="number"
@@ -330,7 +296,7 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
                         disabled={existingIngredient ? true : false}
                         hintText="Units"
                         errorText={newMealDetail.uniqueKey !== this.state.lastRowKey 
-                            ? this.validateIngredientUnit(newMealDetail.unit)
+                            ? validationHelper.validateIngredientUnit(newMealDetail.unit)
                             : null}
                         onChange={(event: object, newValue: string) => this.editNewItemUnit(newMealDetail.uniqueKey, newValue)}
                     />
