@@ -8,6 +8,7 @@ load test
 v1:
 Bootstrap/UI - need to make header static, need room to see autocomplete fields when page is full.
 re work max lengths on fields and factor out validation.
+use Trusted_Connection=True; in connection strings instead of userId and Password
 
 v2:
 refactor API - neaten and handle errors better

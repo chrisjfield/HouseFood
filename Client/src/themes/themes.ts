@@ -1,10 +1,11 @@
 import {
   grey400,
-  grey700,
+  grey600,
+  // grey700,
   grey900,
   blue900,
-  blueGrey700,
-  blueGrey800,
+  // blueGrey700,
+  // blueGrey800,
   blueGrey900,
   red800,
 } from 'material-ui/styles/colors';
@@ -15,13 +16,13 @@ const theme: __MaterialUI.Styles.MuiTheme = getMuiTheme({
         primary1Color: blue900,
         primary2Color: blue900,
         textColor: grey400,
-        borderColor: blueGrey700,
-        disabledColor: grey900,
+        borderColor: blueGrey900,
+        disabledColor: grey600,
         pickerHeaderColor: blue900,
-        canvasColor: blueGrey900,
+        canvasColor: grey900,
+        accent1Color: grey600,
+        accent2Color: blue900,
         alternateTextColor: grey400,
-        accent2Color: blueGrey800,
-        accent3Color: grey400,
     },
     toolbar: {
         color: grey900,
@@ -31,9 +32,6 @@ const theme: __MaterialUI.Styles.MuiTheme = getMuiTheme({
     avatar: {
         backgroundColor: blue900,
         color: grey400,
-    },
-    textField: {
-        backgroundColor: grey700,
     },
     snackbar: {
         backgroundColor: red800,
