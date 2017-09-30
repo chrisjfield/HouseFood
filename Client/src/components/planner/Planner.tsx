@@ -248,6 +248,12 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
 
         return (
             <form onSubmit={this.handleChipAdd}>
+                <div style={{ height: '40px', display: 'inline-block' }}>
+                    {this.state.selectedDayPeople
+                        ? this.state.selectedDayPeople.map((person: Person) => this.createChips(person))
+                        : null}
+                </div>
+                <br/>
                 <AutoComplete
                     hintText="People attending the meal"
                     floatingLabelText="Add Person"
@@ -257,12 +263,6 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                     onUpdateInput={(searchText, dataSource) => this.applyPersonSearch(searchText)}
                 />
                 {this.props.updating ? [<AppUpdating/>] : actions}
-                <div style={{ height: '50px' }}>
-                    <br />
-                    {this.state.selectedDayPeople
-                        ? this.state.selectedDayPeople.map((person: Person) => this.createChips(person))
-                        : null}
-                </div>
             </form>
         );
     }
