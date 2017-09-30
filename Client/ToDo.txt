@@ -29,3 +29,6 @@ Adding meal ingredients breaks
 Improve tabbing / keyboard usage
 make Plan Meal button work
 Improve way buttons ripple color is set!
+
+Back button from Meal to list of meals
+What does Category mean when creating meal??

@@ -104,7 +104,7 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
             <div>
                 <Table>
                     {this.createTableHeader()}
-                    <TableBody stripedRows={true} showRowHover={true} displayRowCheckbox={false}>
+                    <TableBody stripedRows={false} showRowHover={false} displayRowCheckbox={false}>
                         {this.getTableRows()}
                     </TableBody>
                 </Table>

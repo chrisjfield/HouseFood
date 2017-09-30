@@ -86,8 +86,8 @@ class Meals extends React.Component<MealsProps, MealsState> {
 
     getNewMealDialog = () => {
         const actions: JSX.Element[] = [
-            <FlatButton key="add" type="submit" label="Add" primary={true} />,
-            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleDialogClose}/>,
+            <FlatButton key="add" type="submit" label="Add" primary={true} rippleColor={'#263238'}/>,
+            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleDialogClose} rippleColor={'#263238'}/>,
         ];
 
         return (
@@ -182,8 +182,8 @@ class Meals extends React.Component<MealsProps, MealsState> {
 
     getEditMealDialog = () => {
         const actions: JSX.Element[] = [
-            <FlatButton key="add" type="submit" label="Save" primary={true} />,
-            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleDialogClose}/>,
+            <FlatButton key="add" type="submit" label="Save" primary={true} rippleColor={'#263238'}/>,
+            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleDialogClose} rippleColor={'#263238'}/>,
         ];
 
 

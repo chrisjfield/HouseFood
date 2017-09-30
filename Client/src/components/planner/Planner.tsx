@@ -243,16 +243,13 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
 
     getAddPerson() {
         const actions = [
-            <FlatButton key="add" type="submit" label="Add" primary={true} />,
+            <FlatButton key="add" type="submit" label="Add" primary={true} rippleColor={'#263238'}/>,
         ];
 
         return (
             <form onSubmit={this.handleChipAdd}>
-                {this.state.selectedDayPeople
-                    ? this.state.selectedDayPeople.map((person: Person) => this.createChips(person))
-                    : null}
                 <AutoComplete
-                    hintText="People in for the meal"
+                    hintText="People attending the meal"
                     floatingLabelText="Add Person"
                     maxSearchResults={5}
                     searchText={this.state.selectedPeopleSearchText}
@@ -260,6 +257,12 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                     onUpdateInput={(searchText, dataSource) => this.applyPersonSearch(searchText)}
                 />
                 {this.props.updating ? [<AppUpdating/>] : actions}
+                <div style={{ height: '50px' }}>
+                    <br />
+                    {this.state.selectedDayPeople
+                        ? this.state.selectedDayPeople.map((person: Person) => this.createChips(person))
+                        : null}
+                </div>
             </form>
         );
     }
@@ -312,8 +315,14 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
 
     getgenerateListDialog () {
         const actions = [
-            <FlatButton key="generateList" label="Generate List" primary={true} keyboardFocused={true} onClick={this.handleGenerateList}/>,
-            <FlatButton key="cancel" label="Cancel" primary={true} onClick={this.handleClose}/>,
+            <FlatButton key="generateList" 
+                label="Generate List" 
+                primary={true} 
+                keyboardFocused={true} 
+                onClick={this.handleGenerateList} 
+                rippleColor={'#263238'}
+            />,
+            <FlatButton key="cancel" label="Cancel" primary={true} onClick={this.handleClose} rippleColor={'#263238'}/>,
         ];
 
         return (

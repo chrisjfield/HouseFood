@@ -175,7 +175,7 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
             <div>
                 <Table>
                     {this.createTableHeader()}
-                    <TableBody stripedRows={true} showRowHover={true} displayRowCheckbox={false}>
+                    <TableBody stripedRows={false} showRowHover={false} displayRowCheckbox={false}>
                         {this.getExistingTableRows()}
                         {this.getNewTableRows()}
                     </TableBody>

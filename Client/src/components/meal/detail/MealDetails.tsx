@@ -82,7 +82,7 @@ class MealDetails extends React.Component<MealDetailsProps, MealDetailsState> {
             <div>
                 <Table>
                     {this.createTableHeader()}
-                    <TableBody stripedRows={true} showRowHover={true} displayRowCheckbox={false}>
+                    <TableBody stripedRows={false} showRowHover={false} displayRowCheckbox={false}>
                         {this.getTableRows()}
                     </TableBody>
                 </Table>
