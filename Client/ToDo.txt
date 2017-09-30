@@ -28,3 +28,4 @@ Category - when validates moves field strangely
 Adding meal ingredients breaks
 Improve tabbing / keyboard usage
 make Plan Meal button work
+Improve way buttons ripple color is set!
