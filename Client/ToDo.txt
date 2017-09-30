@@ -37,3 +37,4 @@ generate list not title case
 think about center align more
 complete list button ripple wrong color
 add more tiles
+disconnect between generate list and setting food for days? 
