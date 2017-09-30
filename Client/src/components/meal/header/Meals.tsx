@@ -65,7 +65,7 @@ class Meals extends React.Component<MealsProps, MealsState> {
         return (
             <div>
                 <br/>
-                <FlatButton label="Add Meal" primary={true} onClick={this.openNewMealDialog}/>
+                <FlatButton label="Add Meal" primary={true} onClick={this.openNewMealDialog} rippleColor={'#263238'}/>
                 {this.state.newMeal ? this.getNewMealDialog() : null}
                 {this.state.mealEditing ? this.getEditMealDialog() : null}
                 {this.createSearch()}

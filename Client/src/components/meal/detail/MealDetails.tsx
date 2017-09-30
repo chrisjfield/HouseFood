@@ -65,7 +65,7 @@ class MealDetails extends React.Component<MealDetailsProps, MealDetailsState> {
         return (
             <div>
                 <br/>
-                <FlatButton label="Edit Meal" primary={true} onClick={this.editMeal}/>
+                <FlatButton label="Edit Meal" primary={true} onClick={this.editMeal} rippleColor={'#263238'}/>
                 <h2 style={styles.editHeading}>{this.state.filterdMeal.name}</h2>
                 {this.createTable()}
             </div>

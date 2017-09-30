@@ -96,8 +96,8 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
                             <h2 style={styles.editHeading}>{this.state.filterdMeal.name}</h2>
                         </div>)
                     :  (<div>
-                            <FlatButton label="Save" primary={true} onClick={this.saveMeal}/>
-                            <FlatButton label="Cancel" secondary={true} onClick={this.cancelEdit}/>
+                            <FlatButton label="Save" primary={true} onClick={this.saveMeal} rippleColor={'#263238'}/>
+                            <FlatButton label="Cancel" secondary={true} onClick={this.cancelEdit} rippleColor={'#263238'}/>
                             <h2 style={styles.editHeading}>{this.state.filterdMeal.name}</h2>
                         </div>)
                 }

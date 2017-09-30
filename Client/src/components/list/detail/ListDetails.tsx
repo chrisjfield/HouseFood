@@ -90,7 +90,7 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
 
     getCompleteList = () => {
         return (
-            <FlatButton label="Edit List" primary={true} onClick={this.editList} />
+            <FlatButton label="Edit List" primary={true} onClick={this.editList} rippleColor={'#263238'} />
         );
     }
 

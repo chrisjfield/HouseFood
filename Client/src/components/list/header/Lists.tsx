@@ -65,8 +65,8 @@ class Lists extends React.Component<ListsProps, ListsState> {
                         onToggle={(event, isInputChecked) => this.setToggle(isInputChecked)}
                     />
                 </div>
-                <FlatButton label="Custom List" primary={true} onClick={this.openNewListDialog}/>
-                <FlatButton label="Auto Generate List" primary={true} onClick={this.openGenerateListDialog}/>
+                <FlatButton label="Custom List" primary={true} onClick={this.openNewListDialog} rippleColor={'#263238'}/>
+                <FlatButton label="Auto Generate List" primary={true} onClick={this.openGenerateListDialog} rippleColor={'#263238'}/>
                 {this.state.generateListDialogOpen ? this.getgenerateListDialog() : null}
                 {this.state.editListDialogOpen ? this.getEditListDialog() : null}
                 {this.state.newListDialogOpen ? this.getNewListDialog() : null}
@@ -107,8 +107,8 @@ class Lists extends React.Component<ListsProps, ListsState> {
 
     getgenerateListDialog () {
         const actions: JSX.Element[] = [
-            <FlatButton label="Generate List" primary={true} keyboardFocused={true} onClick={this.handleGenerateList}/>,
-            <FlatButton label="Cancel" secondary={true} onClick={this.handleDialogClose}/>,
+            <FlatButton label="Generate List" primary={true} onClick={this.handleGenerateList} rippleColor={'#263238'}/>,
+            <FlatButton label="Cancel" secondary={true} onClick={this.handleDialogClose} rippleColor={'#263238'}/>,
         ];
 
         return (

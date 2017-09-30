@@ -119,8 +119,8 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
 
     getEditDialog () {
         const actions = [
-            <FlatButton label="Save" primary={true} keyboardFocused={true} onClick={this.handleSave}/>,
-            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleClose}/>,
+            <FlatButton label="Save" primary={true} onClick={this.handleSave} rippleColor={'#263238'}/>,
+            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleClose} rippleColor={'#263238'}/>,
         ];
 
         return (
