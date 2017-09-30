@@ -20,3 +20,14 @@ v3:
 clever pull back of data (not just all - see what it does pull {profiler/graphql})
 default items section - ablity too add
 recipie (plus cooking time etc)
+
+
+
+How to: 
+plan a meal for a day? - needs a button on the home screen
+
+Bugs: 
+Category - when validates moves field strangely
+
+Adding meal ingredients breaks
+Improve tabbing / keyboard usage

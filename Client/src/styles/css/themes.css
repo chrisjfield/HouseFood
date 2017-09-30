@@ -1,10 +1,27 @@
 html {
-  font-family: 'Roboto', sans-serif;
-  color: #004989;
+  font-family: "Roboto", sans-serif;
+  color: #0d47a1;
   background-color: #212121;
 }
 
 input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 1000px #212121 inset;
   -webkit-text-fill-color: #bdbdbd;
+}
+
+.rbc-today {
+  background-color: #263238;
+}
+
+.rbc-toolbar button {
+  color: #0d47a1;
+}
+
+.rbc-toolbar button:active,
+.rbc-toolbar button:focus,
+.rbc-toolbar button:hover,
+.rbc-toolbar button:visited,
+.rbc-toolbar button:active:focus {
+  background-color: #263238;
+  color: #0d47a1;
 }
