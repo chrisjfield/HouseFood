@@ -120,7 +120,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
     getEditDialog () {
         const actions = [
             <FlatButton label="Save" primary={true} keyboardFocused={true} onClick={this.handleSave}/>,
-            <FlatButton key="cancel" label="Cancel" primary={true} onClick={this.handleClose}/>,
+            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleClose}/>,
         ];
 
         return (
@@ -135,7 +135,8 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                         <br/>
                     </div>
                     <AutoComplete
-                        hintText="Select Meal"
+                        hintText="Auto completes from your meals"
+                        floatingLabelText="Select Meal"
                         maxSearchResults={5}
                         dataSource={this.state.searchTerms}
                         searchText={this.state.selectedSearchText}
@@ -242,7 +243,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
 
     getAddPerson() {
         const actions = [
-            <FlatButton key="add" type="submit" label="Add" />,
+            <FlatButton key="add" type="submit" label="Add" primary={true} />,
         ];
 
         return (
@@ -250,11 +251,9 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                 {this.state.selectedDayPeople
                     ? this.state.selectedDayPeople.map((person: Person) => this.createChips(person))
                     : null}
-                <div>
-                    <br/>
-                </div>
                 <AutoComplete
-                    hintText="Add Person"
+                    hintText="People in for the meal"
+                    floatingLabelText="Add Person"
                     maxSearchResults={5}
                     searchText={this.state.selectedPeopleSearchText}
                     dataSource={this.state.searchPeople}
@@ -331,6 +330,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                     </div>
                     <TextField
                         hintText="List Name"
+                        floatingLabelText="List Name"
                         value={this.state.generateListDialogListName}
                         onChange={this.handleChangeListName}
                         errorText={this.state.generateListDialogValidationMessage}
@@ -339,7 +339,8 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                         <br/>
                     </div>
                     <DatePicker 
-                        hintText="Start Date" 
+                        hintText="Start Date"
+                        floatingLabelText="Start Date"
                         autoOk={true} 
                         defaultDate={this.state.generateListDialogStart}
                         onChange={this.handleChangeStartDate}
@@ -350,7 +351,8 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                         <br/>
                     </div>
                     <DatePicker 
-                        hintText="End Date" 
+                        hintText="End Date"
+                        floatingLabelText="End Date"
                         autoOk={true} 
                         defaultDate={this.state.generateListDialogEnd}
                         onChange={this.handleChangeEndDate}

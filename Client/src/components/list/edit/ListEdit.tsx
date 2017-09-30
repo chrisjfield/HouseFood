@@ -97,7 +97,7 @@ class ListEdit extends React.Component<ListEditProps, ListEditState> {
                         </div>)
                     :  (<div>
                             <FlatButton label="Save" primary={true} onClick={this.saveList}/>
-                            <FlatButton label="Cancel" primary={true} onClick={this.cancelEdit}/>
+                            <FlatButton label="Cancel" secondary={true} onClick={this.cancelEdit}/>
                             <h2 style={styles.editHeading}>{this.state.filterdList.name}</h2>
                         </div>)
                 }

@@ -97,7 +97,7 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
                         </div>)
                     :  (<div>
                             <FlatButton label="Save" primary={true} onClick={this.saveMeal}/>
-                            <FlatButton label="Cancel" primary={true} onClick={this.cancelEdit}/>
+                            <FlatButton label="Cancel" secondary={true} onClick={this.cancelEdit}/>
                             <h2 style={styles.editHeading}>{this.state.filterdMeal.name}</h2>
                         </div>)
                 }

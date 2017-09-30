@@ -56,7 +56,7 @@ class Lists extends React.Component<ListsProps, ListsState> {
     getShoppingLists () {
         return (
             <div>
-                <br/>
+                <h3> Shopping Lists </h3>
                 <div style={styles.toggle}>
                     <Toggle 
                         label="Show Completed"
@@ -65,8 +65,8 @@ class Lists extends React.Component<ListsProps, ListsState> {
                         onToggle={(event, isInputChecked) => this.setToggle(isInputChecked)}
                     />
                 </div>
-                <FlatButton label="Add New List" primary={true} onClick={this.openNewListDialog}/>
-                <FlatButton label="Generate List" primary={true} onClick={this.openGenerateListDialog}/>
+                <FlatButton label="Custom List" primary={true} onClick={this.openNewListDialog}/>
+                <FlatButton label="Auto Generate List" primary={true} onClick={this.openGenerateListDialog}/>
                 {this.state.generateListDialogOpen ? this.getgenerateListDialog() : null}
                 {this.state.editListDialogOpen ? this.getEditListDialog() : null}
                 {this.state.newListDialogOpen ? this.getNewListDialog() : null}
@@ -107,8 +107,8 @@ class Lists extends React.Component<ListsProps, ListsState> {
 
     getgenerateListDialog () {
         const actions: JSX.Element[] = [
-            <FlatButton label="Cancel" primary={true} onClick={this.handleDialogClose}/>,
             <FlatButton label="Generate List" primary={true} keyboardFocused={true} onClick={this.handleGenerateList}/>,
+            <FlatButton label="Cancel" secondary={true} onClick={this.handleDialogClose}/>,
         ];
 
         return (
@@ -119,12 +119,13 @@ class Lists extends React.Component<ListsProps, ListsState> {
                     open={this.state.generateListDialogOpen}
                     onRequestClose={this.handleDialogClose}
                 >
-                Would you like to generate a shopping list for the following date range?
+                Make a shopping list for the following date range
                     <div>
                         <br/>
                     </div>
                     <TextField
-                        hintText="List Name"
+                        hintText="Weekly Shop"
+                        floatingLabelText="List Name"
                         value={this.state.generateListDetail.listName}
                         onChange={this.handleChangeListName}
                         errorText={this.state.generateListDialogNameValidation}
@@ -134,6 +135,7 @@ class Lists extends React.Component<ListsProps, ListsState> {
                     </div>
                     <DatePicker 
                         hintText="Start Date" 
+                        floatingLabelText="Start Date"
                         autoOk={true} 
                         defaultDate={this.state.generateListDetail.startDate}
                         onChange={this.handleChangeStartDate}
@@ -144,7 +146,8 @@ class Lists extends React.Component<ListsProps, ListsState> {
                         <br/>
                     </div>
                     <DatePicker 
-                        hintText="End Date" 
+                        hintText="End Date"
+                        floatingLabelText="End Date"
                         autoOk={true} 
                         defaultDate={this.state.generateListDetail.endDate}
                         onChange={this.handleChangeEndDate}
@@ -252,8 +255,8 @@ class Lists extends React.Component<ListsProps, ListsState> {
 
     getEditListDialog = () => {
         const actions: JSX.Element[] = [
-            <FlatButton key="save" type="submit" label="Save" />,
-            <FlatButton key="cancel" label="Cancel" primary={true} onClick={this.handleDialogClose}/>,
+            <FlatButton key="save" type="submit" label="Save" primary={true} />,
+            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleDialogClose}/>,
         ];
 
         return (
@@ -299,8 +302,8 @@ class Lists extends React.Component<ListsProps, ListsState> {
 
     getNewListDialog = () => {
         const actions: JSX.Element[] = [
-            <FlatButton key="add" type="submit" label="Add" />,
-            <FlatButton key="cancel" label="Cancel" primary={true} onClick={this.handleDialogClose}/>,
+            <FlatButton key="add" type="submit" label="Add" primary={true} />,
+            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleDialogClose}/>,
         ];
 
         return (

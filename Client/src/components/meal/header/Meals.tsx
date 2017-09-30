@@ -86,27 +86,33 @@ class Meals extends React.Component<MealsProps, MealsState> {
 
     getNewMealDialog = () => {
         const actions: JSX.Element[] = [
-            <FlatButton key="add" type="submit" label="Add" />,
-            <FlatButton key="cancel" label="Cancel" primary={true} onClick={this.handleDialogClose}/>,
+            <FlatButton key="add" type="submit" label="Add" primary={true} />,
+            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleDialogClose}/>,
         ];
 
         return (
             <div>
                 <Dialog title="Create Meal" open={this.state.newMealDialogOpen} onRequestClose={this.handleDialogClose}>
                     <form onSubmit={this.handleSaveNewMeal}>
+                        <div>
                         <TextField
                             hintText="Meal Name"
+                            floatingLabelText="Meal Name"
                             value={this.state.newMeal.name}
                             onChange={(event: object, newValue: string) => this.editNewName(newValue)}
                             errorText={this.state.nameErrorText}
                         />
+                        </div>
+                        <div>
                         <AutoComplete
                             hintText="Category"
+                            floatingLabelText="Category"
                             maxSearchResults={5}
                             dataSource={this.state.categories}
                             onUpdateInput={(searchText: string) => this.editNewCategory(searchText)}
                             errorText={this.state.categoryErrorText}
                         />
+                        </div>
                         {this.props.updating ? [<AppUpdating/>] : actions}
                     </form>
                 </Dialog>
@@ -176,8 +182,8 @@ class Meals extends React.Component<MealsProps, MealsState> {
 
     getEditMealDialog = () => {
         const actions: JSX.Element[] = [
-            <FlatButton key="add" type="submit" label="Save" />,
-            <FlatButton key="cancel" label="Cancel" primary={true} onClick={this.handleDialogClose}/>,
+            <FlatButton key="add" type="submit" label="Save" primary={true} />,
+            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleDialogClose}/>,
         ];
 
 
@@ -185,20 +191,26 @@ class Meals extends React.Component<MealsProps, MealsState> {
             <div>
                 <Dialog title="Edit Meal" open={this.state.editMealDialogOpen} onRequestClose={this.handleDialogClose}>
                     <form onSubmit={this.handleSaveEditedMeal}>
+                        <div>
                         <TextField
                             hintText="Meal Name"
+                            floatingLabelText="Meal Name"
                             value={this.state.mealEditing.name}
                             onChange={(event: object, newValue: string) => this.editEditedName(newValue)}
                             errorText={this.state.nameErrorText}
                         />
+                        </div>
+                        <div>
                         <AutoComplete
                             hintText="Category"
+                            floatingLabelText="Category"
                             maxSearchResults={5}
                             searchText={this.state.mealEditing.category}
                             dataSource={this.state.categories}
                             onUpdateInput={(searchText: string) => this.editEditedCategory(searchText)}
                             errorText={this.state.categoryErrorText}
                         />
+                        </div>
                         {this.props.updating ? [<AppUpdating/>] : actions}
                     </form>
                 </Dialog>

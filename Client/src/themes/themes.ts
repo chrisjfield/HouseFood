@@ -1,11 +1,9 @@
 import {
   grey400,
   grey600,
-  // grey700,
   grey900,
   blue900,
-  // blueGrey700,
-  // blueGrey800,
+  blueGrey800,
   blueGrey900,
   red800,
 } from 'material-ui/styles/colors';
@@ -36,6 +34,11 @@ const theme: __MaterialUI.Styles.MuiTheme = getMuiTheme({
     },
     snackbar: {
         backgroundColor: red800,
+    },
+    tableRow: {
+        hoverColor: blueGrey800,
+        selectedColor: blueGrey800,
+        stripeColor: blueGrey900,
     },
 });
 
