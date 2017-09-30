@@ -176,12 +176,14 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
               label="Cancel"
               primary={true}
               onClick={this.handleCompleteDialogClose}
+              rippleColor={'#263238'}
             />,
             <FlatButton
               label="Complete List"
               primary={true}
               keyboardFocused={true}
               onClick={this.handleCompleteDialogComplete}
+              rippleColor={'#263238'}
             />,
         ];
 

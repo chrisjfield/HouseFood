@@ -175,7 +175,7 @@ class ListEdit extends React.Component<ListEditProps, ListEditState> {
             <div>
                 <Table>
                     {this.createTableHeader()}
-                    <TableBody stripedRows={true} showRowHover={true} displayRowCheckbox={false}>
+                    <TableBody stripedRows={false} showRowHover={false} displayRowCheckbox={false}>
                         {this.getExistingTableRows()}
                         {this.getNewTableRows()}
                     </TableBody>

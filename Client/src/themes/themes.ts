@@ -3,7 +3,6 @@ import {
   grey600,
   grey900,
   blue900,
-  blueGrey800,
   blueGrey900,
   red800,
 } from 'material-ui/styles/colors';
@@ -36,10 +35,10 @@ const theme: __MaterialUI.Styles.MuiTheme = getMuiTheme({
         backgroundColor: red800,
     },
     tableRow: {
-        hoverColor: blueGrey800,
-        selectedColor: blueGrey800,
+        hoverColor: blueGrey900,
+        selectedColor: blueGrey900,
         stripeColor: blueGrey900,
     },
 });
-// ED! blueGrey900 for button focus color!
+
 export default theme;

@@ -322,7 +322,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                 onClick={this.handleGenerateList} 
                 rippleColor={'#263238'}
             />,
-            <FlatButton key="cancel" label="Cancel" primary={true} onClick={this.handleClose} rippleColor={'#263238'}/>,
+            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleClose} rippleColor={'#263238'}/>,
         ];
 
         return (

@@ -23,12 +23,17 @@ recipie (plus cooking time etc)
 
 
 Bugs: 
-Category - when validates moves field strangely
 
 Adding meal ingredients breaks
 Improve tabbing / keyboard usage
 make Plan Meal button work
+Meal name links to meal from same screen
 Improve way buttons ripple color is set!
 
 Back button from Meal to list of meals
-What does Category mean when creating meal??
+What does Category mean when creating meal?? - searchable user defined key
+generate list not title case
+
+think about center align more
+complete list button ripple wrong color
+add more tiles

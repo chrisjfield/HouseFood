@@ -96,7 +96,7 @@ class Meals extends React.Component<MealsProps, MealsState> {
                     <form onSubmit={this.handleSaveNewMeal}>
                         <div>
                         <TextField
-                            hintText="Roast Chicken"
+                            hintText="Spaghetti Bolognese"
                             floatingLabelText="Meal Name"
                             value={this.state.newMeal.name}
                             onChange={(event: object, newValue: string) => this.editNewName(newValue)}
@@ -105,7 +105,7 @@ class Meals extends React.Component<MealsProps, MealsState> {
                         </div>
                         <div>
                         <AutoComplete
-                            hintText="Category"
+                            hintText="Type of meal"
                             floatingLabelText="Category"
                             maxSearchResults={5}
                             dataSource={this.state.categories}
@@ -186,14 +186,13 @@ class Meals extends React.Component<MealsProps, MealsState> {
             <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleDialogClose} rippleColor={'#263238'}/>,
         ];
 
-
         return (
             <div>
                 <Dialog title="Edit Meal" open={this.state.editMealDialogOpen} onRequestClose={this.handleDialogClose}>
                     <form onSubmit={this.handleSaveEditedMeal}>
                         <div>
                         <TextField
-                            hintText="Roast Chicken"
+                            hintText="Spaghetti Bolognese"
                             floatingLabelText="Meal Name"
                             value={this.state.mealEditing.name}
                             onChange={(event: object, newValue: string) => this.editEditedName(newValue)}
@@ -202,7 +201,7 @@ class Meals extends React.Component<MealsProps, MealsState> {
                         </div>
                         <div>
                         <AutoComplete
-                            hintText="Category"
+                            hintText="Type of meal"
                             floatingLabelText="Category"
                             maxSearchResults={5}
                             searchText={this.state.mealEditing.category}
