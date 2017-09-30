@@ -32,4 +32,3 @@ Improve way buttons ripple color is set!
 
 Back button from Meal to list of meals
 What does Category mean when creating meal??
-calendar selected stuff color clearer

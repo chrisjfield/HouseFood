@@ -10,7 +10,7 @@ input:-webkit-autofill {
 }
 
 .rbc-today {
-  background-color: #263238;
+  background-color: #424242;
 }
 
 .rbc-toolbar button {
@@ -29,4 +29,8 @@ input:-webkit-autofill {
 .rbc-event, .rbc-event.rbc-selected {
   background-color: #0d47a1;
   color: #BDBDBD;
+}
+
+.rbc-day-bg.rbc-selected-cell {
+  background-color: #263238;
 }
