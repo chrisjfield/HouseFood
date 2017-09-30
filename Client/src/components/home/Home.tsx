@@ -19,6 +19,7 @@ import { getPeople } from '../../actions/people/peopleActions';
 import { Card, CardText } from 'material-ui/Card';
 import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
+import FlatButton from 'material-ui/FlatButton';
 
 import styles from '../../styles';
 
@@ -60,20 +61,32 @@ class Home extends React.Component<HomeProps> {
             <Card key={moment(rowDate).day().toString()}>
                 <CardText>
                     <h3>{<Moment format="dddd - Do MMMM" date={rowDate}/>}</h3>
-                    {noMealMessage ? noMealMessage : this.getCardText(people, meal)}
+                    {noMealMessage ? this.getAddMealOption(noMealMessage) : this.getCardText(people, meal)}
                 </CardText>
             </Card>
         );
     }
 
+    getAddMealOption(noMealMessage: string) {
+        // this.props.history.push("/Meal")
+        return (
+            <div> 
+                { noMealMessage } 
+                <span>
+                <FlatButton label="Plan meal" primary={true} rippleColor={'#263238'}/>
+                </span>
+            </div>
+        );
+    }
+
     getCardText(people: Person[], meal: string) {
-        const mealText: string = people.length > 1 ? 'are in for ' : 'is in for ';
+        const mealText: string = ' with ';
 
         return (
             <div>
-                {people.map((person: Person) => this.getPerson(person))}
+                <b style={{ color: '#0D47A1' }}>{meal}</b>
                 {mealText}
-                <b>{meal}</b>
+                {people.map((person: Person) => this.getPerson(person))}
             </div>
         );
     }
