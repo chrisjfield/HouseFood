@@ -6,11 +6,11 @@ need room to see autocomplete fields when page is full.
 BBQ uppercase
 Generate List with name 01/10/17 errors on concat in list reducer
 Order people in for meal
-Refresh button on shopping list
 Scrollable div for mobile
 Entering quantities, backspace doesn't clear 0 see house money
 Increase field lengths on units
 Quantity should be decimal
+persist on mobile causes refresh issue.
 
 v1:
 Mobile testing
