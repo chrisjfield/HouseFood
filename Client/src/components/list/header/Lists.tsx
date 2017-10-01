@@ -65,8 +65,8 @@ class Lists extends React.Component<ListsProps, ListsState> {
                         onToggle={(event, isInputChecked) => this.setToggle(isInputChecked)}
                     />
                 </div>
-                <FlatButton label="Custom List" primary={true} onClick={this.openNewListDialog} rippleColor={'#263238'}/>
-                <FlatButton label="Auto Generate List" primary={true} onClick={this.openGenerateListDialog} rippleColor={'#263238'}/>
+                <FlatButton label="Custom List" primary={true} onClick={this.openNewListDialog}/>
+                <FlatButton label="Auto Generate List" primary={true} onClick={this.openGenerateListDialog}/>
                 {this.state.generateListDialogOpen ? this.getgenerateListDialog() : null}
                 {this.state.editListDialogOpen ? this.getEditListDialog() : null}
                 {this.state.newListDialogOpen ? this.getNewListDialog() : null}
@@ -107,8 +107,8 @@ class Lists extends React.Component<ListsProps, ListsState> {
 
     getgenerateListDialog () {
         const actions: JSX.Element[] = [
-            <FlatButton label="Generate List" primary={true} onClick={this.handleGenerateList} rippleColor={'#263238'}/>,
-            <FlatButton label="Cancel" secondary={true} onClick={this.handleDialogClose} rippleColor={'#263238'}/>,
+            <FlatButton label="Generate List" primary={true} onClick={this.handleGenerateList}/>,
+            <FlatButton label="Cancel" secondary={true} onClick={this.handleDialogClose}/>,
         ];
 
         return (
@@ -255,8 +255,8 @@ class Lists extends React.Component<ListsProps, ListsState> {
 
     getEditListDialog = () => {
         const actions: JSX.Element[] = [
-            <FlatButton key="save" type="submit" label="Save" primary={true} rippleColor={'#263238'}/>,
-            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleDialogClose} rippleColor={'#263238'}/>,
+            <FlatButton key="save" type="submit" label="Save" primary={true}/>,
+            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleDialogClose}/>,
         ];
 
         return (
@@ -303,8 +303,8 @@ class Lists extends React.Component<ListsProps, ListsState> {
 
     getNewListDialog = () => {
         const actions: JSX.Element[] = [
-            <FlatButton key="add" type="submit" label="Add" primary={true} rippleColor={'#263238'}/>,
-            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleDialogClose} rippleColor={'#263238'}/>,
+            <FlatButton key="add" type="submit" label="Add" primary={true}/>,
+            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleDialogClose}/>,
         ];
 
         return (
@@ -352,14 +352,8 @@ class Lists extends React.Component<ListsProps, ListsState> {
 
     getCompleteListDialog = () => {
         const actions = [
-            <FlatButton key="cancel" label="Cancel" primary={true} onClick={this.handleDialogClose} rippleColor={'#263238'}/>,
-            <FlatButton key="complete" 
-                label="Complete" 
-                primary={true} 
-                keyboardFocused={true} 
-                onClick={this.handleCompleteDialogComplete} 
-                rippleColor={'#263238'}
-            />,
+            <FlatButton key="cancel" label="Cancel" primary={true} onClick={this.handleDialogClose}/>,
+            <FlatButton key="complete" label="Complete" primary={true} keyboardFocused={true} onClick={this.handleComplete}/>,
         ];
 
         return (
@@ -377,7 +371,7 @@ class Lists extends React.Component<ListsProps, ListsState> {
         );
     }
 
-    handleCompleteDialogComplete = () => {
+    handleComplete = () => {
         this.props.dispatch(completeList(this.state.activeList))
         .then((response: List) => {
             this.setState({ 

@@ -79,19 +79,23 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
     }
 
     getListDetails = () => {
+        const buttons: JSX.Element[] = [
+            <FlatButton label="Return to Lists" primary={true} onClick={this.goToLists}/>,
+            <FlatButton label="Edit List" primary={true} onClick={this.editList}/>,
+        ];
+        
         return (
             <div>
-                {!this.state.listComplete ? this.getCompleteList() : null}
+                {!this.state.listComplete ? buttons : null}
                 <h2 style={styles.editHeading}>{this.state.filterdList.name}</h2>
                 {this.createTable()}
             </div>
         );
     }
 
-    getCompleteList = () => {
-        return (
-            <FlatButton label="Edit List" primary={true} onClick={this.editList} rippleColor={'#263238'} />
-        );
+    goToLists = () => {
+        const url: string = '/List/Header';
+        this.props.history.push(url);
     }
 
     editList = () => {
@@ -172,19 +176,8 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
 
     isCompleted = () => {
         const actions: JSX.Element[] = [
-            <FlatButton
-              label="Cancel"
-              primary={true}
-              onClick={this.handleCompleteDialogClose}
-              rippleColor={'#263238'}
-            />,
-            <FlatButton
-              label="Complete List"
-              primary={true}
-              keyboardFocused={true}
-              onClick={this.handleCompleteDialogComplete}
-              rippleColor={'#263238'}
-            />,
+            <FlatButton key="cancel" label="Cancel" primary={true} onClick={this.handleCompleteDialogClose}/>,
+            <FlatButton key="complete" label="Complete List" primary={true} keyboardFocused={true} onClick={this.handleComplete}/>,
         ];
 
         return (
@@ -208,7 +201,7 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
         });
     }
 
-    handleCompleteDialogComplete = () => {
+    handleComplete = () => {
         this.props.dispatch(completeList(this.state.filterdList))
         .then((response: List) => {
             this.setState({ 

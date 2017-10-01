@@ -65,11 +65,17 @@ class MealDetails extends React.Component<MealDetailsProps, MealDetailsState> {
         return (
             <div>
                 <br/>
-                <FlatButton label="Edit Meal" primary={true} onClick={this.editMeal} rippleColor={'#263238'}/>
+                <FlatButton label="Return to Meals" primary={true} onClick={this.goToMeals}/>
+                <FlatButton label="Edit Meal" primary={true} onClick={this.editMeal}/>
                 <h2 style={styles.editHeading}>{this.state.filterdMeal.name}</h2>
                 {this.createTable()}
             </div>
         );
+    }
+
+    goToMeals = () => {
+        const url: string = '/Meal/Header';
+        this.props.history.push(url);
     }
 
     editMeal = () => {

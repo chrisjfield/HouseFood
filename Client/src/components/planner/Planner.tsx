@@ -105,7 +105,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
             <div style={styles.calendarContainer}>
                 <br/>
                 {this.getEditDialog()}
-                {this.getgenerateListDialog()}
+                {this.getGenerateListDialog()}
                 <BigCalendar
                     selectable={true}
                     events={this.state.calendarView}
@@ -119,8 +119,8 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
 
     getEditDialog () {
         const actions = [
-            <FlatButton label="Save" primary={true} onClick={this.handleSave} rippleColor={'#263238'}/>,
-            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleClose} rippleColor={'#263238'}/>,
+            <FlatButton label="Save" primary={true} onClick={this.handleSave}/>,
+            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleClose}/>,
         ];
 
         return (
@@ -243,7 +243,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
 
     getAddPerson() {
         const actions = [
-            <FlatButton key="add" type="submit" label="Add" primary={true} rippleColor={'#263238'}/>,
+            <FlatButton key="add" type="submit" label="Add" primary={true}/>,
         ];
 
         return (
@@ -293,7 +293,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
 
     createChips (person: Person) {
         return (
-            <Chip key={person.person} style={styles.chips} onRequestDelete={() => this.handleChipDelete(person.person)}>
+            <Chip key={person.person} style={styles.chip} onRequestDelete={() => this.handleChipDelete(person.person)}>
                 <Avatar size={32}>{textHelper.toTitleCase(person.person).charAt(0)}</Avatar>
                 {person.person}
             </Chip>
@@ -313,16 +313,10 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
         });
     }
 
-    getgenerateListDialog () {
+    getGenerateListDialog () {
         const actions = [
-            <FlatButton key="generateList" 
-                label="Generate List" 
-                primary={true} 
-                keyboardFocused={true} 
-                onClick={this.handleGenerateList} 
-                rippleColor={'#263238'}
-            />,
-            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleClose} rippleColor={'#263238'}/>,
+            <FlatButton key="generate" label="Generate List" primary={true} keyboardFocused={true} onClick={this.handleGenerateList}/>,
+            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleClose}/>,
         ];
 
         return (

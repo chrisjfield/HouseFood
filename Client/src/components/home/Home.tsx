@@ -59,7 +59,7 @@ class Home extends React.Component<HomeProps> {
 
         return (
             <Card key={moment(rowDate).day().toString()}>
-                <CardText>
+                <CardText style={styles.cardText}>
                     <h3>{<Moment format="dddd - Do MMMM" date={rowDate}/>}</h3>
                     {noMealMessage ? this.getAddMealOption(noMealMessage) : this.getCardText(people, meal)}
                 </CardText>
@@ -73,7 +73,7 @@ class Home extends React.Component<HomeProps> {
             <div> 
                 { noMealMessage } 
                 <span>
-                <FlatButton label="Plan meal" primary={true} rippleColor={'#263238'}/>
+                <FlatButton label="Plan meal" primary={true}/>
                 </span>
             </div>
         );

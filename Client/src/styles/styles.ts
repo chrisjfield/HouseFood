@@ -32,9 +32,9 @@ const styles: { [name: string]: React.CSSProperties } = {
     calendarContainer: {
         height: '85vh',
     },
-    chips: {
-        display: 'inline-flex',
-        marginRight: '4px',
+    cardText: {
+        paddingTop: '8px',
+        paddingBottom: '8px',
     },
 };
 

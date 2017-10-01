@@ -1,13 +1,13 @@
 v0.3:
 add clean live db to repo
-publish API dev and live
-cors issue with puts and deletes
 publish using surge
 load test
 
 v1:
 Bootstrap/UI - need to make header static, need room to see autocomplete fields when page is full.
-re work max lengths on fields and factor out validation.
+think about center align more
+Improve tabbing / keyboard usage
+re-work max lengths on fields.
 use Trusted_Connection=True; in connection strings instead of userId and Password
 
 v2:
@@ -24,17 +24,10 @@ recipie (plus cooking time etc)
 
 Bugs: 
 
-Adding meal ingredients breaks
-Improve tabbing / keyboard usage
+generate list not title case
+to title case on units of meals & lists
+
 make Plan Meal button work
 Meal name links to meal from same screen
-Improve way buttons ripple color is set!
 
-Back button from Meal to list of meals
-What does Category mean when creating meal?? - searchable user defined key
-generate list not title case
-
-think about center align more
-complete list button ripple wrong color
-add more tiles
-disconnect between generate list and setting food for days? 
+app updating - key issue

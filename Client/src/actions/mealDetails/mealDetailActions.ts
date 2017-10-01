@@ -113,7 +113,7 @@ export function deleteBulkMealDetails(mealDetails: MealDetail[]) {
         dispatch(startDelete());
         return request
         .then((response: MealDetail[]) => {
-            dispatch(deleteBulkMealDetailsSuccessful(response));
+            dispatch(deleteBulkMealDetailsSuccessful(mealDetails));
             dispatch(stopDelete());
             return response;
         })
