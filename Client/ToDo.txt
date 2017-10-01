@@ -1,17 +1,36 @@
-v1:
-Bootstrap/UI - need to make header static, need room to see autocomplete fields when page is full.
-think about center align more
-Improve tabbing / keyboard usage
+v0.5:
+Bootstrap/UI
 re-work max lengths on fields.
-use Trusted_Connection=True; in connection strings instead of userId and Password
+need to make header static, 
+need room to see autocomplete fields when page is full.
+BBQ uppercase
+Generate List with name 01/10/17 errors on concat in list reducer
+Order people in for meal
+Refresh button on shopping list
+Scrollable div for mobile
+Entering quantities, backspace doesn't clear 0 see house money
+Increase field lengths on units
+
+
+v1:
+Mobile testing
+Other browsers tests
+Load testing
+Regression Bugs Fixed
+Set up standard meals - but in db backup
 
 v2:
+Login/ multi tennacy
 refactor API - neaten and handle errors better
 add shopping list api call to order items by name and quantity (api needs to join).
-Login/ multi tennacy
-update to react16 for component will catch - add catch page for JS error
 
 v3:
-clever pull back of data (not just all - see what it does pull {profiler/graphql})
+Meal ingredients need a "for how many people" option so you can add for say 4, app does maths.
+Edit units of ingredients - own screen
 default items section - ablity too add
 recipie (plus cooking time etc)
+
+future:
+update to react16 for component will catch - add catch page for JS error
+clever pull back of data (not just all - see what it does pull {profiler/graphql})
+Duplicate button
