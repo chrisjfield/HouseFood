@@ -25,4 +25,4 @@ recipie (plus cooking time etc)
 Bugs: 
 
 make Plan Meal button work
-Meal name links to meal from same screen
+cors - find where - use every option!???

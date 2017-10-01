@@ -36,6 +36,10 @@ const styles: { [name: string]: React.CSSProperties } = {
         paddingTop: '8px',
         paddingBottom: '8px',
     },
+    personChip: { 
+        color: '#0D47A1',
+        textDecoration: 'none',
+    },
 };
 
 export default styles;

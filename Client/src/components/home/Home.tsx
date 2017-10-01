@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
 import * as moment from 'moment';
 
@@ -46,45 +47,55 @@ class Home extends React.Component<HomeProps> {
 
     getCard(rowDate: Date) {
         const day: Day = this.props.days.find((day: Day) => rowDate.toDateString() === new Date(day.date).toDateString());
-        const meal: string = day ? this.props.meals.find((meal: Meal) => meal.mealid === day.mealid).name : null;
+        const mealName: string = day ? this.props.meals.find((meal: Meal) => meal.mealid === day.mealid).name : null;
+        const mealid: number = day ? day.mealid : null;
         const people: Person[] = this.props.people.filter((people: Person) => 
             rowDate.toDateString() === new Date(people.date).toDateString(),
         );
         let noMealMessage: string;
-        if (!meal) {
+        let messageType: number;
+
+        if (!mealName) {
             noMealMessage = 'No meal planned';
+            messageType = 1;
         } else if (!people.length) {
             noMealMessage = 'No one in';
+            messageType = 2;
         }
 
         return (
             <Card key={moment(rowDate).day().toString()}>
                 <CardText style={styles.cardText}>
                     <h3>{<Moment format="dddd - Do MMMM" date={rowDate}/>}</h3>
-                    {noMealMessage ? this.getAddMealOption(noMealMessage) : this.getCardText(people, meal)}
+                    {noMealMessage ? this.getAddMealOption(noMealMessage, messageType) : this.getCardText(people, mealName, mealid)}
                 </CardText>
             </Card>
         );
     }
 
-    getAddMealOption(noMealMessage: string) {
-        // this.props.history.push("/Meal")
+    getAddMealOption(noMealMessage: string, messageType: number) {
         return (
             <div> 
                 { noMealMessage } 
-                <span>
-                <FlatButton label="Plan meal" primary={true}/>
-                </span>
+                {messageType !== 2 
+                    ?  (<span>
+                            <FlatButton label="Plan meal" primary={true}/>
+                        </span>)
+                    : null}
             </div>
         );
     }
 
-    getCardText(people: Person[], meal: string) {
+    getCardText(people: Person[], meal: string, mealid: number) {
         const mealText: string = ' with ';
 
         return (
             <div>
-                <b style={{ color: '#0D47A1' }}>{meal}</b>
+                <Link to={'/Meal/Detail/' + mealid} key={mealid} style={styles.personChip}>
+                    <b>
+                        {meal}
+                    </b>
+                </Link>
                 {mealText}
                 {people.map((person: Person) => this.getPerson(person))}
             </div>
