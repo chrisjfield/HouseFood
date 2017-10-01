@@ -26,6 +26,7 @@ import Chip from 'material-ui/Chip';
 import AutoComplete from 'material-ui/AutoComplete';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import Divider from 'material-ui/Divider';
 
 import styles from '../../styles';
 
@@ -253,14 +254,17 @@ class Home extends React.Component<HomeProps, HomeState> {
         }
 
         return (
-            <Card key={moment(rowDate).day().toString()}>
-                <CardText style={styles.cardText}>
-                    <h3>{<Moment format="dddd - Do MMMM" date={rowDate}/>}</h3>
-                    {noMealMessage 
-                        ? this.getAddMealOption(noMealMessage, messageType, rowDate) 
-                        : this.getCardText(people, mealName, mealid)}
-                </CardText>
-            </Card>
+            <div>
+                <Card key={moment(rowDate).day().toString()}>
+                    <CardText style={styles.cardText}>
+                        <h3>{<Moment format="dddd - Do MMMM" date={rowDate}/>}</h3>
+                        {noMealMessage 
+                            ? this.getAddMealOption(noMealMessage, messageType, rowDate) 
+                            : this.getCardText(people, mealName, mealid)}
+                    </CardText>
+                </Card>
+                <Divider/>
+            </div>
         );
     }
 
