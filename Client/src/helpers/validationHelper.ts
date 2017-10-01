@@ -28,7 +28,7 @@ class validationHelper {
         if (!unit) {
             validationMessage = 'Please set a unit';
         } else if (unit.length > 20) {
-            validationMessage = 'Maximum unit legth is 10 characters';
+            validationMessage = 'Maximum unit legth is 20 characters';
         }
         
         return validationMessage;

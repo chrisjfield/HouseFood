@@ -3,7 +3,6 @@ Bootstrap/UI
 re-work max lengths on fields.
 need to make header static, 
 need room to see autocomplete fields when page is full.
-BBQ uppercase
 Generate List with name 01/10/17 errors on concat in list reducer
 Order people in for meal
 Scrollable div for mobile
