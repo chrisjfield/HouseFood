@@ -127,7 +127,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
             <div>
                 <Dialog
                     title={<Moment format="dddd - Do MMMM" date={this.state.selectedDate}/>}
-                    actions={this.props.updating ? [<AppUpdating/>] : actions}
+                    actions={this.props.updating ? [<AppUpdating key="saving"/>] : actions}
                     open={this.state.selectedDate ? true : false}
                     onRequestClose={this.handleClose}
                 >
@@ -262,7 +262,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                     dataSource={this.state.searchPeople}
                     onUpdateInput={(searchText, dataSource) => this.applyPersonSearch(searchText)}
                 />
-                {this.props.updating ? [<AppUpdating/>] : actions}
+                {this.props.updating ? [<AppUpdating key="adding"/>] : actions}
             </form>
         );
     }
@@ -323,7 +323,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
             <div>
                 <Dialog
                     title="Generate List"
-                    actions={this.props.updating ? [<AppUpdating/>] : actions}
+                    actions={this.props.updating ? [<AppUpdating key="generating"/>] : actions}
                     open={this.state.generateListDialogOpen}
                     onRequestClose={this.handleClose}
                 >
@@ -417,7 +417,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
         return validationMessage;
     }
     handleChangeListName = (event: object, listName: string) => {
-        this.setState({ generateListDialogListName: listName });
+        this.setState({ generateListDialogListName: textHelper.toTitleCase(listName) });
         this.validateListName(listName);
     }
 

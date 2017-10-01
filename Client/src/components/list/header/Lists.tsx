@@ -115,7 +115,7 @@ class Lists extends React.Component<ListsProps, ListsState> {
             <div>
                 <Dialog
                     title="Generate List"
-                    actions={this.props.updating ? [<AppUpdating/>] : actions}
+                    actions={this.props.updating ? [<AppUpdating key="generating"/>] : actions}
                     open={this.state.generateListDialogOpen}
                     onRequestClose={this.handleDialogClose}
                 >
@@ -274,7 +274,7 @@ class Lists extends React.Component<ListsProps, ListsState> {
                             errorText={this.state.nameErrorText}
                             onChange={(event: object, newValue: string) => this.editEditedName(newValue)}
                         />
-                        {this.props.updating ? [<AppUpdating/>] : actions}
+                        {this.props.updating ? [<AppUpdating key="editing"/>] : actions}
                     </form>
                 </Dialog>
             </div>
@@ -322,7 +322,7 @@ class Lists extends React.Component<ListsProps, ListsState> {
                             onChange={(event: object, newValue: string) => this.editNewName(newValue)}
                             value={this.state.newList.name}
                         />
-                        {this.props.updating ? [<AppUpdating/>] : actions}
+                        {this.props.updating ? [<AppUpdating key="creating"/>] : actions}
                     </form>
                 </Dialog>
             </div>
@@ -360,7 +360,7 @@ class Lists extends React.Component<ListsProps, ListsState> {
             <div>
                 <Dialog
                     title="Complete List"
-                    actions={this.props.updating ? [<AppUpdating/>] : actions}
+                    actions={this.props.updating ? [<AppUpdating key="completing"/>] : actions}
                     open={this.state.completeDialogOpen}
                     onRequestClose={this.handleDialogClose}
                 >

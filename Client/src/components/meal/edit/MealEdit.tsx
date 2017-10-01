@@ -92,7 +92,7 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
             <div>
                 {this.props.updating 
                     ?  (<div>
-                            <AppUpdating/>
+                            <AppUpdating key="saving"/>
                             <h2 style={styles.editHeading}>{this.state.filterdMeal.category}</h2>
                         </div>)
                     :  (<div>

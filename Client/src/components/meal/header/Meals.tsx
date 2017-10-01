@@ -108,12 +108,13 @@ class Meals extends React.Component<MealsProps, MealsState> {
                             hintText="Type of meal"
                             floatingLabelText="Category"
                             maxSearchResults={5}
+                            searchText={this.state.newMeal.category}
                             dataSource={this.state.categories}
                             onUpdateInput={(searchText: string) => this.editNewCategory(searchText)}
                             errorText={this.state.categoryErrorText}
                         />
                         </div>
-                        {this.props.updating ? [<AppUpdating/>] : actions}
+                        {this.props.updating ? [<AppUpdating key="creating"/>] : actions}
                     </form>
                 </Dialog>
             </div>
@@ -210,7 +211,7 @@ class Meals extends React.Component<MealsProps, MealsState> {
                             errorText={this.state.categoryErrorText}
                         />
                         </div>
-                        {this.props.updating ? [<AppUpdating/>] : actions}
+                        {this.props.updating ? [<AppUpdating key="editing"/>] : actions}
                     </form>
                 </Dialog>
             </div>

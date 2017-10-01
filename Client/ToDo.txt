@@ -24,10 +24,5 @@ recipie (plus cooking time etc)
 
 Bugs: 
 
-generate list not title case
-to title case on units of meals & lists
-
 make Plan Meal button work
 Meal name links to meal from same screen
-
-app updating - key issue

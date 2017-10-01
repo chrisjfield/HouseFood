@@ -92,7 +92,7 @@ class ListEdit extends React.Component<ListEditProps, ListEditState> {
             <div>
                 {this.props.updating 
                     ?  (<div>
-                            <AppUpdating/>
+                            <AppUpdating key="saving"/>
                             <h2 style={styles.editHeading}>{this.state.filterdList.name}</h2>
                         </div>)
                     :  (<div>

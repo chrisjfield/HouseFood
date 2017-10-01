@@ -15,7 +15,7 @@ export function AppLoading() {
 export function AppUpdating() {
     return (
         <div>
-            <CircularProgress key="updating" size={30} thickness={2}/>
+            <CircularProgress size={30} thickness={2}/>
         </div>
     );
 }

@@ -183,7 +183,7 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
         return (
             <Dialog
                 title="Complete List"
-                actions={this.props.updating ? [<AppUpdating/>] : actions}
+                actions={this.props.updating ? [<AppUpdating key="completing"/>] : actions}
                 modal={true}
                 open={this.state.completeDialogOpen}
                 onRequestClose={this.handleCompleteDialogClose}
