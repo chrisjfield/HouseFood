@@ -24,12 +24,14 @@ class textHelper {
     static getArrayFromProperty<T>(initialOject: T[], property: string): string[] {
         const array: string[] = [];
 
-        initialOject.map((element: T) => {
-            const value: string = this.toTitleCase(element[property]);
-            if (array.indexOf(value) === -1) {
-                array.push(value);
-            }
-        });
+        if (initialOject) {
+            initialOject.map((element: T) => {
+                const value: string = this.toTitleCase(element[property]);
+                if (array.indexOf(value) === -1) {
+                    array.push(value);
+                }
+            });
+        }
 
         return array;
     }

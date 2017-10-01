@@ -68,9 +68,7 @@ class ListEdit extends React.Component<ListEditProps, ListEditState> {
         const updatedListDetails: ListDetail[] = (this.state && this.state.updatedListDetails.length !== 0)
             ? this.state.updatedListDetails
             : [...filterdListDetails];
-        const ingredientList = nextProps.ingredients 
-            ? textHelper.getArrayFromProperty(nextProps.ingredients, 'name')
-            : [];
+        const ingredientList = textHelper.getArrayFromProperty(nextProps.ingredients, 'name');
 
         this.setState({
             listid,

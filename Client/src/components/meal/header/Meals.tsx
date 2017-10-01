@@ -48,12 +48,8 @@ class Meals extends React.Component<MealsProps, MealsState> {
     }
  
     componentWillReceiveProps(nextProps: MealsProps) {
-        const categories = nextProps.meals 
-            ? textHelper.getArrayFromProperty(nextProps.meals, 'category')
-            : []; 
-        const mealNames = nextProps.meals 
-            ? textHelper.getArrayFromProperty(nextProps.meals, 'name')
-            : []; 
+        const categories = textHelper.getArrayFromProperty(nextProps.meals, 'category'); 
+        const mealNames = textHelper.getArrayFromProperty(nextProps.meals, 'name'); 
 
         this.setState({
             searchTerms: [...categories, ...mealNames],

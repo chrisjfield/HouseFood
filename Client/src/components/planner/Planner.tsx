@@ -68,12 +68,8 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
     }
 
     componentWillReceiveProps(nextProps: PlannerProps) {
-        const mealNames = nextProps.meals 
-            ? textHelper.getArrayFromProperty(nextProps.meals, 'name')
-            : []; 
-        const searchPeople = nextProps.people 
-            ? textHelper.getArrayFromProperty(nextProps.people, 'person')
-            : [];
+        const mealNames = textHelper.getArrayFromProperty(nextProps.meals, 'name');
+        const searchPeople = textHelper.getArrayFromProperty(nextProps.people, 'person');
         const calendarView = nextProps.days
             ? nextProps.days.map((day: Day) => {
                 const mealName: string = nextProps.meals 

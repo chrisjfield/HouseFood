@@ -68,9 +68,7 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
         const updatedMealDetails: MealDetail[] = (this.state && this.state.updatedMealDetails.length !== 0)
             ? this.state.updatedMealDetails
             : [...filterdMealDetails];
-        const ingredientList = nextProps.ingredients 
-            ? textHelper.getArrayFromProperty(nextProps.ingredients, 'name')
-            : []; 
+        const ingredientList = textHelper.getArrayFromProperty(nextProps.ingredients, 'name'); 
 
         this.setState({
             mealid,

@@ -53,12 +53,8 @@ class Home extends React.Component<HomeProps, HomeState> {
     }
 
     componentWillReceiveProps(nextProps: HomeProps) {
-        const mealNames = nextProps.meals 
-            ? textHelper.getArrayFromProperty(nextProps.meals, 'name')
-            : []; 
-        const searchPeople = nextProps.people 
-            ? textHelper.getArrayFromProperty(nextProps.people, 'person')
-            : [];
+        const mealNames =  textHelper.getArrayFromProperty(nextProps.meals, 'name'); 
+        const searchPeople = textHelper.getArrayFromProperty(nextProps.people, 'person');
 
         this.setState({
             searchPeople,
