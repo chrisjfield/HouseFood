@@ -69,7 +69,7 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
             ? this.state.updatedMealDetails
             : [...filterdMealDetails];
         const ingredientList = nextProps.ingredients 
-            ? [...new Set<string>(nextProps.ingredients.map((ingredient: Ingredient) => textHelper.toTitleCase(ingredient.name)))]
+            ? textHelper.getArrayFromProperty(nextProps.ingredients, 'name')
             : []; 
 
         this.setState({

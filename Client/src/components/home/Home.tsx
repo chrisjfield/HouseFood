@@ -54,12 +54,12 @@ class Home extends React.Component<HomeProps, HomeState> {
 
     componentWillReceiveProps(nextProps: HomeProps) {
         const mealNames = nextProps.meals 
-            ? [...new Set<string>(nextProps.meals.map((meal: Meal) => textHelper.toTitleCase(meal.name)))]
+            ? textHelper.getArrayFromProperty(nextProps.meals, 'name')
             : []; 
         const searchPeople = nextProps.people 
-            ? [...new Set<string>(nextProps.people.map((person: Person) => textHelper.toTitleCase(person.person)))]
+            ? textHelper.getArrayFromProperty(nextProps.people, 'person')
             : [];
-          
+
         this.setState({
             searchPeople,
             searchTerms: mealNames,

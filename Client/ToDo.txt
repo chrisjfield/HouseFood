@@ -1,8 +1,3 @@
-v0.3:
-add clean live db to repo
-publish using surge
-load test
-
 v1:
 Bootstrap/UI - need to make header static, need room to see autocomplete fields when page is full.
 think about center align more
@@ -20,8 +15,3 @@ v3:
 clever pull back of data (not just all - see what it does pull {profiler/graphql})
 default items section - ablity too add
 recipie (plus cooking time etc)
-
-
-Bugs: 
-
-cors - find where - use every option!???

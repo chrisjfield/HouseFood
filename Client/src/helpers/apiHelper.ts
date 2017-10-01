@@ -7,10 +7,10 @@ class APIHelper {
             'Content-Type': 'application/json;charset=UTF-8',
         };
         const headers: Headers = new Headers(customheaders);
-        let calledUrl: string = `${baseURL}${endpoint}`;
+        let calledUrl: string = baseURL + endpoint;
   
         if (urlParams) {
-            calledUrl += `?${urlParams}`;
+            calledUrl = calledUrl + urlParams;
         }
   
         return fetch(calledUrl, {

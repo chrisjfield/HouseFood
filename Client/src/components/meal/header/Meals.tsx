@@ -49,10 +49,10 @@ class Meals extends React.Component<MealsProps, MealsState> {
  
     componentWillReceiveProps(nextProps: MealsProps) {
         const categories = nextProps.meals 
-            ? [...new Set<string>(nextProps.meals.map((meal: Meal) => textHelper.toTitleCase(meal.category)))]
+            ? textHelper.getArrayFromProperty(nextProps.meals, 'category')
             : []; 
         const mealNames = nextProps.meals 
-            ? [...new Set<string>(nextProps.meals.map((meal: Meal) => textHelper.toTitleCase(meal.name)))]
+            ? textHelper.getArrayFromProperty(nextProps.meals, 'name')
             : []; 
 
         this.setState({

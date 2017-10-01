@@ -1,6 +1,7 @@
 {
+  "homepage": "http://housefood.surge.sh/",
   "name": "housefood",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "private": false,
   "dependencies": {
     "@types/material-ui": "^0.18.0",
@@ -36,14 +37,16 @@
     "typescript": "^2.4.2",
     "webfontloader": "^1.6.28"
   },
-  "scripts": {
-    "start": "react-scripts-ts start",
-    "build": "react-scripts-ts build",
-    "eject": "react-scripts-ts eject"
-  },
   "devDependencies": {
+    "surge": "^0.19.0",
     "tslint": "^5.6.0",
     "tslint-config-airbnb": "^5.2.1",
     "tslint-react": "^3.2.0"
+  },
+  "scripts": {
+    "start": "react-scripts-ts start",
+    "build": "react-scripts-ts build",
+    "eject": "react-scripts-ts eject",
+    "deploy": "npm run build && cd ./build && rename index.html 200.html && surge -p ./ -d housefood.surge.sh"
   }
 }
