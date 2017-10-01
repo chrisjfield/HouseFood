@@ -24,5 +24,4 @@ recipie (plus cooking time etc)
 
 Bugs: 
 
-make Plan Meal button work
 cors - find where - use every option!???

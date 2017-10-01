@@ -44,7 +44,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
             calendarView: undefined,
             selectedDate: undefined,
             selectedDayInfo: undefined,
-            selectedDayPeople: undefined,
+            selectedDayPeople: [],
             selectedSearchText: '',
             searchTerms: undefined,
             searchPeople: undefined,
@@ -189,7 +189,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                     removedPeople.length > 0 ? this.props.dispatch(removePeople(removedPeople, updatedDate)) : null,
                 ])
                 .then((response: any) => {
-                    this.setState({ selectedDate: undefined });
+                    this.handleClose();
                 })
                 .catch((error: any) => {
                     console.log(error);
@@ -201,7 +201,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                 });
                 this.props.dispatch(addDay(newDay, newPeople))
                 .then((response: Day[]) => {
-                    this.setState({ selectedDate: undefined });
+                    this.handleClose();
                 })
                 .catch((error: any) => {
                     console.log(error);
@@ -231,6 +231,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
             selectedSearchText: '',
             saveValidationMessage: undefined,
             selectedPeopleSearchText: '',
+            selectedDayPeople: [],
         });
     }
 
@@ -248,7 +249,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
 
         return (
             <form onSubmit={this.handleChipAdd}>
-                <div style={{ height: '40px', display: 'inline-block' }}>
+                <div style={styles.addPerson}>
                     {this.state.selectedDayPeople
                         ? this.state.selectedDayPeople.map((person: Person) => this.createChips(person))
                         : null}

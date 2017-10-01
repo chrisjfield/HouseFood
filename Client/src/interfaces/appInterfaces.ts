@@ -14,5 +14,17 @@ export interface HomeProps {
     people: Person[];
     meals: Meal[];
     loading: boolean;
+    updating: boolean;
     dispatch: Dispatch<{}>;
+}
+
+export interface HomeState {
+    selectedDate: Date;
+    selectedSearchText: string;
+    saveValidationMessage: string;
+    searchTerms: string[];
+    selectedDayPeople: Person[];
+    addPersonText: string;
+    selectedPeopleSearchText: string;
+    searchPeople: string[];
 }

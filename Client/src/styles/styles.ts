@@ -40,6 +40,10 @@ const styles: { [name: string]: React.CSSProperties } = {
         color: '#0D47A1',
         textDecoration: 'none',
     },
+    addPerson:{ 
+        height: '40px', 
+        display: 'inline-block', 
+    },
 };
 
 export default styles;
