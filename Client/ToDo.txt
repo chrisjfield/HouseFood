@@ -1,17 +1,11 @@
 v0.4:
-Bootstrap/UI
-re-work max lengths on fields.
-need to make header static, 
-need room to see autocomplete fields when page is full.
-Generate List with name 01/10/17 errors on concat in list reducer
-Order people in for meal
-Scrollable div for mobile
-Entering quantities, backspace doesn't clear 0 see house money
-Increase field lengths on units
 Quantity should be decimal
 persist on mobile causes refresh issue.
 
 v1:
+responsive UI (bootstrap)
+Scrollable div for mobile for lists etc
+more fixed headers for each page.
 Mobile testing
 Other browsers tests
 Load testing

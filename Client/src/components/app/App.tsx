@@ -4,12 +4,18 @@ import Routes from '../routes';
 import Header from '../header';
 import { AppError } from '../errorHandler';
 
+import styles from '../../styles';
+
 function App() {
     return (
         <div>
-            <Header/>
-            <Routes/>
-            <AppError/>
+            <div style={styles.header}>
+                <Header/>
+            </div>
+            <div style={styles.content}>
+                <Routes/>
+                <AppError/>
+            </div>
         </div>
     );
 }

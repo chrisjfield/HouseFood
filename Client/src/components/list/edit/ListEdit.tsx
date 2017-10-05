@@ -170,7 +170,7 @@ class ListEdit extends React.Component<ListEditProps, ListEditState> {
 
     createTable() {
         return (
-            <div>
+            <div style={styles.table}>
                 <Table>
                     {this.createTableHeader()}
                     <TableBody stripedRows={false} showRowHover={false} displayRowCheckbox={false}>
@@ -279,7 +279,7 @@ class ListEdit extends React.Component<ListEditProps, ListEditState> {
                 </TableRowColumn>
                 <TableRowColumn>
                     <TextField
-                        value={newListDetail.amount}
+                        defaultValue={newListDetail.amount}
                         hintText="Quantity"
                         errorText={newListDetail.uniqueKey !== this.state.lastRowKey 
                             ? validationHelper.validateIngredientAmount(newListDetail.amount)

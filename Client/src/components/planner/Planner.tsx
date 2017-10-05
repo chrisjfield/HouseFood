@@ -247,7 +247,9 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
             <form onSubmit={this.handleChipAdd}>
                 <div style={styles.addPerson}>
                     {this.state.selectedDayPeople
-                        ? this.state.selectedDayPeople.map((person: Person) => this.createChips(person))
+                        ? this.state.selectedDayPeople
+                            .sort((a,b) => {return (a.person > b.person) ? 1 : ((b.person > a.person) ? -1 : 0);})
+                            .map((person: Person) => this.createChips(person))
                         : null}
                 </div>
                 <br/>

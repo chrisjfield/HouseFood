@@ -172,7 +172,9 @@ class Home extends React.Component<HomeProps, HomeState> {
             <form onSubmit={this.handleChipAdd}>
                 <div style={styles.addPerson}>
                     {this.state.selectedDayPeople
-                        ? this.state.selectedDayPeople.map((person: Person) => this.createChips(person))
+                        ? this.state.selectedDayPeople
+                            .sort((a,b) => {return (a.person > b.person) ? 1 : ((b.person > a.person) ? -1 : 0);})
+                            .map((person: Person) => this.createChips(person))
                         : null}
                 </div>
                 <br/>
@@ -239,9 +241,9 @@ class Home extends React.Component<HomeProps, HomeState> {
         const day: Day = this.props.days.find((day: Day) => rowDate.toDateString() === new Date(day.date).toDateString());
         const mealName: string = day ? this.props.meals.find((meal: Meal) => meal.mealid === day.mealid).name : null;
         const mealid: number = day ? day.mealid : null;
-        const people: Person[] = this.props.people.filter((people: Person) => 
-            rowDate.toDateString() === new Date(people.date).toDateString(),
-        );
+        const people: Person[] = this.props.people
+            .filter((people: Person) => rowDate.toDateString() === new Date(people.date).toDateString())
+            .sort((a,b) => {return (a.person > b.person) ? 1 : ((b.person > a.person) ? -1 : 0);});
         let noMealMessage: string;
         let messageType: number;
 

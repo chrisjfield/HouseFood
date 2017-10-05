@@ -170,7 +170,7 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
 
     createTable() {
         return (
-            <div>
+            <div style={styles.table}>
                 <Table>
                     {this.createTableHeader()}
                     <TableBody stripedRows={false} showRowHover={false} displayRowCheckbox={false}>
@@ -279,7 +279,7 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
                 </TableRowColumn>
                 <TableRowColumn>
                     <TextField
-                        value={newMealDetail.amount}
+                        defaultValue={newMealDetail.amount}
                         hintText="Quantity"
                         errorText={newMealDetail.uniqueKey !== this.state.lastRowKey 
                             ? validationHelper.validateIngredientAmount(newMealDetail.amount)

@@ -40,9 +40,22 @@ const styles: { [name: string]: React.CSSProperties } = {
         color: '#0D47A1',
         textDecoration: 'none',
     },
-    addPerson:{ 
+    addPerson: { 
         height: '40px', 
         display: 'inline-block', 
+    },
+    table: {
+        marginBottom: '260px',
+    },
+    header: {
+        position: 'fixed',
+        top: '0', 
+        left: '0', 
+        width: '100%',
+        zIndex: 2,
+    },
+    content: {
+        marginTop: '56px',
     },
 };
 
