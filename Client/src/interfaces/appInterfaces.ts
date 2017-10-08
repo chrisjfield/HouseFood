@@ -28,3 +28,11 @@ export interface HomeState {
     selectedPeopleSearchText: string;
     searchPeople: string[];
 }
+
+export interface AppProps {
+
+}
+
+export interface AppState {
+    rehydrated: boolean;
+}

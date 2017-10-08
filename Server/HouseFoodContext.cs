@@ -63,7 +63,7 @@ namespace HouseFoodAPI
                 entity.Property(e => e.Units)
                     .IsRequired()
                     .HasColumnName("UNITS")
-                    .HasMaxLength(10);
+                    .HasMaxLength(20);
             });
 
             modelBuilder.Entity<Listitems>(entity =>
@@ -75,7 +75,9 @@ namespace HouseFoodAPI
 
                 entity.Property(e => e.Listitemid).HasColumnName("LISTITEMID");
 
-                entity.Property(e => e.Amount).HasColumnName("AMOUNT");
+                entity.Property(e => e.Amount)
+                    .HasColumnName("AMOUNT")
+                    .HasColumnType("decimal");
 
                 entity.Property(e => e.Complete)
                     .HasColumnName("COMPLETE")
@@ -128,13 +130,15 @@ namespace HouseFoodAPI
             modelBuilder.Entity<Mealingredients>(entity =>
             {
                 entity.HasKey(e => e.Mealingredientid)
-                    .HasName("PK__MEALINGR__D74DD616FFC45DE6");
+                    .HasName("PK__MEALINGR__D74DD616EE96AE4F");
 
                 entity.ToTable("MEALINGREDIENTS");
 
                 entity.Property(e => e.Mealingredientid).HasColumnName("MEALINGREDIENTID");
 
-                entity.Property(e => e.Amount).HasColumnName("AMOUNT");
+                entity.Property(e => e.Amount)
+                    .HasColumnName("AMOUNT")
+                    .HasColumnType("decimal");
 
                 entity.Property(e => e.Ingredientid).HasColumnName("INGREDIENTID");
 
