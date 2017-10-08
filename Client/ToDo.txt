@@ -1,4 +1,9 @@
 v1:
+get rid of any
+initial insert rounds decimals
+generate list goes 1 day to far back (forward?)
+
+v2
 responsive UI (bootstrap)
 Scrollable div for mobile for lists etc
 more fixed headers for each page.
@@ -6,18 +11,19 @@ Mobile testing
 Other browsers tests
 Load testing
 Regression Bugs Fixed
-Set up standard meals - but in db backup
+Set up standard meals - put in db backup
 
-v2:
+v3:
 Login/ multi tennacy
 refactor API - neaten and handle errors better
 add shopping list api call to order items by name and quantity (api needs to join).
 
-v3:
+v4:
 Meal ingredients need a "for how many people" option so you can add for say 4, app does maths.
 Edit units of ingredients - own screen
 default items section - ablity too add
 recipie (plus cooking time etc)
+edit day from home
 
 future:
 update to react16 for component will catch - add catch page for JS error
