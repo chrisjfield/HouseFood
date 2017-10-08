@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { connect } from 'react-redux';
 
+import history from '../../../history';
 import { AppLoading, AppUpdating } from '../../loadingHandler';
 import { NotFound404 } from '../../errorHandler';
 
@@ -30,7 +31,7 @@ import AutoComplete from 'material-ui/AutoComplete';
 import styles from '../../../styles';
 
 class MealEdit extends React.Component<MealEditProps, MealEditState> {
-    constructor(props: any) {
+    constructor(props: MealEditProps) {
         super();
 
         this.state = {
@@ -135,12 +136,12 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
                     });
 
                     this.props.dispatch(updateMeal(newMealDetail, this.state.deletedMealDetails, this.state.updatedMealDetails))
-                        .then(() => this.props.history.push(url))
-                        .catch((error: any) => {
+                        .then(() => history.push(url))
+                        .catch((error: Error) => {
                             throw error;
                         });
                 })
-                .catch((error: any) => {
+                .catch((error: Error) => {
                     console.log(error);
                 });
         }
@@ -165,7 +166,7 @@ class MealEdit extends React.Component<MealEditProps, MealEditState> {
 
     cancelEdit = () => {
         const url: string = '/Meal/Detail/' + String(this.state.mealid);
-        this.props.history.push(url);
+        history.push(url);
     }
 
     createTable() {

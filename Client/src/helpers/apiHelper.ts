@@ -22,7 +22,7 @@ class APIHelper {
         .then((response: any) => {
             return APIHelper.checkStatus(response);
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             throw(error);
         });
     }

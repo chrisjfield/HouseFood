@@ -1,3 +1,5 @@
+import { Action } from '../../interfaces/appInterfaces';
+
 import { ADD_ERROR, REMOVE_ERROR } from '../../actions/app/appErrorActions';
 import { 
     START_GET, START_POST, START_PUT, START_DELETE,
@@ -18,7 +20,7 @@ function appReducer(state: appReducerState = {
     putting: 0,
     deleting: 0,
     errorMessage: undefined, 
-},                  action: any) {
+},                  action: Action) {
     switch (action.type) {
     case ADD_ERROR:
         return {

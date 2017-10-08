@@ -23,7 +23,7 @@ export function generateList(newListDetails: GenerateListDetail) {
             dispatch(stopPost());
             return response;
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopPost());
             throw(error);

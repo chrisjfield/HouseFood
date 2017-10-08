@@ -27,7 +27,7 @@ export function getDays() {
             dispatch(getDaysSuccessful(response));
             dispatch(stopGet());
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopGet());
         });
@@ -55,7 +55,7 @@ export function getDay(dayDate: string) {
             dispatch(getDaySuccessful(response));
             dispatch(stopGet());
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopGet());
         });
@@ -85,7 +85,7 @@ export function addDay(newDay: NewDay, newPeople: NewPerson[]) {
             dispatch(stopPost());
             return response;
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopPost());
             throw error;
@@ -116,7 +116,7 @@ export function updateDay(dayDate: string, day: NewDay) {
             dispatch(stopPut());
             return response;
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopPut());
             throw error;

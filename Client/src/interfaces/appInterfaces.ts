@@ -36,3 +36,9 @@ export interface AppProps {
 export interface AppState {
     rehydrated: boolean;
 }
+
+export interface Action {
+    type: string;
+    payload: any;
+    checked: boolean;
+}

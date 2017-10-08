@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { connect } from 'react-redux';
 
+import history from '../../../history';
 import { AppLoading, AppUpdating } from '../../loadingHandler';
 import { NotFound404 } from '../../errorHandler';
 
@@ -25,7 +26,7 @@ import FlatButton from 'material-ui/FlatButton';
 import styles from '../../../styles';
 
 class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
-    constructor(props: any) {
+    constructor(props: ListDetailsProps) {
         super();
 
         this.state = {
@@ -95,12 +96,12 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
 
     goToLists = () => {
         const url: string = '/List/Header';
-        this.props.history.push(url);
+        history.push(url);
     }
 
     editList = () => {
         const url: string = '/List/Edit/' + String(this.state.listid);
-        this.props.history.push(url);
+        history.push(url);
     }
 
     createTable = () => {
@@ -208,7 +209,7 @@ class ListDetails extends React.Component<ListDetailsProps, ListDetailsState> {
                 completeDialogOpen: false,
             });
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             console.log(error);
         });
     }

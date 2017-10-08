@@ -37,7 +37,7 @@ import '../../styles/css/app.css';
 import styles from '../../styles';
 
 class Planner extends React.Component<PlannerProps, PlannerState> {
-    constructor(props: any) {
+    constructor(props: PlannerProps) {
         super();
 
         this.state = {
@@ -187,7 +187,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                 .then((response: any) => {
                     this.handleClose();
                 })
-                .catch((error: any) => {
+                .catch((error: Error) => {
                     console.log(error);
                 });
             } else {
@@ -199,7 +199,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                 .then((response: Day[]) => {
                     this.handleClose();
                 })
-                .catch((error: any) => {
+                .catch((error: Error) => {
                     console.log(error);
                 });
             }  
@@ -266,7 +266,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
         );
     }
 
-    handleChipAdd = (event: any)  => {
+    handleChipAdd = (event: React.FormEvent<HTMLFormElement>)  => {
         event.preventDefault();
         const personExists: Person = this.state.addPersonText
             ? this.state.selectedDayPeople
@@ -379,7 +379,7 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
                 const url: string = '/List/Detail/' + String(response[0].listid);
                 history.push(url);
             })
-            .catch((error: any) => {
+            .catch((error: Error) => {
                 console.log(error);
             });
         }

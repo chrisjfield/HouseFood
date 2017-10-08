@@ -30,7 +30,7 @@ export function getListDetails() {
             dispatch(getListDetailsSuccessful(response));
             dispatch(stopGet());
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopGet());
         });
@@ -59,7 +59,7 @@ export function postBulkListDetails(listDetails: NewListDetail[]) {
             dispatch(stopPost());
             return response;
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopPost());
             throw error;
@@ -92,7 +92,7 @@ export function checkListDetail(listDetail: ListDetail) {
             dispatch(checkListDetailSuccessful(response));
             dispatch(stopPut());
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopPut());
         });
@@ -108,7 +108,7 @@ function checkListDetailSuccessful(response: ListDetail) {
 
 export function checkAllListDetail(checked: boolean, listid: number) {
     const endpoint = 'listitems/bulk/' + String(listid);
-    const checkedToJSON: any = JSON.parse(String(checked));
+    const checkedToJSON: JSON = JSON.parse(String(checked));
 
     const request = apiHelper.apiCall(
         'PUT',
@@ -123,7 +123,7 @@ export function checkAllListDetail(checked: boolean, listid: number) {
             dispatch(checkAllListDetailSuccessful(checked, listid));
             dispatch(stopPut());
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopPut());
         });
@@ -153,7 +153,7 @@ export function putBulkListDetails(listDetails: ListDetail[]) {
             dispatch(stopPut());
             return response;
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopPut());
             throw error;
@@ -183,7 +183,7 @@ export function deleteBulkListDetails(listDetails: ListDetail[]) {
             dispatch(stopDelete());
             return response;
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopDelete());
             throw error;

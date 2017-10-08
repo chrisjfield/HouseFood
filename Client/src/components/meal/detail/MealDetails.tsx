@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { connect } from 'react-redux';
 
+import history from '../../../history';
 import { AppLoading } from '../../loadingHandler';
 import { NotFound404 } from '../../errorHandler';
 
@@ -23,7 +24,7 @@ import FlatButton from 'material-ui/FlatButton';
 import styles from '../../../styles';
 
 class MealDetails extends React.Component<MealDetailsProps, MealDetailsState> {
-    constructor(props: any) {
+    constructor(props: MealDetailsProps) {
         super();
 
         this.state = {
@@ -75,12 +76,12 @@ class MealDetails extends React.Component<MealDetailsProps, MealDetailsState> {
 
     goToMeals = () => {
         const url: string = '/Meal/Header';
-        this.props.history.push(url);
+        history.push(url);
     }
 
     editMeal = () => {
         const url: string = '/Meal/Edit/' + String(this.state.mealid);
-        this.props.history.push(url);
+        history.push(url);
     }
 
     createTable() {

@@ -25,7 +25,7 @@ export function getPeople() {
             dispatch(getPeopleSuccessful(response));
             dispatch(stopGet());
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopGet());
         });
@@ -55,7 +55,7 @@ export function addPeople(newPeople: NewPerson[], newDate: string) {
             dispatch(stopPost());
             return response;
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopPost());
             throw error;
@@ -86,7 +86,7 @@ export function removePeople(removedPeople: Person[], newDate: string) {
             dispatch(stopDelete());
             return response;
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopDelete());
             throw error;

@@ -27,7 +27,7 @@ export function getMeals() {
             dispatch(getMealsSuccessful(response));
             dispatch(stopGet());
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopGet());
         });
@@ -56,7 +56,7 @@ export function saveMeal(meal: NewMeal) {
             dispatch(stopPost());
             return response;
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopPost());
             throw(error);
@@ -87,7 +87,7 @@ export function editMeal(meal: Meal) {
             dispatch(stopPut());
             return response;
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopPut());
             throw error;

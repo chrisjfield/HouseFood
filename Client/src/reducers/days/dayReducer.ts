@@ -1,15 +1,12 @@
+import { Action } from '../../interfaces/appInterfaces';
 import { dayReducerState } from '../../interfaces/stateInterfaces';
 import { Day } from '../../interfaces/dayInterfaces';
-import { 
-    GET_DAY_BULK_SUCCESSFUL,
-    GET_DAY_SUCCESSFUL,
-    POST_DAY_SUCCESSFUL,
-    PUT_DAY_SUCCESSFUL,
-} from '../../actions/days/dayActions';
+
+import { GET_DAY_BULK_SUCCESSFUL, GET_DAY_SUCCESSFUL,  POST_DAY_SUCCESSFUL, PUT_DAY_SUCCESSFUL } from '../../actions/days/dayActions';
 
 function daysReducer(state: dayReducerState = { 
     days: undefined, 
-},                   action: any) {
+},                   action: Action) {
     switch (action.type) {
     case GET_DAY_SUCCESSFUL:
         return {

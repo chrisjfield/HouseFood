@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { connect } from 'react-redux';
 
+import history from '../../../history';
 import { AppLoading, AppUpdating } from '../../loadingHandler';
 import { NotFound404 } from '../../errorHandler';
 
@@ -30,7 +31,7 @@ import AutoComplete from 'material-ui/AutoComplete';
 import styles from '../../../styles';
 
 class ListEdit extends React.Component<ListEditProps, ListEditState> {
-    constructor(props: any) {
+    constructor(props: ListEditProps) {
         super();
 
         this.state = {
@@ -135,12 +136,12 @@ class ListEdit extends React.Component<ListEditProps, ListEditState> {
                     });
                     
                     this.props.dispatch(updateList(newListDetail, this.state.deletedListDetails, this.state.updatedListDetails))
-                        .then(() => this.props.history.push(url))
-                        .catch((error: any) => {
+                        .then(() => history.push(url))
+                        .catch((error: Error) => {
                             throw error;
                         });
                 })
-                .catch((error: any) => {
+                .catch((error: Error) => {
                     console.log(error);
                 });
         }
@@ -165,7 +166,7 @@ class ListEdit extends React.Component<ListEditProps, ListEditState> {
 
     cancelEdit = () => {
         const url: string = '/List/Detail/' + String(this.state.listid);
-        this.props.history.push(url);
+        history.push(url);
     }
 
     createTable() {

@@ -29,7 +29,7 @@ import DatePicker from 'material-ui/DatePicker';
 import styles from '../../../styles';
 
 class Lists extends React.Component<ListsProps, ListsState> {
-    constructor(props: any) {
+    constructor(props: ListsProps) {
         super();
 
         this.state = {
@@ -184,7 +184,7 @@ class Lists extends React.Component<ListsProps, ListsState> {
                 const url: string = '/List/Detail/' + String(response[0].listid);
                 history.push(url);
             })
-            .catch((error: any) => {
+            .catch((error: Error) => {
                 console.log(error);
             });
         }
@@ -281,14 +281,14 @@ class Lists extends React.Component<ListsProps, ListsState> {
         );        
     }
 
-    handleSaveEditedList = (event: any) => {
+    handleSaveEditedList = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (!this.validateListName(this.state.listEditing.name)) {
             this.props.dispatch(editList(this.state.listEditing))
             .then((response: List) => {
                 this.handleDialogClose();
             })
-            .catch((error: any) => {
+            .catch((error: Error) => {
                 console.log(error);
             });
         }
@@ -329,7 +329,7 @@ class Lists extends React.Component<ListsProps, ListsState> {
         );
     }
 
-    handleSaveNewList = (event: any) => {
+    handleSaveNewList = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (!this.validateListName(this.state.newList.name)) {
             this.props.dispatch(saveList(this.state.newList))
@@ -337,7 +337,7 @@ class Lists extends React.Component<ListsProps, ListsState> {
                 const url: string = '/List/Edit/' + String(response.listid);
                 history.push(url);
             })
-            .catch((error: any) => {
+            .catch((error: Error) => {
                 console.log(error);
             });
         }
@@ -379,7 +379,7 @@ class Lists extends React.Component<ListsProps, ListsState> {
                 activeList : undefined, 
             });
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             console.log(error);
         });
     }
@@ -419,7 +419,7 @@ class Lists extends React.Component<ListsProps, ListsState> {
 
     handleViewDetails = (listId: number) => {
         const url: string = '/List/Detail/' + String(listId);
-        this.props.history.push(url);
+        history.push(url);
     }
 
     handleEdit = (listid: number) => {

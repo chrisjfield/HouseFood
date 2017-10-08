@@ -32,7 +32,7 @@ import styles from '../../styles';
 
 class Home extends React.Component<HomeProps, HomeState> {
     
-    constructor(props: any) {
+    constructor(props: HomeProps) {
         super();
 
         this.state = {
@@ -132,7 +132,7 @@ class Home extends React.Component<HomeProps, HomeState> {
             .then((response: Day[]) => {
                 this.handleClose();
             })
-            .catch((error: any) => {
+            .catch((error: Error) => {
                 console.log(error);
             });
         }
@@ -191,7 +191,7 @@ class Home extends React.Component<HomeProps, HomeState> {
         );
     }
 
-    handleChipAdd = (event: any)  => {
+    handleChipAdd = (event: React.FormEvent<HTMLFormElement>)  => {
         event.preventDefault();
         const personExists: Person = this.state.addPersonText
             ? this.state.selectedDayPeople

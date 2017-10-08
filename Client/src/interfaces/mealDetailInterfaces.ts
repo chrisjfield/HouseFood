@@ -30,7 +30,6 @@ export interface MealDetailsProps {
     updating: boolean;
     loading: boolean;
     dispatch: Dispatch<{}>;
-    history: any;
     match: any;
 }
 
@@ -47,7 +46,6 @@ export interface MealEditProps {
     updating: boolean;
     loading: boolean;
     dispatch: Dispatch<{}>;
-    history: any;
     match: any;
 }
 

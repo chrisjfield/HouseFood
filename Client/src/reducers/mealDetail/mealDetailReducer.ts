@@ -1,5 +1,7 @@
 import { mealDetailReducerState } from '../../interfaces/stateInterfaces';
 import { MealDetail } from '../../interfaces/mealDetailInterfaces';
+import { Action } from '../../interfaces/appInterfaces';
+
 import { 
     GET_MEALDETAILS_SUCCESSFUL, DELETE_BULK_MEALDETAILS_SUCCESSFUL,
     PUT_BULK_MEALDETAILS_SUCCESSFUL, POST_BULK_MEALDETAILS_SUCCESSFUL,
@@ -7,7 +9,7 @@ import {
 
 function mealDetailsReducer(state: mealDetailReducerState = { 
     mealDetails: undefined, 
-},                          action: any) {
+},                          action: Action) {
     switch (action.type) {
     case GET_MEALDETAILS_SUCCESSFUL:
         return {

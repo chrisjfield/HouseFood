@@ -31,7 +31,6 @@ export interface ListDetailsProps {
     updating: boolean;
     loading: boolean;
     dispatch: Dispatch<{}>;
-    history: any;
     match: any;
 }
 
@@ -52,7 +51,6 @@ export interface ListEditProps {
     updating: boolean;
     loading: boolean;
     dispatch: Dispatch<{}>;
-    history: any;
     match: any;
 }
 

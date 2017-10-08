@@ -28,7 +28,7 @@ export function getMealDetails() {
             dispatch(getMealDetailsSuccessful(response));
             dispatch(stopGet());
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopGet());
         });
@@ -57,7 +57,7 @@ export function postBulkMealDetails(mealDetails: NewMealDetail[]) {
             dispatch(stopPost());
             return response;
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopPost());
             throw error;
@@ -87,7 +87,7 @@ export function putBulkMealDetails(mealDetails: MealDetail[]) {
             dispatch(stopPut());
             return response;
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopPut());
             throw error;
@@ -117,7 +117,7 @@ export function deleteBulkMealDetails(mealDetails: MealDetail[]) {
             dispatch(stopDelete());
             return response;
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopDelete());
             throw error;

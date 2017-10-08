@@ -16,7 +16,6 @@ export interface MealsProps {
     loading: boolean;
     updating: boolean;
     dispatch: Dispatch<{}>;
-    history: any;
 }
 
 export interface MealsState {

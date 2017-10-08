@@ -27,7 +27,7 @@ import TextField from 'material-ui/TextField';
 import styles from '../../../styles';
 
 class Meals extends React.Component<MealsProps, MealsState> {
-    constructor(props: any) {
+    constructor(props: MealsProps) {
         super();
 
         this.state = {
@@ -127,7 +127,7 @@ class Meals extends React.Component<MealsProps, MealsState> {
         });
     }
 
-    handleSaveNewMeal = (event: any) => {
+    handleSaveNewMeal = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const newMeal: NewMeal = this.state.newMeal;
 
@@ -137,7 +137,7 @@ class Meals extends React.Component<MealsProps, MealsState> {
                 const url: string = '/Meal/Edit/' + String(response.mealid);
                 history.push(url);
             })
-            .catch((error: any) => {
+            .catch((error: Error) => {
                 console.log(error);
             });
         }
@@ -214,7 +214,7 @@ class Meals extends React.Component<MealsProps, MealsState> {
         );        
     }
 
-    handleSaveEditedMeal = (event: any) => {
+    handleSaveEditedMeal = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const editedMeal: Meal = this.state.mealEditing;
 
@@ -223,7 +223,7 @@ class Meals extends React.Component<MealsProps, MealsState> {
             .then((response: Meal) => {
                 this.handleDialogClose();
             })
-            .catch((error: any) => {
+            .catch((error: Error) => {
                 console.log(error);
             });
         }
@@ -304,7 +304,7 @@ class Meals extends React.Component<MealsProps, MealsState> {
 
     handleViewDetails = (mealId: number) => {
         const url: string = '/Meal/Detail/' + String(mealId);
-        this.props.history.push(url);
+        history.push(url);
     }
 
     handleEdit = (mealid: number) => {

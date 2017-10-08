@@ -27,7 +27,7 @@ export function getLists() {
             dispatch(getListsSuccessful(response));
             dispatch(stopGet());
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopGet());
         });
@@ -56,7 +56,7 @@ export function saveList(meal: NewList) {
             dispatch(stopPost());
             return response;
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopPost());
             throw(error);
@@ -91,7 +91,7 @@ export function completeList(list : List) {
             dispatch(stopPut());
             return response;
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopPut());
             throw error;
@@ -115,7 +115,7 @@ export function editList(list: List) {
             dispatch(stopPut());
             return response;
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopPut());
             throw error;

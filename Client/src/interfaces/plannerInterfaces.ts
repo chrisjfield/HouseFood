@@ -11,7 +11,7 @@ export interface PlannerProps {
     loading: boolean;
     updating: boolean;
     dispatch: Dispatch<{}>;
-    history: any;
+    history: History;
 }
 
 export interface PlannerState {

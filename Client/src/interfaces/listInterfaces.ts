@@ -25,7 +25,6 @@ export interface ListsProps {
     loading: boolean;
     updating: boolean;
     dispatch: Dispatch<{}>;
-    history: any;
 }
 
 export interface ListsState {

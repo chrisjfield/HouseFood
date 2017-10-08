@@ -1,9 +1,11 @@
+import { Action } from '../../interfaces/appInterfaces';
 import { ingredientReducerState } from '../../interfaces/stateInterfaces';
+
 import { GET_INGREDIENTS_SUCCESSFUL, POST_INGREDIENTS_BULK_SUCCESSFUL } from '../../actions/ingredient/ingredientActions';
 
 function ingredientReducer(state: ingredientReducerState = { 
     ingredients: undefined, 
-},                         action: any) {
+},                         action: Action) {
     switch (action.type) {
     case GET_INGREDIENTS_SUCCESSFUL:
         return {

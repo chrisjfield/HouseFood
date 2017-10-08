@@ -1,5 +1,7 @@
 import { listDetailReducerState } from '../../interfaces/stateInterfaces';
 import { ListDetail } from '../../interfaces/listDetailInterfaces';
+import { Action } from '../../interfaces/appInterfaces';
+
 import { 
     GET_LISTDETAILS_SUCCESSFUL, PUT_LISTDETAILS_SUCCESSFUL,
     POST_BULK_LISTDETAILS_SUCCESSFUL, PUT_BULK_LISTDETAILS_SUCCESSFUL, DELETE_BULK_LISTDETAILS_SUCCESSFUL,
@@ -8,7 +10,7 @@ import {
 
 function listDetailReducer(state: listDetailReducerState = { 
     listDetails: undefined, 
-},                         action: any) {
+},                         action: Action) {
     switch (action.type) {
     case GET_LISTDETAILS_SUCCESSFUL:
         return {

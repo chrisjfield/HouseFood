@@ -20,7 +20,7 @@ export function getIngredients() {
             dispatch(getIngredientsSuccessful(response));
             dispatch(stopGet());
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopGet());
         });
@@ -49,7 +49,7 @@ export function postBulkIngredients(newIngredients: NewIngredient[]) {
             dispatch(stopPost());
             return response;
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             dispatch(addError(error));
             dispatch(stopPost());
             throw(error);

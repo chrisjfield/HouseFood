@@ -1,14 +1,12 @@
+import { Action } from '../../interfaces/appInterfaces';
 import { listReducerState } from '../../interfaces/stateInterfaces';
 import { List } from '../../interfaces/listInterfaces';
-import { 
-    GET_LISTS_SUCCESSFUL,
-    POST_LIST_SUCCESSFUL,
-    PUT_LIST_SUCCESSFUL,
-} from '../../actions/lists/listActions';
+
+import { GET_LISTS_SUCCESSFUL, POST_LIST_SUCCESSFUL, PUT_LIST_SUCCESSFUL } from '../../actions/lists/listActions';
 
 function listReducer(state: listReducerState = { 
     lists: undefined, 
-},                   action: any) {
+},                   action: Action) {
     switch (action.type) {
     case GET_LISTS_SUCCESSFUL:
         return {

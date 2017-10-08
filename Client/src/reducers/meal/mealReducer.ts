@@ -1,10 +1,12 @@
 import { mealReducerState } from '../../interfaces/stateInterfaces';
 import { Meal } from '../../interfaces/mealInterfaces';
+import { Action } from '../../interfaces/appInterfaces';
+
 import { GET_MEALS_SUCCESSFUL, POST_MEAL_SUCCESSFUL, PUT_MEAL_SUCCESSFUL } from '../../actions/meals/mealActions';
 
 function mealReducer(state: mealReducerState = { 
     meals: undefined, 
-},                   action: any) {
+},                   action: Action) {
     switch (action.type) {
     case GET_MEALS_SUCCESSFUL:
         return {
