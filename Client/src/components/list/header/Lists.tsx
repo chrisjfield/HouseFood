@@ -178,9 +178,11 @@ class Lists extends React.Component<ListsProps, ListsState> {
 
     handleGenerateList = () => {
         const newList = this.state.generateListDetail;
-        const formattedList = dateHelper.formatListDates(this.state.generateListDetail);
+
         if (this.validateList(newList)) {
-            this.props.dispatch(generateList(newList))
+            const formattedList = dateHelper.formatListDates(newList);
+
+            this.props.dispatch(generateList(formattedList))
             .then((response: List) => {
                 const url: string = '/List/Detail/' + String(response[0].listid);
                 history.push(url);
@@ -380,13 +382,9 @@ class Lists extends React.Component<ListsProps, ListsState> {
                     activeList: undefined,
                 });
             })
-            .catch((error: any) => {
+            .catch((error: Error) => {
                 console.log(error);
             });
-        })
-        .catch((error: Error) => {
-            console.log(error);
-        });
     }
 
     createLists = () => {
