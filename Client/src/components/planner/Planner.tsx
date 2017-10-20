@@ -373,9 +373,10 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
             startDate: this.state.generateListDialogStart,
             endDate: this.state.generateListDialogEnd,
         };
-        const formattedList = dateHelper.formatListDates(newList);
         
         if (this.validateList(newList)) {
+            const formattedList = dateHelper.formatListDates(newList);
+
             this.props.dispatch(generateList(formattedList))
             .then((response: List) => {
                 const url: string = '/List/Detail/' + String(response[0].listid);
