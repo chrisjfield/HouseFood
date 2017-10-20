@@ -31,7 +31,7 @@ import Divider from 'material-ui/Divider';
 import styles from '../../styles';
 
 class Home extends React.Component<HomeProps, HomeState> {
-    
+
     constructor(props: HomeProps) {
         super();
 
@@ -54,7 +54,7 @@ class Home extends React.Component<HomeProps, HomeState> {
     }
 
     componentWillReceiveProps(nextProps: HomeProps) {
-        const mealNames =  textHelper.getArrayFromProperty(nextProps.meals, 'name'); 
+        const mealNames = textHelper.getArrayFromProperty(nextProps.meals, 'name');
         const searchPeople = textHelper.getArrayFromProperty(nextProps.people, 'person');
 
         this.setState({
@@ -67,33 +67,33 @@ class Home extends React.Component<HomeProps, HomeState> {
         const dateArray: Date[] = [];
         for (let i = 0; i < 7; i += 1) {
             dateArray.push(moment(new Date()).startOf('week').add(i, 'day').toDate());
-        } 
-        
+        }
+
         return (
             <div>
                 {this.getPlanMealDialog()}
-                <br/>
+                <br />
                 {dateArray.map((date: Date) => this.getCard(date))}
             </div>
         );
     }
 
-    getPlanMealDialog () {
+    getPlanMealDialog() {
         const actions = [
-            <FlatButton label="Save" primary={true} onClick={this.handleSave}/>,
-            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleClose}/>,
+            <FlatButton label="Save" primary={true} onClick={this.handleSave} />,
+            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleClose} />,
         ];
 
         return (
             <div>
                 <Dialog
-                    title={<Moment format="dddd - Do MMMM" date={this.state.selectedDate}/>}
-                    actions={this.props.updating ? [<AppUpdating key="saving"/>] : actions}
+                    title={<Moment format="dddd - Do MMMM" date={this.state.selectedDate} />}
+                    actions={this.props.updating ? [<AppUpdating key="saving" />] : actions}
                     open={this.state.selectedDate ? true : false}
                     onRequestClose={this.handleClose}
                 >
                     <div>
-                        <br/>
+                        <br />
                     </div>
                     <AutoComplete
                         hintText="Auto completes from your meals"
@@ -105,7 +105,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                         errorText={this.state.saveValidationMessage}
                     />
                     <div>
-                        <br/>
+                        <br />
                     </div>
                     <div>
                         {this.getAddPerson()}
@@ -125,8 +125,8 @@ class Home extends React.Component<HomeProps, HomeState> {
 
         if (!this.validateMeal(mealName, mealid)) {
             const newDay: NewDay = { mealid, date: moment(this.state.selectedDate).format('YYYY-MM-DD') };
-            const newPeople: NewPerson[] = people.map((person: Person) => { 
-                return { date: moment(person.date).format('YYYY-MM-DD'),person: person.person };
+            const newPeople: NewPerson[] = people.map((person: Person) => {
+                return { date: moment(person.date).format('YYYY-MM-DD'), person: person.person };
             });
             this.props.dispatch(addDay(newDay, newPeople))
             .then((response: Day[]) => {
@@ -147,8 +147,8 @@ class Home extends React.Component<HomeProps, HomeState> {
     }
 
     handleClose = () => {
-        this.setState({ 
-            selectedDate: undefined, 
+        this.setState({
+            selectedDate: undefined,
             selectedSearchText: '',
             saveValidationMessage: undefined,
             selectedDayPeople: [],
@@ -156,7 +156,7 @@ class Home extends React.Component<HomeProps, HomeState> {
         });
     }
 
-    applyMealSearch (mealName: string) {
+    applyMealSearch(mealName: string) {
         this.setState({
             selectedSearchText: textHelper.toTitleCase(mealName),
             saveValidationMessage: '',
@@ -165,7 +165,7 @@ class Home extends React.Component<HomeProps, HomeState> {
 
     getAddPerson() {
         const actions = [
-            <FlatButton key="add" type="submit" label="Add" primary={true}/>,
+            <FlatButton key="add" type="submit" label="Add" primary={true} />,
         ];
 
         return (
@@ -177,7 +177,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                             .map((person: Person) => this.createChips(person))
                         : null}
                 </div>
-                <br/>
+                <br />
                 <AutoComplete
                     hintText="People attending the meal"
                     floatingLabelText="Add Person"
@@ -186,7 +186,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                     dataSource={this.state.searchPeople}
                     onUpdateInput={(searchText, dataSource) => this.applyPersonSearch(searchText)}
                 />
-                {this.props.updating ? [<AppUpdating key="adding"/>] : actions}
+                {this.props.updating ? [<AppUpdating key="adding" />] : actions}
             </form>
         );
     }
@@ -215,7 +215,7 @@ class Home extends React.Component<HomeProps, HomeState> {
         }
     }
 
-    createChips (person: Person) {
+    createChips(person: Person) {
         return (
             <Chip key={person.person} style={styles.chip} onRequestDelete={() => this.handleChipDelete(person.person)}>
                 <Avatar size={32}>{textHelper.toTitleCase(person.person).charAt(0)}</Avatar>
@@ -223,14 +223,14 @@ class Home extends React.Component<HomeProps, HomeState> {
             </Chip>
         );
     }
-    
+
     handleChipDelete(personName: string) {
         this.setState({
             selectedDayPeople: this.state.selectedDayPeople.filter((person: Person) => person.person !== personName),
         });
     }
 
-    applyPersonSearch (personName: string) {
+    applyPersonSearch(personName: string) {
         this.setState({
             addPersonText: textHelper.toTitleCase(personName),
             selectedPeopleSearchText: textHelper.toTitleCase(personName),
@@ -259,25 +259,25 @@ class Home extends React.Component<HomeProps, HomeState> {
             <div>
                 <Card key={moment(rowDate).day().toString()}>
                     <CardText style={styles.cardText}>
-                        <h3>{<Moment format="dddd - Do MMMM" date={rowDate}/>}</h3>
-                        {noMealMessage 
-                            ? this.getAddMealOption(noMealMessage, messageType, rowDate) 
+                        <h3>{<Moment format="dddd - Do MMMM" date={rowDate} />}</h3>
+                        {noMealMessage
+                            ? this.getAddMealOption(noMealMessage, messageType, rowDate)
                             : this.getCardText(people, mealName, mealid)}
                     </CardText>
                 </Card>
-                <Divider/>
+                <Divider />
             </div>
         );
     }
 
     getAddMealOption(noMealMessage: string, messageType: number, date: Date) {
         return (
-            <div> 
-                { noMealMessage } 
-                {messageType !== 2 
-                    ?  (<span>
-                            <FlatButton key="planning" label="Plan meal" primary={true} onClick={() => this.planMeal(date)}/>
-                        </span>)
+            <div>
+                {noMealMessage}
+                {messageType !== 2
+                    ? (<span>
+                        <FlatButton key="planning" label="Plan meal" primary={true} onClick={() => this.planMeal(date)} />
+                    </span>)
                     : null}
             </div>
         );
@@ -315,10 +315,10 @@ class Home extends React.Component<HomeProps, HomeState> {
     render() {
         return (
             <div>
-                {!this.props.loading && this.props.days && this.props.people && this.props.meals 
-                 && this.state && this.state.searchTerms
-                    ? this.generateWeek() 
-                    : <AppLoading/>
+                {!this.props.loading && this.props.days && this.props.people && this.props.meals
+                    && this.state && this.state.searchTerms
+                    ? this.generateWeek()
+                    : <AppLoading />
                 }
             </div>
         );
@@ -334,6 +334,6 @@ const mapStateToProps = (store: AppStore) => {
         updating: (store.appReducer.posting > 0 || store.appReducer.putting > 0 || store.appReducer.deleting > 0) ? true : false,
     };
 };
-  
+
 const ConnectedHome = connect(mapStateToProps)(Home);
 export default ConnectedHome;        

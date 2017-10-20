@@ -1,13 +1,13 @@
 import apiHelper from '../../helpers/apiHelper';
 
-import { List, GenerateListDetail } from '../../interfaces/listInterfaces';
+import { List, GenerateListDetailServer } from '../../interfaces/listInterfaces';
 
 import { getListDetails } from '../../actions/listDetail/listDetailActions';
 import { startPost, stopPost } from '../app/appLoadingActions';
 import { addError } from '../app/appErrorActions';
 import { POST_LIST_SUCCESSFUL } from '../../actions/lists/listActions';
 
-export function generateList(newListDetails: GenerateListDetail) {
+export function generateList(newListDetails: GenerateListDetailServer) {
     const request = apiHelper.apiCall(
         'POST',
         'Lists/GenerateList',

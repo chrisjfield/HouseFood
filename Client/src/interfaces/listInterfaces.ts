@@ -20,6 +20,12 @@ export interface GenerateListDetail {
     listName: string;
 }
 
+export interface GenerateListDetailServer {
+    startDate: String;
+    endDate: String;
+    listName: string;
+}
+
 export interface ListsProps {
     lists: List[];
     loading: boolean;

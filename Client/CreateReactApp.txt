@@ -1,7 +1,7 @@
 npm install -g create-react-app
 
 create-react-app {folderName} --scripts-version=react-scripts-ts
-cd {folderName}/
+cd ./{folderName}
 npm start
 
 /*Packages*/

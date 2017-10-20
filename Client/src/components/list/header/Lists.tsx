@@ -10,6 +10,7 @@ import { AppLoading, AppUpdating } from '../../loadingHandler';
 
 import textHelper from '../../../helpers/textHelper';
 import validationHelper from '../../../helpers/validationHelper';
+import dateHelper from '../../../helpers/dateHelper';
 
 import { List, GenerateListDetail, ListsProps, ListsState } from '../../../interfaces/listInterfaces';
 import { getLists, completeList, editList, saveList } from '../../../actions/lists/listActions';
@@ -34,7 +35,7 @@ class Lists extends React.Component<ListsProps, ListsState> {
 
         this.state = {
             completeDialogOpen: false,
-            activeList : undefined, 
+            activeList: undefined,
             showComplete: false,
             newListDialogOpen: false,
             newList: undefined,
@@ -53,20 +54,20 @@ class Lists extends React.Component<ListsProps, ListsState> {
         this.props.dispatch(getLists());
     }
 
-    getShoppingLists () {
+    getShoppingLists() {
         return (
             <div>
                 <h3> Shopping Lists </h3>
                 <div style={styles.toggle}>
-                    <Toggle 
+                    <Toggle
                         label="Show Completed"
                         labelPosition="right"
-                        toggled={this.state.showComplete} 
+                        toggled={this.state.showComplete}
                         onToggle={(event, isInputChecked) => this.setToggle(isInputChecked)}
                     />
                 </div>
-                <FlatButton label="Custom List" primary={true} onClick={this.openNewListDialog}/>
-                <FlatButton label="Auto Generate List" primary={true} onClick={this.openGenerateListDialog}/>
+                <FlatButton label="Custom List" primary={true} onClick={this.openNewListDialog} />
+                <FlatButton label="Auto Generate List" primary={true} onClick={this.openGenerateListDialog} />
                 {this.state.generateListDialogOpen ? this.getgenerateListDialog() : null}
                 {this.state.editListDialogOpen ? this.getEditListDialog() : null}
                 {this.state.newListDialogOpen ? this.getNewListDialog() : null}
@@ -77,8 +78,8 @@ class Lists extends React.Component<ListsProps, ListsState> {
     }
 
     setToggle(isInputChecked: boolean) {
-        this.setState({ 
-            showComplete: isInputChecked, 
+        this.setState({
+            showComplete: isInputChecked,
         });
     }
 
@@ -100,28 +101,28 @@ class Lists extends React.Component<ListsProps, ListsState> {
             generateListDetail: {
                 startDate: date,
                 endDate: moment(date).add(1, 'week').toDate(),
-                listName: '',
+                listName: 'List for ' + moment(date).format('YYYY MM DD').toString(),
             },
         });
     }
 
-    getgenerateListDialog () {
+    getgenerateListDialog() {
         const actions: JSX.Element[] = [
-            <FlatButton label="Generate List" primary={true} onClick={this.handleGenerateList}/>,
-            <FlatButton label="Cancel" secondary={true} onClick={this.handleDialogClose}/>,
+            <FlatButton label="Generate List" primary={true} onClick={this.handleGenerateList} />,
+            <FlatButton label="Cancel" secondary={true} onClick={this.handleDialogClose} />,
         ];
 
         return (
             <div>
                 <Dialog
                     title="Generate List"
-                    actions={this.props.updating ? [<AppUpdating key="generating"/>] : actions}
+                    actions={this.props.updating ? [<AppUpdating key="generating" />] : actions}
                     open={this.state.generateListDialogOpen}
                     onRequestClose={this.handleDialogClose}
                 >
-                Make a shopping list for the following date range
+                    Make a shopping list for the following date range
                     <div>
-                        <br/>
+                        <br />
                     </div>
                     <TextField
                         hintText="Weekly Shop"
@@ -131,24 +132,24 @@ class Lists extends React.Component<ListsProps, ListsState> {
                         errorText={this.state.generateListDialogNameValidation}
                     />
                     <div>
-                        <br/>
+                        <br />
                     </div>
-                    <DatePicker 
-                        hintText="Start Date" 
+                    <DatePicker
+                        hintText="Start Date"
                         floatingLabelText="Start Date"
-                        autoOk={true} 
+                        autoOk={true}
                         defaultDate={this.state.generateListDetail.startDate}
                         onChange={this.handleChangeStartDate}
                         shouldDisableDate={this.disableDatesPastEnd}
                         errorText={this.state.generateListDialogStartValidation}
                     />
                     <div>
-                        <br/>
+                        <br />
                     </div>
-                    <DatePicker 
+                    <DatePicker
                         hintText="End Date"
                         floatingLabelText="End Date"
-                        autoOk={true} 
+                        autoOk={true}
                         defaultDate={this.state.generateListDetail.endDate}
                         onChange={this.handleChangeEndDate}
                         shouldDisableDate={this.disableDatesBeforeStart}
@@ -160,10 +161,10 @@ class Lists extends React.Component<ListsProps, ListsState> {
     }
 
     handleDialogClose = () => {
-        this.setState({ 
+        this.setState({
             completeDialogOpen: false,
-            activeList : undefined, 
-            newListDialogOpen: false,            
+            activeList: undefined,
+            newListDialogOpen: false,
             editListDialogOpen: false,
             listEditing: undefined,
             generateListDialogOpen: false,
@@ -176,8 +177,8 @@ class Lists extends React.Component<ListsProps, ListsState> {
     }
 
     handleGenerateList = () => {
-        const newList: GenerateListDetail = this.state.generateListDetail;
-        
+        const newList = this.state.generateListDetail;
+        const formattedList = dateHelper.formatListDates(this.state.generateListDetail);
         if (this.validateList(newList)) {
             this.props.dispatch(generateList(newList))
             .then((response: List) => {
@@ -190,9 +191,9 @@ class Lists extends React.Component<ListsProps, ListsState> {
         }
     }
 
-    validateList = (newList: GenerateListDetail) => {     
+    validateList = (newList: GenerateListDetail) => {
         const isValid: boolean = (!this.validateListName(newList.listName) && !this.validateListStart(newList.startDate)
-                                  && !this.validateListEnd(newList.endDate)) ? true : false;
+            && !this.validateListEnd(newList.endDate)) ? true : false;
 
         return isValid;
     }
@@ -200,8 +201,8 @@ class Lists extends React.Component<ListsProps, ListsState> {
     validateListName = (name: string) => {
         const validationMessage: string = validationHelper.validateListName(name);
 
-        this.setState({ 
-            generateListDialogNameValidation: validationMessage, 
+        this.setState({
+            generateListDialogNameValidation: validationMessage,
             nameErrorText: validationMessage,
         });
 
@@ -255,8 +256,8 @@ class Lists extends React.Component<ListsProps, ListsState> {
 
     getEditListDialog = () => {
         const actions: JSX.Element[] = [
-            <FlatButton key="save" type="submit" label="Save" primary={true}/>,
-            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleDialogClose}/>,
+            <FlatButton key="save" type="submit" label="Save" primary={true} />,
+            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleDialogClose} />,
         ];
 
         return (
@@ -274,11 +275,11 @@ class Lists extends React.Component<ListsProps, ListsState> {
                             errorText={this.state.nameErrorText}
                             onChange={(event: object, newValue: string) => this.editEditedName(newValue)}
                         />
-                        {this.props.updating ? [<AppUpdating key="editing"/>] : actions}
+                        {this.props.updating ? [<AppUpdating key="editing" />] : actions}
                     </form>
                 </Dialog>
             </div>
-        );        
+        );
     }
 
     handleSaveEditedList = (event: React.FormEvent<HTMLFormElement>) => {
@@ -295,16 +296,16 @@ class Lists extends React.Component<ListsProps, ListsState> {
     }
 
     editEditedName = (newValue: string) => {
-        this.setState({ 
-            listEditing: { ...this.state.listEditing, name: textHelper.toTitleCase(newValue) }, 
+        this.setState({
+            listEditing: { ...this.state.listEditing, name: textHelper.toTitleCase(newValue) },
         });
         this.validateListName(newValue);
     }
 
     getNewListDialog = () => {
         const actions: JSX.Element[] = [
-            <FlatButton key="add" type="submit" label="Add" primary={true}/>,
-            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleDialogClose}/>,
+            <FlatButton key="add" type="submit" label="Add" primary={true} />,
+            <FlatButton key="cancel" label="Cancel" secondary={true} onClick={this.handleDialogClose} />,
         ];
 
         return (
@@ -322,7 +323,7 @@ class Lists extends React.Component<ListsProps, ListsState> {
                             onChange={(event: object, newValue: string) => this.editNewName(newValue)}
                             value={this.state.newList.name}
                         />
-                        {this.props.updating ? [<AppUpdating key="creating"/>] : actions}
+                        {this.props.updating ? [<AppUpdating key="creating" />] : actions}
                     </form>
                 </Dialog>
             </div>
@@ -344,28 +345,28 @@ class Lists extends React.Component<ListsProps, ListsState> {
     }
 
     editNewName = (newValue: string) => {
-        this.setState({ 
-            newList: { ...this.state.newList, name: textHelper.toTitleCase(newValue) }, 
+        this.setState({
+            newList: { ...this.state.newList, name: textHelper.toTitleCase(newValue) },
         });
         this.validateListName(newValue);
     }
 
     getCompleteListDialog = () => {
         const actions = [
-            <FlatButton key="cancel" label="Cancel" primary={true} onClick={this.handleDialogClose}/>,
-            <FlatButton key="complete" label="Complete" primary={true} keyboardFocused={true} onClick={this.handleComplete}/>,
+            <FlatButton key="cancel" label="Cancel" primary={true} onClick={this.handleDialogClose} />,
+            <FlatButton key="complete" label="Complete" primary={true} keyboardFocused={true} onClick={this.handleComplete} />,
         ];
 
         return (
             <div>
                 <Dialog
                     title="Complete List"
-                    actions={this.props.updating ? [<AppUpdating key="completing"/>] : actions}
+                    actions={this.props.updating ? [<AppUpdating key="completing" />] : actions}
                     open={this.state.completeDialogOpen}
                     onRequestClose={this.handleDialogClose}
                 >
-                    Continuing will mark {this.state.activeList ? this.state.activeList.name : ''} as completed.<br/>
-                    After this the list may only be viewed and not edited. 
+                    Continuing will mark {this.state.activeList ? this.state.activeList.name : ''} as completed.<br />
+                    After this the list may only be viewed and not edited.
                 </Dialog>
             </div>
         );
@@ -373,10 +374,14 @@ class Lists extends React.Component<ListsProps, ListsState> {
 
     handleComplete = () => {
         this.props.dispatch(completeList(this.state.activeList))
-        .then((response: List) => {
-            this.setState({ 
-                completeDialogOpen: false,
-                activeList : undefined, 
+            .then((response: List) => {
+                this.setState({
+                    completeDialogOpen: false,
+                    activeList: undefined,
+                });
+            })
+            .catch((error: any) => {
+                console.log(error);
             });
         })
         .catch((error: Error) => {
@@ -387,7 +392,7 @@ class Lists extends React.Component<ListsProps, ListsState> {
     createLists = () => {
         return this.props.lists
             .filter((list: List) => this.state.showComplete || list.complete === false)
-            .sort((a,b) => {return (a.datecreated < b.datecreated) ? 1 : ((b.datecreated < a.datecreated) ? -1 : 0);})
+            .sort((a, b) => { return (a.datecreated < b.datecreated) ? 1 : ((b.datecreated < a.datecreated) ? -1 : 0); })
             .map(this.createlist);
     }
 
@@ -396,21 +401,21 @@ class Lists extends React.Component<ListsProps, ListsState> {
 
         return (
             <Card key={list.listid}>
-                <CardTitle title={list.name + ' - ' + completed}/>} 
+                <CardTitle title={list.name + ' - ' + completed} />}
                 <CardText>
-                    <label>Created Date: </label><Moment format="DD/MM/YYYY" date={list.datecreated}/><br/>
+                    <label>Created Date: </label><Moment format="DD/MM/YYYY" date={list.datecreated} /><br />
                     <label>Completed Date: </label>
-                    {list.datecompleted ? <Moment format="DD/MM/YYYY" date={list.datecompleted}/> : undefined}
+                    {list.datecompleted ? <Moment format="DD/MM/YYYY" date={list.datecompleted} /> : undefined}
                 </CardText>
                 <CardActions>
                     <IconButton tooltip="View Details" onClick={() => this.handleViewDetails(list.listid)}>
-                        <ActionView/>
+                        <ActionView />
                     </IconButton>
                     <IconButton tooltip="Edit" disabled={list.complete} onClick={() => this.handleEdit(list.listid)}>
-                        <Edit/>
-                    </IconButton> 
+                        <Edit />
+                    </IconButton>
                     <IconButton tooltip="Complete" disabled={list.complete} onClick={() => this.handleCompleteDialogOpen(list)}>
-                        <ActionDone/>
+                        <ActionDone />
                     </IconButton>
                 </CardActions>
             </Card>
@@ -429,19 +434,19 @@ class Lists extends React.Component<ListsProps, ListsState> {
         });
     }
 
-    handleCompleteDialogOpen = (list : List) => {
-        this.setState({ 
-            completeDialogOpen: true, 
-            activeList : list,
+    handleCompleteDialogOpen = (list: List) => {
+        this.setState({
+            completeDialogOpen: true,
+            activeList: list,
         });
     }
 
     render() {
         return (
             <div>
-                {(!this.props.loading && this.state && this.props.lists) 
-                    ? this.getShoppingLists() 
-                    : <AppLoading/>
+                {(!this.props.loading && this.state && this.props.lists)
+                    ? this.getShoppingLists()
+                    : <AppLoading />
                 }
             </div>
         );
@@ -455,6 +460,6 @@ const mapStateToProps = (store: AppStore) => {
         updating: (store.appReducer.posting > 0 || store.appReducer.putting > 0 || store.appReducer.deleting > 0) ? true : false,
     };
 };
-  
+
 const ConnectedLists = connect(mapStateToProps)(Lists);
 export default ConnectedLists;

@@ -11,6 +11,7 @@ import { AppLoading, AppUpdating } from '../loadingHandler';
 
 import textHelper from '../../helpers/textHelper';
 import validationHelper from '../../helpers/validationHelper';
+import dateHelper from '../../helpers/dateHelper';
 
 import { AppStore } from '../../interfaces/stateInterfaces';
 import { Person, NewPerson } from '../../interfaces/personInterfaces';
@@ -372,9 +373,10 @@ class Planner extends React.Component<PlannerProps, PlannerState> {
             startDate: this.state.generateListDialogStart,
             endDate: this.state.generateListDialogEnd,
         };
+        const formattedList = dateHelper.formatListDates(newList);
         
         if (this.validateList(newList)) {
-            this.props.dispatch(generateList(newList))
+            this.props.dispatch(generateList(formattedList))
             .then((response: List) => {
                 const url: string = '/List/Detail/' + String(response[0].listid);
                 history.push(url);
