@@ -29,3 +29,4 @@ future:
 update to react16 for component will catch - add catch page for JS error
 clever pull back of data (not just all - see what it does pull {profiler/graphql})
 Duplicate button
+Feature request Tesco for basket api to add items

@@ -8,8 +8,6 @@ import {
 } from 'material-ui/styles/colors';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
-const rippleColour: string = '#263238';
-
 const theme: __MaterialUI.Styles.MuiTheme = getMuiTheme({
     palette: {
         primary1Color: blue900,
@@ -42,7 +40,7 @@ const theme: __MaterialUI.Styles.MuiTheme = getMuiTheme({
         stripeColor: blueGrey900,
     },
     ripple: {
-        color: rippleColour,
+        color: blueGrey900,
     },
 });
 
