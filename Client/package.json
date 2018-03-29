@@ -44,7 +44,7 @@
     "tslint-react": "^3.2.0"
   },
   "scripts": {
-    "start": "react-scripts-ts start",
+    "start": "set PORT=3002 && react-scripts-ts start",
     "build": "react-scripts-ts build",
     "eject": "react-scripts-ts eject",
     "deploy": "npm run build && cd ./build && rename index.html 200.html && surge -p ./ -d housefood.surge.sh"
